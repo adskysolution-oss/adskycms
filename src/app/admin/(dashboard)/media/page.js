@@ -29,7 +29,7 @@ export default function AdminMediaPage() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('folder', 'general');
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: formData });
       if (!res.ok) throw new Error('Upload failed');
       fetchMedia();
     } catch (err) { alert(err.message); }
@@ -39,7 +39,7 @@ export default function AdminMediaPage() {
   const deleteMedia = async (id) => {
     if (!confirm('Delete this media?')) return;
     try {
-      await fetch(`/api/upload?id=${id}`, { method: 'DELETE' });
+      await fetch(`/api/upload?id=${id}`, { method: 'DELETE', credentials: 'include' });
       fetchMedia();
     } catch {}
   };

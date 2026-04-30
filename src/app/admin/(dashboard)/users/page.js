@@ -29,7 +29,7 @@ export default function AdminUsersPage() {
     try {
       const method = editing._id ? 'PUT' : 'POST';
       const payload = editing._id ? { id: editing._id, name: editing.name, email: editing.email, role: editing.role, isActive: editing.isActive } : editing;
-      const res = await fetch('/api/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await fetch('/api/users', { method, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error); }
       setMsg('User saved!');
       setEditing(null);
@@ -41,7 +41,7 @@ export default function AdminUsersPage() {
   const deleteUser = async (id) => {
     if (!confirm('Delete this user?')) return;
     try {
-      await fetch(`/api/users?id=${id}`, { method: 'DELETE' });
+      await fetch(`/api/users?id=${id}`, { method: 'DELETE', credentials: 'include' });
       fetchUsers();
     } catch {}
   };

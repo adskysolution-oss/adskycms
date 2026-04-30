@@ -34,7 +34,7 @@ export async function PUT(request) {
 
     await dbConnect();
     const { id, ...data } = await request.json();
-    const project = await Project.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    const project = await Project.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
     if (!project) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ success: true, project });
   } catch (error) {

@@ -34,7 +34,7 @@ export async function PUT(request) {
 
     await dbConnect();
     const { id, ...data } = await request.json();
-    const member = await TeamMember.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    const member = await TeamMember.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
     if (!member) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ success: true, member });
   } catch (error) {

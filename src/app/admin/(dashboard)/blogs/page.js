@@ -33,10 +33,12 @@ export default function AdminBlogsPage() {
 
       const res = await fetch('/api/blogs', {
         method,
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Save failed');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Save failed');
       setMsg('Blog saved!');
       setEditing(null);
       fetchBlogs();
@@ -47,7 +49,7 @@ export default function AdminBlogsPage() {
   const deleteBlog = async (id) => {
     if (!confirm('Delete this blog post?')) return;
     try {
-      await fetch(`/api/blogs?id=${id}`, { method: 'DELETE' });
+      await fetch(`/api/blogs?id=${id}`, { method: 'DELETE', credentials: 'include' });
       fetchBlogs();
     } catch {}
   };

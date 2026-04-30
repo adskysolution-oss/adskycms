@@ -5,20 +5,20 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata = {
-  title: 'AdSky Solution - Digital Marketing & Technology Solutions',
-  description: 'Transform your business with cutting-edge digital solutions. Web development, mobile apps, digital marketing, and more.',
+  title: 'AdSky Solution - Premium IT Company',
+  description: 'Premium IT support, scalable digital systems, and modern software solutions for growing businesses.',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased">
+      <body className="bg-[#020617] text-white antialiased">
         {children}
         <Toaster position="top-right" toastOptions={{
           style: {
-            background: '#1E293B',
-            color: '#F1F5F9',
-            border: '1px solid #334155',
+            background: '#0f172a',
+            color: '#FFFFFF',
+            border: '1px solid #1E293B',
           },
         }} />
       </body>

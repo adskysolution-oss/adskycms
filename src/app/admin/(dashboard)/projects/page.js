@@ -26,7 +26,7 @@ export default function AdminProjectsPage() {
       const payload = { ...editing, technologies: typeof editing.technologies === 'string' ? editing.technologies.split(',').map(s => s.trim()).filter(Boolean) : editing.technologies };
       const method = editing._id ? 'PUT' : 'POST';
       if (editing._id) payload.id = editing._id;
-      const res = await fetch('/api/projects', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await fetch('/api/projects', { method, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Save failed');
       setMsg('Saved!'); setEditing(null); fetchAll();
     } catch (err) { setMsg('Error: ' + err.message); }
@@ -35,7 +35,7 @@ export default function AdminProjectsPage() {
 
   const remove = async (id) => {
     if (!confirm('Delete this project?')) return;
-    try { await fetch(`/api/projects?id=${id}`, { method: 'DELETE' }); fetchAll(); } catch {}
+    try { await fetch(`/api/projects?id=${id}`, { method: 'DELETE', credentials: 'include' }); fetchAll(); } catch {}
   };
 
   return (

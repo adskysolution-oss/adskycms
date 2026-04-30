@@ -29,7 +29,7 @@ export async function getBlogBySlug(slug) {
   const blog = await Blog.findOneAndUpdate(
     { slug, isPublished: true },
     { $inc: { views: 1 } },
-    { new: true }
+    { returnDocument: 'after' }
   ).populate('author', 'name avatar').lean();
   return blog ? serialize(blog) : null;
 }

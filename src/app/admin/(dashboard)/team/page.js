@@ -26,7 +26,7 @@ export default function AdminTeamPage() {
       const method = editing._id ? 'PUT' : 'POST';
       const payload = { ...editing };
       if (editing._id) payload.id = editing._id;
-      const res = await fetch('/api/team', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await fetch('/api/team', { method, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Save failed');
       setMsg('Saved!'); setEditing(null); fetchAll();
     } catch (err) { setMsg('Error: ' + err.message); }
@@ -35,7 +35,7 @@ export default function AdminTeamPage() {
 
   const remove = async (id) => {
     if (!confirm('Delete this member?')) return;
-    try { await fetch(`/api/team?id=${id}`, { method: 'DELETE' }); fetchAll(); } catch {}
+    try { await fetch(`/api/team?id=${id}`, { method: 'DELETE', credentials: 'include' }); fetchAll(); } catch {}
   };
 
   return (

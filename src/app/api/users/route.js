@@ -52,7 +52,7 @@ export async function PUT(request) {
     // Don't allow password updates through this endpoint
     delete updateData.password;
 
-    const user = await User.findByIdAndUpdate(id, updateData, { new: true }).select('-password');
+    const user = await User.findByIdAndUpdate(id, updateData, { returnDocument: 'after' }).select('-password');
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
     return NextResponse.json({ success: true, user });
   } catch (error) {

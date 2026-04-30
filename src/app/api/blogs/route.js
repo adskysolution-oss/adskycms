@@ -48,11 +48,31 @@ export async function POST(request) {
 
     await dbConnect();
     const body = await request.json();
+    
+    // Validate required fields
+    if (!body.title) {
+      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
+    }
+    if (!body.content) {
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+    }
+
+    // Generate slug if not provided
+    if (!body.slug) {
+      const slugify = (await import('slugify')).default;
+      body.slug = slugify(body.title, { lower: true, strict: true });
+    }
+
     body.author = decoded.id;
+    
     const blog = await Blog.create(body);
     return NextResponse.json({ success: true, blog }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Blog POST error:', error);
+    return NextResponse.json({ 
+      error: error.message,
+      details: error.errors ? Object.keys(error.errors).map(k => error.errors[k].message) : undefined
+    }, { status: 500 });
   }
 }
 
@@ -66,7 +86,7 @@ export async function PUT(request) {
     const body = await request.json();
     const { id, ...updateData } = body;
 
-    const blog = await Blog.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    const blog = await Blog.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true });
     if (!blog) return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     return NextResponse.json({ success: true, blog });
   } catch (error) {
