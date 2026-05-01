@@ -12,13 +12,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-[#020617] text-white antialiased">
+      <body className="bg-[#000000] text-white antialiased">
         {children}
         <Toaster position="top-right" toastOptions={{
           style: {
-            background: '#0f172a',
+            background: '#0B0B10',
             color: '#FFFFFF',
-            border: '1px solid #1E293B',
+            border: '1px solid #1A1A2E',
           },
         }} />
       </body>

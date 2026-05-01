@@ -1,7 +1,6 @@
-import { FaCode, FaMobileAlt, FaBullhorn, FaPaintBrush, FaCloud, FaShieldAlt, FaCheckCircle } from 'react-icons/fa';
+import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
+import IconByName from '@/components/IconByName';
 import { getActiveServices } from '@/lib/data';
-
-const iconMap = { FaCode, FaMobileAlt, FaBullhorn, FaPaintBrush, FaCloud, FaShieldAlt };
 
 export const metadata = { title: 'Services - AdSky Solution' };
 
@@ -17,7 +16,7 @@ export default async function ServicesPage() {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
             Our <span className="gradient-text">Services</span>
           </h1>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">Comprehensive digital solutions tailored for your business</p>
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto">From specialized workforce consulting to global IT strategy, we provide the architecture for high-growth businesses.</p>
         </div>
       </section>
 
@@ -32,11 +31,10 @@ export default async function ServicesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((svc) => {
-                const IconComp = iconMap[svc.icon] || FaCode;
                 return (
                   <div key={svc._id} className="glass-card-hover p-8 group">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all">
-                      <IconComp className="text-primary-light" size={26} />
+                      <IconByName name={svc.icon} className="text-primary-light" size={26} />
                     </div>
                     <h3 className="text-xl font-semibold text-text-primary mb-3">{svc.name}</h3>
                     <p className="text-text-secondary text-sm leading-relaxed mb-5">{svc.description}</p>
