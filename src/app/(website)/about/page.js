@@ -1,5 +1,9 @@
 import { FaUsers, FaRocket, FaHeart, FaGlobe } from 'react-icons/fa';
 import { getTeamMembers } from '@/lib/data';
+import MeetTeamSection from '@/components/sections/MeetTeamSection';
+import VisionMissionSection from '@/components/sections/VisionMissionSection';
+import OurJourneySection from '@/components/sections/OurJourneySection';
+import AboutCompanySection from '@/components/sections/AboutCompanySection';
 
 export const metadata = { title: 'About Us - AdSky Solution' };
 
@@ -16,7 +20,7 @@ export default async function AboutPage() {
   return (
     <>
       {/* Hero (Hardcoded) */}
-      <section className="relative pt-32 pb-20">
+      <section className="relative pt-32 ">
         <div className="glow-dot bg-primary top-20 -left-20 animate-pulse-slow" />
         <div className="container-custom relative z-10 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
@@ -28,17 +32,10 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      <AboutCompanySection />
+
       {/* Mission (Hardcoded) */}
-      <section className="section-padding">
-        <div className="container-custom">
-          <div className="glass-card p-10 lg:p-16 text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 gradient-text">Our Mission</h2>
-            <p className="text-text-secondary text-lg leading-relaxed">
-              To empower businesses with innovative digital solutions that drive growth and create lasting impact in an ever-evolving digital landscape.
-            </p>
-          </div>
-        </div>
-      </section>
+      <VisionMissionSection />
 
       {/* Values (Hardcoded) */}
       <section className="section-padding">
@@ -58,33 +55,11 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Journey (Hardcoded) */}
+      <OurJourneySection />
+
       {/* Team (DB) */}
-      {team.length > 0 && (
-        <section className="section-padding">
-          <div className="container-custom">
-            <div className="text-center mb-16">
-              <h2 className="section-title"><span className="gradient-text">Meet Our Team</span></h2>
-              <p className="section-subtitle">The brilliant minds behind AdSky Solution</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {team.map((member) => (
-                <div key={member._id} className="glass-card-hover p-7 text-center group">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary mx-auto mb-5 flex items-center justify-center text-2xl font-bold text-white group-hover:scale-110 transition-transform overflow-hidden">
-                    {member.image ? (
-                      <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                    ) : (
-                      member.name?.charAt(0)
-                    )}
-                  </div>
-                  <h3 className="text-text-primary font-semibold">{member.name}</h3>
-                  <p className="text-text-muted text-sm">{member.role}</p>
-                  {member.bio && <p className="text-text-secondary text-xs mt-2 line-clamp-2">{member.bio}</p>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <MeetTeamSection team={team} />
     </>
   );
 }
