@@ -17,7 +17,7 @@ export default function Hero() {
           {/* LEFT — Text content */}
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <span className="h-px w-70 bg-white/30" />
+              <span className="h-px w-40 bg-white/30" />
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">

@@ -38,6 +38,9 @@ export default function BlogPreviewSection({ blogs = [] }) {
                 </div>
                 <h3 className="text-text-primary font-semibold mb-2 group-hover:text-primary-light transition-colors line-clamp-2">{blog.title}</h3>
                 <p className="text-text-secondary text-sm line-clamp-2">{blog.excerpt}</p>
+                <div className="mt-4 flex items-center gap-2 text-primary-light text-sm font-medium group-hover:gap-3 transition-all">
+                  Read More <FaArrowRight size={12} />
+                </div>
               </div>
             </Link>
           ))}
