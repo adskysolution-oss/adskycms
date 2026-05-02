@@ -19,9 +19,9 @@ export default function HowItWorksSection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Animated connecting line */}
-          <div className="hidden md:block absolute top-16 left-0 right-0 h-[2px] overflow-hidden">
+          <div className="hidden md:block absolute top-16 left-0 right-0 h-[2px]">
             <div
-              className="h-full bg-gradient-to-r from-primary via-secondary to-primary transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-blue-600 via-primary-light to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.8)] transition-all duration-700 ease-in-out"
               style={{
                 width:
                   hoveredStep === 0

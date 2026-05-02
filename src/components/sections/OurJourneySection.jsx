@@ -1,4 +1,10 @@
+'use client';
+
+import { useRef } from 'react';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+
 export default function OurJourneySection() {
+  const containerRef = useRef(null);
   const milestones = [
     {
       year: '2023',
@@ -22,6 +28,17 @@ export default function OurJourneySection() {
     },
   ];
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start center', 'end center'],
+  });
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   return (
     <section className="section-padding relative">
       <div className="container-custom">
@@ -36,9 +53,15 @@ export default function OurJourneySection() {
         </div>
 
         {/* Timeline Container */}
-        <div className="relative max-w-4xl mx-auto">
-          {/* Vertical line (Desktop only) */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-gradient-to-b from-primary/40 via-secondary/30 to-primary/40" />
+        <div ref={containerRef} className="relative max-w-4xl mx-auto">
+          {/* Vertical line background (Static) */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/10" />
+          
+          {/* Vertical line progress (Animated) */}
+          <motion.div 
+            style={{ scaleY, originY: 0 }}
+            className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-gradient-to-b from-blue-500 via-primary-light to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.5)] z-0"
+          />
 
           <div className="flex flex-col md:block">
             {milestones.map((item, i) => {
@@ -50,7 +73,11 @@ export default function OurJourneySection() {
                   <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-primary-light to-secondary border-[3px] border-dark z-10" />
 
                   {/* Card */}
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
                     className={`
                       w-[92%] md:w-[calc(50%-40px)] mb-8 md:mb-20
                       ${isLeft ? 'md:mr-auto md:pr-6' : 'md:ml-auto md:pl-6'}
@@ -69,11 +96,11 @@ export default function OurJourneySection() {
                         {item.description}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  {/* Vertical Line Segment (Mobile only - between cards) */}
+                  {/* Spacer for mobile to maintain vertical height for the line */}
                   {i < milestones.length - 1 && (
-                    <div className="md:hidden self-center w-[2px] h-12 bg-gradient-to-b from-primary/40 to-secondary/40 mb-8" />
+                    <div className="md:hidden h-12" />
                   )}
                 </div>
               );
