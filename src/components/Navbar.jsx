@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
@@ -32,13 +33,15 @@ export default function Navbar() {
 		<header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#020617]/55 backdrop-blur-xl">
 			<div className="container-custom">
 				<div className="flex h-20 items-center justify-between gap-4">
-					<Link href="/" className="flex items-center gap-3">
-						<div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-sm font-bold text-white">
-							AS
-						</div>
-						<div className="leading-tight">  
-							<div className="text-base font-semibold text-white">AdSky Solution</div>
-						</div>
+					<Link href="/" className="flex items-center">
+						<Image 
+							src="/logo.png" 
+							alt="AdSky Solution Logo" 
+							width={140} 
+							height={40} 
+							className="h-9 w-auto object-contain"
+							priority
+						/>
 					</Link>
 
 					<nav className="hidden md:flex items-center gap-1 rounded-full border border-white/5 bg-white/5 px-2 py-2">

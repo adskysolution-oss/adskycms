@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FaClock, FaEye } from 'react-icons/fa';
+import { FaClock, FaEye, FaArrowRight } from 'react-icons/fa';
 import { getPublishedBlogs } from '@/lib/data';
 
 export const metadata = { title: 'Blog - AdSky Solution' };
@@ -47,6 +47,9 @@ export default async function BlogsPage() {
                     </div>
                     <h3 className="text-text-primary font-semibold mb-2 group-hover:text-primary-light transition-colors line-clamp-2">{blog.title}</h3>
                     <p className="text-text-secondary text-sm line-clamp-2">{blog.excerpt}</p>
+                    <div className="mt-4 flex items-center gap-2 text-primary-light text-sm font-medium group-hover:gap-3 transition-all">
+                      Read More <FaArrowRight size={12} />
+                    </div>
                   </div>
                 </Link>
               ))}

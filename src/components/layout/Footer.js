@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaArrowUp } from 'react-icons/fa';
 
@@ -40,13 +41,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center font-bold text-white text-sm">
-                AS
-              </div>
-              <span className="text-xl font-bold text-text-primary">
-                AdSky<span className="text-primary-light">.</span>
-              </span>
+            <Link href="/" className="inline-block mb-4">
+              <Image 
+                src="/logo.png" 
+                alt="AdSky Solution Logo" 
+                width={150} 
+                height={50} 
+                className="h-10 w-auto object-contain"
+              />
             </Link>
             <p className="text-text-secondary text-sm leading-relaxed mb-6">
               Transforming businesses through innovative digital solutions. We build, market, and scale.

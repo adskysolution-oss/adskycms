@@ -25,7 +25,7 @@ export default async function BlogDetailPage({ params }) {
 
   return (
     <section className="pt-28 pb-20">
-      <div className="container-custom max-w-3xl">
+      <div className="container-custom">
         <Link href="/blogs" className="inline-flex items-center gap-2 text-text-muted text-sm hover:text-primary-light transition-colors mb-8">
           <FaArrowLeft size={12} /> Back to Blog
         </Link>
