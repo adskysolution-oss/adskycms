@@ -10,7 +10,7 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <>
-          {/* Hero (Hardcoded) */}
+      {/* Hero (Hardcoded) */}
       <section className="relative pt-32 pb-20">
         <div className="glow-dot bg-primary top-20 right-0 animate-pulse-slow" />
         <div className="container-custom relative z-10 text-center">
@@ -29,20 +29,27 @@ export default function ContactPage() {
               <p className="text-text-secondary">Have a project or question? Send us a message and we'll get back to you shortly.</p>
             </div> */}
 
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Email & Phone</h3>
-              <p className="text-text-secondary text-sm mb-2">hr@bridgefix.co</p>
-              <p className="text-text-secondary text-sm">+91 9425960946</p>
+            <div className="p-6">
+              <div className='p-2'>
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Email & Phone</h3>
+                <p className="text-text-secondary text-sm mb-2">hr@bridgefix.co</p>
+                <p className="text-text-secondary text-sm">+91 9425960946</p>
+              </div>
 
               <hr className="my-6 border-border" />
 
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Our Location</h3>
-              <p className="text-text-secondary text-sm">388, 1st Floor, Pu4, Scheme Number 54, Vijay Nagar, Indore, Madhya Pradesh, 452010</p>
+              <div className='p-2'>
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Our Location</h3>
+                <p className="text-text-secondary text-sm">388, 1st Floor, Pu4, Scheme Number 54, Vijay Nagar, Indore, Madhya Pradesh, 452010</p>
+              </div>
 
               <hr className="my-6 border-border" />
 
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Get in Touch</h3>
-              <p className="text-text-secondary text-sm">www.adskysolution.com</p>
+              <div className='p-2'>
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Get in Touch</h3>
+                <p className="text-text-secondary text-sm">www.adskysolution.com</p>
+              </div>
+
             </div>
           </div>
 

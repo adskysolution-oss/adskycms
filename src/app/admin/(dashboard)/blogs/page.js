@@ -9,8 +9,36 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const emptyBlog = { title: '', excerpt: '', content: '', category: 'General', tags: '', coverImage: '', isPublished: false };
+
+  const resetEditor = () => {
+    setEditing(null);
+    setImageFile(null);
+    setImagePreview('');
+  };
+
+  const openNewBlog = () => {
+    setEditing({ ...emptyBlog });
+    setImageFile(null);
+    setImagePreview('');
+  };
+
+  const openEditBlog = (blog) => {
+    setEditing({ ...blog, tags: blog.tags?.join(', ') || '' });
+    setImageFile(null);
+    setImagePreview(blog.coverImage || '');
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -27,7 +55,23 @@ export default function AdminBlogsPage() {
     setSaving(true);
     setMsg('');
     try {
-      const payload = { ...editing, tags: typeof editing.tags === 'string' ? editing.tags.split(',').map((t) => t.trim()).filter(Boolean) : editing.tags };
+      let coverImage = editing.coverImage || '';
+
+      if (imageFile) {
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('folder', 'blogs');
+
+        const uploadRes = await fetch('/api/upload', { method: 'POST', credentials: 'include', body: formData });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
+        coverImage = uploadData.media.url;
+      }
+
+      if (!coverImage) throw new Error('Please choose a cover image');
+
+      const payload = { ...editing, coverImage, tags: typeof editing.tags === 'string' ? editing.tags.split(',').map((t) => t.trim()).filter(Boolean) : editing.tags };
       const method = editing._id ? 'PUT' : 'POST';
       if (editing._id) payload.id = editing._id;
 
@@ -40,10 +84,10 @@ export default function AdminBlogsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Save failed');
       setMsg('Blog saved!');
-      setEditing(null);
+      resetEditor();
       fetchBlogs();
     } catch (err) { setMsg('Error: ' + err.message); }
-    finally { setSaving(false); }
+    finally { setSaving(false); setIsUploading(false); }
   };
 
   const deleteBlog = async (id) => {
@@ -61,7 +105,7 @@ export default function AdminBlogsPage() {
           <h1 className="text-2xl font-bold text-text-primary">Blogs</h1>
           <p className="text-text-secondary text-sm mt-1">Manage blog posts</p>
         </div>
-        <button onClick={() => setEditing({ ...emptyBlog })} className="btn-primary text-sm"><FaPlus size={12} /> New Post</button>
+        <button onClick={openNewBlog} className="btn-primary text-sm"><FaPlus size={12} /> New Post</button>
       </div>
 
       {msg && <div className={`mb-4 p-3 rounded-lg text-sm ${msg.includes('Error') ? 'bg-danger/10 text-danger' : 'bg-success/10 text-success'}`}>{msg}</div>}
@@ -71,7 +115,7 @@ export default function AdminBlogsPage() {
         <div className="glass-card p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-text-primary">{editing._id ? 'Edit' : 'New'} Blog Post</h2>
-            <button onClick={() => setEditing(null)} className="text-text-muted hover:text-text-primary"><FaTimes size={18} /></button>
+            <button onClick={resetEditor} className="text-text-muted hover:text-text-primary"><FaTimes size={18} /></button>
           </div>
 
           <div className="space-y-4">
@@ -92,8 +136,14 @@ export default function AdminBlogsPage() {
             </div>
 
             <div>
-              <label className="text-text-secondary text-sm mb-1 block">Cover Image URL</label>
-              <input value={editing.coverImage} onChange={(e) => setEditing({ ...editing, coverImage: e.target.value })} placeholder="Upload from Media library and paste URL" className="w-full px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
+              <label className="text-text-secondary text-sm mb-1 block">Cover Image URL / Upload</label>
+              <input type="file" accept="image/*" onChange={handleFileChange} className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-primary file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary-dark" />
+
+              {(imagePreview || editing.coverImage) && (
+                <div className="mt-3">
+                  <img src={imagePreview || editing.coverImage} alt="preview" className="max-h-44 w-full rounded-xl border border-border object-cover" />
+                </div>
+              )}
             </div>
 
             <div>
@@ -111,8 +161,8 @@ export default function AdminBlogsPage() {
                 <input type="checkbox" checked={editing.isPublished} onChange={(e) => setEditing({ ...editing, isPublished: e.target.checked })} className="accent-primary" />
                 Publish
               </label>
-              <button onClick={saveBlog} disabled={saving} className="btn-primary text-sm">
-                {saving ? <><FaSpinner className="animate-spin" /> Saving...</> : <><FaSave /> Save</>}
+              <button onClick={saveBlog} disabled={saving || isUploading} className="btn-primary text-sm">
+                {saving || isUploading ? <><FaSpinner className="animate-spin" /> {isUploading ? 'Uploading...' : 'Saving...'}</> : <><FaSave /> Save</>}
               </button>
             </div>
           </div>
@@ -140,7 +190,7 @@ export default function AdminBlogsPage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => setEditing({ ...blog, tags: blog.tags?.join(', ') || '' })} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
+                <button onClick={() => openEditBlog(blog)} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
                 <button onClick={() => deleteBlog(blog._id)} className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20"><FaTrash size={12} /></button>
               </div>
             </div>

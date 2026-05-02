@@ -24,14 +24,14 @@ export default function Hero() {
 
             <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
               <span className="bg-gradient-to-r from-gray-100 via-white to-gray-300 bg-clip-text text-transparent">
-                Customer Support:
+                Build Scalable Digital Solutions
               </span>
               <br />
-              The Heart of Service Excellence
+              With Smart Technology & Talent
             </h1>
 
             <p className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg leading-8 text-text-secondary">
-              Delivering Excellence Through Customer Support
+              We help businesses grow faster with IT development, web solutions, and recruitment services across India.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">

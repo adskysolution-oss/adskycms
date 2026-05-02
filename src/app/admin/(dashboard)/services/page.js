@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSpinner, FaSave, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
+import IconByName from '@/components/IconByName';
 
 export default function AdminServicesPage() {
   const [items, setItems] = useState([]);
@@ -11,6 +12,28 @@ export default function AdminServicesPage() {
   const [msg, setMsg] = useState('');
 
   const empty = { name: '', description: '', features: '', icon: 'FaCode', order: 0, isActive: true };
+
+  const [iconValid, setIconValid] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const check = async () => {
+      if (!editing?.icon) {
+        if (mounted) setIconValid(false);
+        return;
+      }
+      try {
+        const mod = await import('react-icons/fa');
+        if (!mounted) return;
+        setIconValid(Boolean(mod[editing.icon]));
+      } catch (e) {
+        if (!mounted) return;
+        setIconValid(false);
+      }
+    };
+    check();
+    return () => { mounted = false; };
+  }, [editing?.icon]);
 
   const fetchAll = async () => {
     setLoading(true);
@@ -66,8 +89,20 @@ export default function AdminServicesPage() {
                 <input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="w-full px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
               </div>
               <div>
-                <label className="text-text-secondary text-sm mb-1 block">Icon (e.g. FaCode)</label>
-                <input value={editing.icon} onChange={(e) => setEditing({ ...editing, icon: e.target.value })} className="w-full px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
+                <label className="text-text-secondary text-sm mb-1 block">Icon Name (e.g. FaCode)</label>
+                <div className="flex items-center gap-3">
+                  <input value={editing.icon} onChange={(e) => setEditing({ ...editing, icon: e.target.value })} placeholder="FaCode" className="flex-1 px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
+                  <div className="w-12 h-12 flex items-center justify-center rounded-md border border-border bg-surface">
+                    <IconByName name={editing.icon} size={20} fallbackToDefault={false} />
+                  </div>
+                  <div className="text-sm">
+                    {editing.icon ? (
+                      iconValid ? <span className="text-success">Icon found</span> : <span className="text-danger">Icon not found</span>
+                    ) : (
+                      <span className="text-text-muted">Enter icon name</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
             <div>
