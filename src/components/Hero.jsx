@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowRight } from 'react-icons/fa';
 import { TypingText } from './ui/typing-text';
+import PremiumImage from './PremiumImage';
 
 export default function Hero() {
   return (
@@ -16,7 +17,7 @@ export default function Hero() {
           {/* LEFT — Text content */}
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <span className="h-px w-24 bg-white/30" />
+              <span className="h-px w-70 bg-white/30" />
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
@@ -49,26 +50,7 @@ export default function Hero() {
           </div>
 
           {/* RIGHT — Hero image */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-lg xl:max-w-xl group">
-
-              {/* Glow Layer */}
-              <div className="absolute inset-0 -m-6 rounded-3xl bg-gradient-to-tr from-purple-500/10 via-blue-500/10 to-transparent blur-3xl opacity-70 group-hover:opacity-100 transition duration-500" />
-
-              {/* Animated Image */}
-              <div className="relative z-10 animate-float">
-                <Image
-                  src="/hero1.png"
-                  alt="Customer support illustration"
-                  width={700}
-                  height={800}
-                  priority
-                  className="w-full h-auto object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-              </div>
-
-            </div>
-          </div>
+          <PremiumImage src="/hero1.png" alt="Hero Image" />
 
         </div>
       </div>

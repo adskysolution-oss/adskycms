@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { FaEye, FaBullseye } from 'react-icons/fa';
+import PremiumImage from '../PremiumImage';
 
 export default function VisionMissionSection() {
   return (
@@ -44,14 +45,13 @@ export default function VisionMissionSection() {
           {/* RIGHT — Image */}
           <div className="order-2 lg:order-2 flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md lg:max-w-lg">
-              <Image
-                src="/mission-vision.png"
-                alt="Vision and Mission illustration"
+              <PremiumImage 
+                src="/mission-vision.png" 
+                alt="Vision and Mission illustration" 
                 width={550}
                 height={450}
-                className="relative z-10 w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.04)]"
+                className="w-full h-auto"
               />
-              <div className="absolute inset-0 -m-4 rounded-3xl bg-white/[0.02] blur-2xl pointer-events-none" />
             </div>
           </div>
 

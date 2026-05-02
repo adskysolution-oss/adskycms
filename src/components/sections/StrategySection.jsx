@@ -88,7 +88,7 @@ export default function StrategySection() {
             <ul className="space-y-4 mb-8">
               {['Data-driven decision making', 'Competitive market analysis', 'Scalable growth strategies', 'Measurable ROI tracking'].map((point, i) => (
                 <li key={i} className="flex items-center gap-3 text-text-secondary">
-                  <FaCheckCircle className="text-secondary flex-shrink-0" size={16} />
+                  <FaCheckCircle className="text-green-500 flex-shrink-0" size={16} />
                   <span className="text-sm">{point}</span>
                 </li>
               ))}
