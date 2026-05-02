@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   FaTachometerAlt, FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram,
-  FaDollarSign, FaUserFriends, FaSignOutAlt, FaBars, FaTimes, FaChevronLeft, FaEye,
+  FaDollarSign, FaUserFriends, FaSignOutAlt, FaBars, FaTimes, FaChevronLeft, FaEye, FaEnvelope,
 } from 'react-icons/fa';
 
 const menuItems = [
@@ -15,6 +15,7 @@ const menuItems = [
   { href: '/admin/projects', icon: FaProjectDiagram, label: 'Projects' },
   { href: '/admin/pricing', icon: FaDollarSign, label: 'Pricing' },
   { href: '/admin/blogs', icon: FaBlog, label: 'Blogs' },
+  { href: '/admin/contacts', icon: FaEnvelope, label: 'Contacts' },
   { href: '/admin/media', icon: FaImage, label: 'Media' },
   { href: '/admin/users', icon: FaUsers, label: 'Users' },
 ];

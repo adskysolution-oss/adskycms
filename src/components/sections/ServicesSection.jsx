@@ -1,5 +1,6 @@
 import { FaArrowRight } from 'react-icons/fa';
 import IconByName from '@/components/IconByName';
+import { HoverEffect } from '../ui/card-hover-effect';
 
 export default function ServicesSection({ services = [] }) {
   if (services.length === 0) return null;
@@ -13,10 +14,11 @@ export default function ServicesSection({ services = [] }) {
           <p className="section-subtitle">Comprehensive digital solutions tailored to your needs</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((svc, i) => {
-            return (
-              <div key={svc._id} className="glass-card-hover p-7 group" style={{ animationDelay: `${i * 0.1}s` }}>
+        <HoverEffect
+          items={services.map((svc, i) => ({
+            id: svc._id,
+            content: (
+              <div className="group" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-5 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all">
                   <IconByName name={svc.icon} className="text-primary-light" size={22} />
                 </div>
@@ -26,9 +28,9 @@ export default function ServicesSection({ services = [] }) {
                   Learn more <FaArrowRight size={12} />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            )
+          }))}
+        />
       </div>
     </section>
   );
