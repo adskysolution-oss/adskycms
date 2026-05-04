@@ -1,6 +1,7 @@
 import dbConnect from './db';
 import Service from '@/models/Service';
 import Blog from '@/models/Blog';
+import User from '@/models/User';
 import TeamMember from '@/models/TeamMember';
 import Project from '@/models/Project';
 import PricingPlan from '@/models/PricingPlan';

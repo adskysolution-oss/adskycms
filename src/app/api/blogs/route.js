@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Blog from '@/models/Blog';
+import User from '@/models/User';
 import { authenticateRequest } from '@/lib/auth';
 
 // GET all blogs (public: only published) or all (admin)
