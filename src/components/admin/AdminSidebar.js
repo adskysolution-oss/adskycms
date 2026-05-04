@@ -6,7 +6,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   FaTachometerAlt, FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram,
   FaDollarSign, FaUserFriends, FaSignOutAlt, FaBars, FaTimes, FaChevronLeft, 
-  FaEye, FaEnvelope, FaBriefcase, FaFileAlt, FaTags, FaFolder, FaChevronDown
+  FaEye, FaEnvelope, FaBriefcase, FaFileAlt, FaTags, FaFolder, FaChevronDown,
+  FaBuilding
 } from 'react-icons/fa';
 
 const menuGroups = [
