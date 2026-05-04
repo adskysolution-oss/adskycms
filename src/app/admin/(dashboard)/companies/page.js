@@ -28,8 +28,12 @@ export default function AdminCompaniesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      if (res.ok) fetchCompanies();
-    } catch {}
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Update failed');
+      fetchCompanies();
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const filtered = filter === 'all' ? companies : companies.filter(c => c.status === filter);

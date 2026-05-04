@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { 
   FaPlus, FaBriefcase, FaUsers, FaEdit, FaTrash, FaEye, 
   FaCheck, FaTimes, FaSpinner, FaArrowUp, FaSearch, 
-  FaChartLine, FaFilter, FaUserCheck, FaUserTimes, FaComments 
+  FaChartLine, FaFilter, FaUserCheck, FaUserTimes, FaComments, FaBuilding, FaMapMarkerAlt 
 } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -112,7 +112,7 @@ export default function EmployerDashboard() {
             <p className="text-text-secondary">Welcome back, {company?.companyName}. Here's your hiring overview.</p>
           </div>
           <div className="flex gap-4">
-            <Link href="/admin/jobs" className="btn-primary !px-8 !py-4 shadow-xl shadow-primary/20 flex items-center gap-2">
+            <Link href="/dashboard/employer/jobs" className="btn-primary !px-8 !py-4 shadow-xl shadow-primary/20 flex items-center gap-2">
               <FaPlus size={14} /> Post New Job
             </Link>
           </div>
@@ -187,7 +187,7 @@ export default function EmployerDashboard() {
             <div className="glass-card p-8 border border-white/5">
               <h2 className="text-lg font-bold text-text-primary mb-6">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => setActiveTab('jobs')} className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center">
+                <button onClick={() => router.push('/dashboard/employer/jobs')} className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center">
                   <FaBriefcase className="text-primary-light" size={24} />
                   <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Edit Jobs</span>
                 </button>

@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Job from '@/models/Job';
 import Category from '@/models/Category';
 import Company from '@/models/Company';
+import User from '@/models/User';
 import { authenticateRequest } from '@/lib/auth';
 
 export async function GET(req) {
@@ -17,9 +18,21 @@ export async function GET(req) {
     const isMyJobs = searchParams.get('my') === 'true';
 
     let query = { isActive: true };
-    if (isMyJobs && decoded) {
-      query.company = decoded.id;
+
+    if (isMyJobs) {
+      if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      
+      // If employer, only show their company's jobs
+      if (decoded.role === 'employer') {
+        const company = await Company.findOne({ user: decoded.id });
+        if (!company) return NextResponse.json({ jobs: [] });
+        query.company = company._id;
+        delete query.isActive; // Employers can see their inactive jobs
+      } else if (decoded.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
     }
+
     if (category) query.category = category;
     if (type) query.type = type;
     if (search) {
@@ -45,7 +58,42 @@ export async function GET(req) {
 export async function POST(req) {
   await dbConnect();
   try {
+    const decoded = authenticateRequest(req);
+    if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'employer')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
+
+    // Handle manual category entry
+    if (body.manualCategory) {
+      let cat = await Category.findOne({ name: { $regex: new RegExp(`^${body.manualCategory}$`, 'i') } });
+      if (!cat) {
+        cat = await Category.create({ 
+          name: body.manualCategory, 
+          type: 'job',
+          icon: 'FaBriefcase'
+        });
+      }
+      body.category = cat._id;
+    }
+
+    // Auto-associate company for employers
+    if (decoded.role === 'employer') {
+      const company = await Company.findOne({ user: decoded.id });
+      if (!company) return NextResponse.json({ error: 'Company profile not found' }, { status: 404 });
+      if (company.status !== 'approved') return NextResponse.json({ error: 'Company not approved yet' }, { status: 403 });
+      body.company = company._id;
+    }
+
+    if (!body.category) {
+      return NextResponse.json({ error: 'Category is required' }, { status: 400 });
+    }
+
+    if (!body.company) {
+      return NextResponse.json({ error: 'Company is required' }, { status: 400 });
+    }
+
     const job = await Job.create(body);
     return NextResponse.json({ job }, { status: 201 });
   } catch (error) {

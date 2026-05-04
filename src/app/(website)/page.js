@@ -1,53 +1,51 @@
-import HeroSection from '@/components/sections/HeroSection';
+import Hero from '@/components/Hero';
 import ServicesSection from '@/components/sections/ServicesSection';
 import StrategySection from '@/components/sections/StrategySection';
 import JobCategoriesSection from '@/components/sections/JobCategoriesSection';
-import WhyUsSection from '@/components/sections/WhyUsSection';
+import VisionMissionSection from '@/components/sections/VisionMissionSection';
 import HowItWorksSection from '@/components/sections/HowItWorksSection';
-import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import BlogPreview from '@/components/sections/BlogPreview';
+import MeetTeamSection from '@/components/sections/MeetTeamSection';
+import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import CTASection from '@/components/sections/CTASection';
+import AboutCompanySection from '@/components/sections/AboutCompanySection';
+import { getActiveServices, getPublishedBlogs, getTeamMembers } from '@/lib/data';
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-async function getPageData() {
-  try {
-    const res = await fetch(`${BASE}/api/pages?slug=home`, { cache: 'no-store' });
-    const data = await res.json();
-    return data.page;
-  } catch {
-    return null;
-  }
-}
-
-async function getBlogs() {
-  try {
-    const res = await fetch(`${BASE}/api/blogs?limit=3`, { cache: 'no-store' });
-    const data = await res.json();
-    return data.blogs || [];
-  } catch {
-    return [];
-  }
-}
-
-function getSection(page, sectionId) {
-  return page?.sections?.find((s) => s.sectionId === sectionId && s.isVisible);
-}
+export const metadata = {
+  title: 'AdSky Solution - Premium IT Solutions & Strategic Hiring',
+  description: 'Elevate your business with premium IT development and an integrated hiring system. We build smart technology and connect you with top talent.',
+};
 
 export default async function HomePage() {
-  const [page, blogs] = await Promise.all([getPageData(), getBlogs()]);
+  // Fetch real data for sections
+  const [services, blogs, team] = await Promise.all([
+    getActiveServices(),
+    getPublishedBlogs(3),
+    getTeamMembers()
+  ]);
 
   return (
     <>
-      <HeroSection data={getSection(page, 'hero')} />
-      <ServicesSection data={getSection(page, 'services')} />
-      <StrategySection data={getSection(page, 'strategy')} />
-      <JobCategoriesSection />
-      <WhyUsSection data={getSection(page, 'whyus')} />
-      <HowItWorksSection data={getSection(page, 'howitworks')} />
-      <TestimonialsSection data={getSection(page, 'testimonials')} />
-      <BlogPreview blogs={blogs} />
-      <CTASection data={getSection(page, 'cta')} />
+      <Hero />
+
+      <div className="relative z-10 bg-black">
+        {/* <AboutCompanySection /> */}
+        <ServicesSection services={services} />
+        <StrategySection />
+        <JobCategoriesSection />
+
+        {/* Subtle separator */}
+        <div className="container-custom">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        </div>
+
+        <VisionMissionSection />
+        <HowItWorksSection />
+
+        <MeetTeamSection team={team} />
+        <BlogPreviewSection blogs={blogs} />
+
+        <CTASection />
+      </div>
     </>
   );
 }

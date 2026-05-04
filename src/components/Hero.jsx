@@ -1,10 +1,69 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight, FaRocket, FaBriefcase } from 'react-icons/fa';
 import { TypingText } from './ui/typing-text';
 import PremiumImage from './PremiumImage';
 
 export default function Hero() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setUser(data.user);
+      })
+      .catch(() => {});
+  }, []);
+
+  const dashboardHref = user?.role === 'admin' 
+    ? '/admin' 
+    : user?.role === 'employer' 
+      ? '/dashboard/employer' 
+      : '/dashboard/candidate';
+
+  // LOGGED IN VIEW
+  if (user) {
+    return (
+      <section className="relative min-h-screen overflow-hidden flex items-center bg-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)]" />
+        <div className="container-custom relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pt-32 lg:pt-0">
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/5 mb-8">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Welcome Back</span>
+              </div>
+              <div className="mb-8 animate-slide-up">
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                  Welcome back, <span className="gradient-text">{user.name}</span> 👋
+                </h2>
+                <p className="text-text-secondary text-xl font-medium">Ready to continue your journey with AdSky?</p>
+              </div>
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
+                <Link href={dashboardHref} className="btn-primary !rounded-2xl !px-8 !py-4 shadow-2xl shadow-primary/20 group">
+                  Go to Dashboard
+                  <FaRocket size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </Link>
+                <Link href="/careers" className="btn-secondary !rounded-2xl !px-8 !py-4 backdrop-blur-md group">
+                  Explore Careers
+                  <FaBriefcase size={14} className="group-hover:scale-110 transition-transform" />
+                </Link>
+              </div>
+            </div>
+            <div className="relative group hidden lg:block">
+              <PremiumImage src="/hero1.png" alt="Welcome Back" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // LOGGED OUT VIEW (As requested by user)
   return (
     <section className="relative min-h-screen overflow-hidden flex items-center" style={{ backgroundColor: '#000000' }}>
       {/* Dark overlay background */}
@@ -39,7 +98,7 @@ export default function Hero() {
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-              <Link href="/about" className="btn-primary !rounded-xl !px-7 !py-3.5">
+              <Link href="/auth/join" className="btn-primary !rounded-xl !px-7 !py-3.5">
                 Get Started
                 <FaArrowRight size={14} />
               </Link>

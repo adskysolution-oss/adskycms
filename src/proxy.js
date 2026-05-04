@@ -8,7 +8,7 @@ export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
   // Paths that require authentication
-  const protectedPaths = ['/admin', '/dashboard'];
+  const protectedPaths = ['/admin', '/dashboard', '/onboarding', '/pending-approval'];
   const isProtected = protectedPaths.some(path => pathname.startsWith(path));
 
   // Exclude auth pages from protection to avoid loops
@@ -18,8 +18,6 @@ export async function proxy(request) {
 
   if (isProtected) {
     if (!token) {
-      // For /admin routes, redirect to /admin/login specifically if needed, 
-      // otherwise to general /auth/login
       const loginUrl = pathname.startsWith('/admin') ? '/admin/login' : '/auth/login';
       return NextResponse.redirect(new URL(loginUrl, request.url));
     }
@@ -51,5 +49,10 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/dashboard/:path*'],
+  matcher: [
+    '/admin/:path*', 
+    '/dashboard/:path*', 
+    '/onboarding/:path*', 
+    '/pending-approval'
+  ],
 };
