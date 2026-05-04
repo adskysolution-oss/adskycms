@@ -13,7 +13,7 @@ export default function CTASection() {
         </h2>
         <p className="text-text-secondary text-lg max-w-xl mx-auto mb-10">Let us help you achieve your digital goals</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/contact" className="btn-primary text-base !py-4 !px-10">
+          <Link href="/auth/join" className="btn-primary text-base !py-4 !px-10">
             Partner With Us <FaArrowRight size={14} className="ml-2" />
           </Link>
           <Link href="/careers" className="btn-secondary text-base !py-4 !px-10">

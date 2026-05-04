@@ -11,6 +11,11 @@ const companySchema = new mongoose.Schema(
     industry: { type: String, default: '' },
     contactEmail: { type: String, default: '' },
     contactPhone: { type: String, default: '' },
+    status: { 
+      type: String, 
+      enum: ['pending', 'approved', 'rejected'], 
+      default: 'pending' 
+    },
   },
   { timestamps: true }
 );

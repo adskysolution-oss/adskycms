@@ -14,6 +14,16 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String, default: '' },
     skills: { type: [String], default: [] },
     resumeUrl: { type: String, default: '' },
+    experience: [{
+      title: String,
+      company: String,
+      duration: String
+    }],
+    education: [{
+      degree: String,
+      school: String,
+      year: String
+    }],
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

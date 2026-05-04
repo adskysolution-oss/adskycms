@@ -46,34 +46,34 @@ export default function LoginPage() {
       <div className="glow-dot bg-primary top-1/4 left-1/4 opacity-20" />
       <div className="glow-dot bg-secondary bottom-1/4 right-1/4 opacity-20" />
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="glass-card p-8 md:p-10 border border-white/10 shadow-2xl">
-          <div className="text-center mb-10">
-            <Link href="/" className="inline-flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg">AS</div>
-              <span className="text-xl font-bold text-text-primary">AdSky Solution</span>
+      <div className="w-full max-w-sm relative z-10">
+        <div className="glass-card p-6 md:p-8 border border-white/10 shadow-2xl">
+          <div className="text-center mb-8">
+            <Link href="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg text-sm">AS</div>
+              <span className="text-lg font-bold text-text-primary">AdSky Solution</span>
             </Link>
-            <h1 className="text-3xl font-bold text-text-primary mb-2">Welcome Back</h1>
-            <p className="text-text-secondary">Enter your credentials to access your account</p>
+            <h1 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">Welcome Back</h1>
+            <p className="text-text-secondary text-xs">Enter credentials to access account</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm flex items-center gap-3">
+            <div className="mb-4 p-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-[10px] font-bold flex items-center gap-2">
               <FaExclamationCircle className="flex-shrink-0" />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Email Address</label>
+              <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
               <div className="relative group">
-                <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" />
-                <input 
-                  type="email" 
+                <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors text-xs" />
+                <input
+                  type="email"
                   required
                   placeholder="name@company.com"
-                  className="w-full bg-dark border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-text-primary focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-dark border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary/50 transition-all"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
@@ -81,34 +81,34 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold text-text-muted uppercase tracking-wider">Password</label>
-                <Link href="#" className="text-xs text-primary-light hover:underline">Forgot password?</Link>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest ml-1">Password</label>
+                <Link href="#" className="text-[10px] text-primary-light hover:underline font-bold">Forgot?</Link>
               </div>
               <div className="relative group">
-                <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" />
-                <input 
-                  type="password" 
+                <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors text-xs" />
+                <input
+                  type="password"
                   required
                   placeholder="••••••••"
-                  className="w-full bg-dark border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-text-primary focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-dark border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary/50 transition-all"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
-              className="btn-primary w-full justify-center !py-4 text-lg shadow-xl shadow-primary/20"
+              className="btn-primary w-full justify-center !py-3 text-sm shadow-xl shadow-primary/20 mt-4"
             >
-              {loading ? <FaSpinner className="animate-spin" /> : <>Sign In <FaArrowRight size={14} className="ml-2" /></>}
+              {loading ? <FaSpinner className="animate-spin" /> : <>Sign In <FaArrowRight size={12} className="ml-2" /></>}
             </button>
           </form>
 
-          <div className="mt-10 text-center">
-            <p className="text-text-secondary text-sm">
+          <div className="mt-6 text-center">
+            <p className="text-text-secondary text-xs">
               Don&apos;t have an account? <Link href="/auth/register" className="text-primary-light font-bold hover:underline">Create one</Link>
             </p>
           </div>

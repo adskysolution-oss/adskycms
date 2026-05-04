@@ -8,7 +8,7 @@ const applicationSchema = new mongoose.Schema(
     coverLetter: { type: String, default: '' },
     status: { 
       type: String, 
-      enum: ['applied', 'shortlisted', 'rejected'], 
+      enum: ['applied', 'shortlisted', 'interviewing', 'rejected'], 
       default: 'applied' 
     },
     appliedAt: { type: Date, default: Date.now },

@@ -76,7 +76,14 @@ export default function AdminJobsPage() {
       // Auto-set company for employers
       if (!editing._id) {
         if (user?.role === 'employer') {
-          payload.company = user._id;
+          // Fetch company ID first
+          const companyRes = await fetch('/api/companies');
+          const companyData = await companyRes.json();
+          if (companyData.company) {
+            payload.company = companyData.company._id;
+          } else {
+            throw new Error('Company profile not found. Please complete onboarding.');
+          }
         } else if (!payload.company) {
           payload.company = '6633768c8c8c8c8c8c8c8c8c'; // AdSky ID
         }

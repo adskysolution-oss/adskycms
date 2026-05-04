@@ -285,8 +285,3 @@
     transform: translateY(0px);
   }
 }
-
-/* FLOAT ANIMATION */
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}

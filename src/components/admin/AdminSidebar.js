@@ -39,6 +39,7 @@ const menuGroups = [
     icon: FaUsers,
     items: [
       { href: '/admin/users', icon: FaUsers, label: 'Users' },
+      { href: '/admin/companies', icon: FaBuilding, label: 'Companies' },
       { href: '/admin/contacts', icon: FaEnvelope, label: 'Contacts' },
     ],
   },
