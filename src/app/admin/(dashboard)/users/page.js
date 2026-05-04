@@ -86,6 +86,7 @@ export default function AdminUsersPage() {
                 <option value="editor">Editor</option>
                 <option value="partner">Partner</option>
                 <option value="employer">Employer</option>
+                <option value="candidate">Candidate</option>
               </select>
             </div>
           </div>

@@ -1,30 +1,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram, FaDollarSign, FaUserFriends, FaArrowUp, FaEye } from 'react-icons/fa';
+import { FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram, FaDollarSign, FaUserFriends, FaArrowUp, FaEye, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 
 const statCards = [
   { key: 'services', icon: FaCog, label: 'Services', color: 'from-primary to-purple-500' },
   { key: 'blogs', icon: FaBlog, label: 'Blog Posts', color: 'from-secondary to-emerald-500' },
-  { key: 'projects', icon: FaProjectDiagram, label: 'Projects', color: 'from-accent to-orange-500' },
-  { key: 'team', icon: FaUserFriends, label: 'Team Members', color: 'from-pink-500 to-rose-500' },
+  { key: 'jobs', icon: FaBriefcase, label: 'Open Jobs', color: 'from-blue-500 to-indigo-500' },
+  { key: 'applications', icon: FaFileAlt, label: 'Applications', color: 'from-orange-500 to-amber-500' },
 ];
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({ services: 0, blogs: 0, projects: 0, team: 0 });
+  const [stats, setStats] = useState({ services: 0, blogs: 0, jobs: 0, applications: 0 });
 
   useEffect(() => {
     Promise.all([
       fetch('/api/services').then((r) => r.json()),
       fetch('/api/blogs?admin=true').then((r) => r.json()),
-      fetch('/api/projects').then((r) => r.json()),
-      fetch('/api/team').then((r) => r.json()),
-    ]).then(([s, b, p, t]) => {
+      fetch('/api/jobs').then((r) => r.json()),
+      fetch('/api/applications').then((r) => r.json()),
+    ]).then(([s, b, j, a]) => {
       setStats({
         services: s.services?.length || 0,
         blogs: b.pagination?.total || b.blogs?.length || 0,
-        projects: p.projects?.length || 0,
-        team: t.members?.length || 0,
+        jobs: j.jobs?.length || 0,
+        applications: a.applications?.length || 0,
       });
     }).catch(() => {});
   }, []);

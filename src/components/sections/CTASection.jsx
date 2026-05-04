@@ -12,9 +12,14 @@ export default function CTASection() {
           Ready to Transform Your Business?
         </h2>
         <p className="text-text-secondary text-lg max-w-xl mx-auto mb-10">Let us help you achieve your digital goals</p>
-        <Link href="/about" className="btn-primary text-base !py-4 !px-10">
-          Contact Us <FaArrowRight size={14} />
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href="/contact" className="btn-primary text-base !py-4 !px-10">
+            Partner With Us <FaArrowRight size={14} className="ml-2" />
+          </Link>
+          <Link href="/careers" className="btn-secondary text-base !py-4 !px-10">
+            Explore Careers
+          </Link>
+        </div>
       </div>
     </section>
   );

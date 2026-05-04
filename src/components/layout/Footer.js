@@ -6,10 +6,19 @@ import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaArrowUp } from 'react
 
 const footerLinks = [
   {
+    title: 'Services',
+    links: [
+      { label: 'Web Development', href: '/services' },
+      { label: 'App Development', href: '/services' },
+      { label: 'Recruitment & Hiring', href: '/services' },
+      { label: 'Business Consulting', href: '/services' },
+      { label: 'More Services...', href: '/services' },
+    ],
+  },
+  {
     title: 'Company',
     links: [
       { label: 'About Us', href: '/about' },
-      { label: 'Services', href: '/services' },
       { label: 'Projects', href: '/projects' },
       { label: 'Contact', href: '/contact' },
       { label: 'Careers', href: '/careers' },
@@ -19,8 +28,16 @@ const footerLinks = [
     title: 'Resources',
     links: [
       { label: 'Blog', href: '/blogs' },
-      { label: 'Gallery', href: '/gallery' },
+      // { label: 'Gallery', href: '/gallery' },
       { label: 'Pricing', href: '/pricing' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Refund Policy', href: '/refund-policy' },
+      { label: 'Terms & Conditions', href: '/terms-and-conditions' },
     ],
   },
 ];
@@ -38,20 +55,20 @@ export default function Footer() {
   return (
     <footer className="bg-dark-light border-t border-border">
       <div className="container-custom py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-12 gap-x-8">
           {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-4">
-              <Image 
-                src="/logo.png" 
-                alt="AdSky Solution Logo" 
-                width={150} 
-                height={50} 
+          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+            <Link href="/" className="inline-block mb-6">
+              <Image
+                src="/logo.png"
+                alt="AdSky Solution Logo"
+                width={150}
+                height={50}
                 className="h-10 w-auto object-contain"
               />
             </Link>
-            <p className="text-text-secondary text-sm leading-relaxed mb-6">
-              Transforming businesses through innovative digital solutions. We build, market, and scale.
+            <p className="text-text-secondary text-sm leading-relaxed mb-6 max-w-xs">
+              Transforming businesses through innovative digital solutions. We build, market, and scale global brands.
             </p>
             <div className="flex gap-3">
               {socialIcons.map(({ icon: Icon, href, label }) => (
@@ -59,9 +76,9 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-surface flex items-center justify-center text-text-secondary hover:text-primary-light hover:bg-primary/10 transition-all"
+                  className="w-10 h-10 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-text-secondary hover:text-primary-light hover:border-primary-light/30 transition-all hover:-translate-y-1"
                 >
-                  <Icon size={16} />
+                  <Icon size={18} />
                 </a>
               ))}
             </div>
@@ -69,17 +86,18 @@ export default function Footer() {
 
           {/* Links */}
           {footerLinks.map((group) => (
-            <div key={group.title}>
-              <h4 className="text-text-primary font-semibold mb-4 text-sm uppercase tracking-wider">
+            <div key={group.title} className="flex flex-col">
+              <h4 className="text-text-primary font-bold mb-6 text-sm uppercase tracking-widest">
                 {group.title}
               </h4>
-              <ul className="space-y-3">
-                {group.links.map((link) => (
-                  <li key={link.href}>
+              <ul className="space-y-4">
+                {group.links.map((link, index) => (
+                  <li key={`${group.title}-${index}`}>
                     <Link
                       href={link.href}
-                      className="text-text-secondary text-sm hover:text-primary-light transition-colors"
+                      className="text-text-secondary text-sm hover:text-primary-light transition-all flex items-center group"
                     >
+                      <span className="w-0 h-[1px] bg-primary-light mr-0 group-hover:w-3 group-hover:mr-2 transition-all duration-300"></span>
                       {link.label}
                     </Link>
                   </li>
@@ -89,14 +107,23 @@ export default function Footer() {
           ))}
 
           {/* Contact */}
-          <div>
-            <h4 className="text-text-primary font-semibold mb-4 text-sm uppercase tracking-wider">
+          <div className="col-span-2 md:col-span-1 flex flex-col">
+            <h4 className="text-text-primary font-bold mb-6 text-sm uppercase tracking-widest">
               Contact
             </h4>
-            <ul className="space-y-3 text-sm text-text-secondary">
-              <li>hello@adskysolution.com</li>
-              <li>+91 98765 43210</li>
-              <li>Mumbai, Maharashtra, India</li>
+            <ul className="space-y-4 text-sm text-text-secondary">
+              <li className="flex flex-col gap-1">
+                <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Email</span>
+                <a href="mailto:hello@adskysolution.com" className="hover:text-primary-light transition-colors">hello@adskysolution.com</a>
+              </li>
+              <li className="flex flex-col gap-1">
+                <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Phone</span>
+                <a href="tel:+919876543210" className="hover:text-primary-light transition-colors">+91 98765 43210</a>
+              </li>
+              <li className="flex flex-col gap-1">
+                <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Office</span>
+                <span>Mumbai, Maharashtra, India</span>
+              </li>
             </ul>
           </div>
         </div>

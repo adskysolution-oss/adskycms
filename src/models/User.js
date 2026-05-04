@@ -8,10 +8,12 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6 },
     role: {
       type: String,
-      enum: ['admin', 'editor', 'partner', 'employer'],
+      enum: ['admin', 'editor', 'partner', 'employer', 'candidate'],
       default: 'admin',
     },
     avatar: { type: String, default: '' },
+    skills: { type: [String], default: [] },
+    resumeUrl: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

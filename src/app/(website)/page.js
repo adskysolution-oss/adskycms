@@ -1,7 +1,7 @@
 import HeroSection from '@/components/sections/HeroSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import StrategySection from '@/components/sections/StrategySection';
-import CategoriesSection from '@/components/sections/CategoriesSection';
+import JobCategoriesSection from '@/components/sections/JobCategoriesSection';
 import WhyUsSection from '@/components/sections/WhyUsSection';
 import HowItWorksSection from '@/components/sections/HowItWorksSection';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
@@ -42,7 +42,7 @@ export default async function HomePage() {
       <HeroSection data={getSection(page, 'hero')} />
       <ServicesSection data={getSection(page, 'services')} />
       <StrategySection data={getSection(page, 'strategy')} />
-      <CategoriesSection data={getSection(page, 'categories')} />
+      <JobCategoriesSection />
       <WhyUsSection data={getSection(page, 'whyus')} />
       <HowItWorksSection data={getSection(page, 'howitworks')} />
       <TestimonialsSection data={getSection(page, 'testimonials')} />
