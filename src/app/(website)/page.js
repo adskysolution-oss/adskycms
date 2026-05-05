@@ -9,6 +9,7 @@ import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import CTASection from '@/components/sections/CTASection';
 import AboutCompanySection from '@/components/sections/AboutCompanySection';
 import { getActiveServices, getPublishedBlogs, getTeamMembers } from '@/lib/data';
+import ContactSection from '@/components/sections/ContactSection';
 
 export const metadata = {
   title: 'AdSky Solution - Premium IT Solutions & Strategic Hiring',
@@ -41,10 +42,10 @@ export default async function HomePage() {
         <VisionMissionSection />
         <HowItWorksSection />
 
-        <MeetTeamSection team={team} />
         <BlogPreviewSection blogs={blogs} />
-
+        <MeetTeamSection team={team} />
         <CTASection />
+        <ContactSection />
       </div>
     </>
   );

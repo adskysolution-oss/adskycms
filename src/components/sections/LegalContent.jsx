@@ -57,9 +57,10 @@ const LegalContent = ({ title, lastUpdated, sections }) => {
             <div className="mt-16 pt-12 border-t border-border/40">
               <p className="text-text-secondary">
                 If you have any questions about this {title}, please contact us at{' '}
-                <a href="mailto:hello@adskysolution.com" className="text-primary-light hover:underline font-medium">
-                  hello@adskysolution.com
+                <a href="mailto:info@adskysolution.com" className="text-primary-light hover:underline font-medium">
+                  info@adskysolution.com
                 </a>
+
               </p>
             </div>
           </div>

@@ -6,9 +6,10 @@ import { FaSave, FaSpinner, FaGlobe, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaL
 export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
     siteName: 'AdSky Solution',
-    siteEmail: 'contact@adskysolution.com',
-    sitePhone: '+91 12345 67890',
-    address: 'Mumbai, India',
+    siteEmail: 'info@adskysolution.com',
+    sitePhone: '8076611842',
+    address: 'AD Sky Solution, 126 Satyam Enclave Sahibabad, Ghaziabad UTTAR PRADESH 201003',
+
     facebook: '',
     instagram: '',
     linkedin: '',

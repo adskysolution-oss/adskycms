@@ -122,17 +122,18 @@ export default function Footer() {
             <ul className="space-y-4 text-sm text-text-secondary">
               <li className="flex flex-col gap-1">
                 <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Email</span>
-                <a href="mailto:hello@adskysolution.com" className="hover:text-primary-light transition-colors">hello@adskysolution.com</a>
+                <a href="mailto:info@adskysolution.com" className="hover:text-primary-light transition-colors">info@adskysolution.com</a>
               </li>
               <li className="flex flex-col gap-1">
                 <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Phone</span>
-                <a href="tel:+919876543210" className="hover:text-primary-light transition-colors">+91 98765 43210</a>
+                <a href="tel:8076611842" className="hover:text-primary-light transition-colors">8076611842</a>
               </li>
               <li className="flex flex-col gap-1">
                 <span className="text-text-muted text-[10px] uppercase font-bold tracking-tighter">Office</span>
-                <span>Mumbai, Maharashtra, India</span>
+                <span>AD Sky Solution, 126 Satyam Enclave Sahibabad, Ghaziabad UTTAR PRADESH 201003</span>
               </li>
             </ul>
+
           </div>
         </div>
       </div>

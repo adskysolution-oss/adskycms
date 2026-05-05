@@ -12,8 +12,9 @@ export default function MeetTeamSection({ team = [] }) {
               Meet Our <span className="gradient-text">Team</span>
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              A project refers to a sequence of tasks that are carefully planned and executed to achieve a specific objective. Projects are essential in various fields, such as business, engineering, and education, and often require collaboration and resources. Each project has a start and an end, along with defined goals and deliverables. The success of a project is usually determined by how effectively the team meets the objectives within the allocated time and resources.
+              At AdSky Solution, our team is our greatest asset. We are a diverse group of designers, developers, and strategists committed to delivering excellence. Each member brings unique expertise and passion to every project, ensuring that we don't just meet expectations—we exceed them.
             </p>
+
           </div>
 
           {/* RIGHT — 2×2 Photo Grid */}

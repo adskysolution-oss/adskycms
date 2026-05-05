@@ -32,16 +32,17 @@ export default function ContactPage() {
             <div className="p-6">
               <div className='p-2'>
                 <h3 className="text-lg font-semibold text-text-primary mb-4">Email & Phone</h3>
-                <p className="text-text-secondary text-sm mb-2">hr@bridgefix.co</p>
-                <p className="text-text-secondary text-sm">+91 9425960946</p>
+                <p className="text-text-secondary text-sm mb-2">info@adskysolution.com</p>
+                <p className="text-text-secondary text-sm">8076611842</p>
               </div>
 
               <hr className="my-6 border-border" />
 
               <div className='p-2'>
                 <h3 className="text-lg font-semibold text-text-primary mb-4">Our Location</h3>
-                <p className="text-text-secondary text-sm">388, 1st Floor, Pu4, Scheme Number 54, Vijay Nagar, Indore, Madhya Pradesh, 452010</p>
+                <p className="text-text-secondary text-sm">AD Sky Solution, 126 Satyam Enclave Sahibabad, Ghaziabad UTTAR PRADESH 201003</p>
               </div>
+
 
               <hr className="my-6 border-border" />
 

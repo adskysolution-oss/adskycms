@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 export const TypingText = ({ 
   text, 
@@ -11,7 +12,21 @@ export const TypingText = ({
   stagger = 0.05,
   as: Component = "span" 
 }) => {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const words = text.split(" ");
+  
+  if (!mounted) {
+    return (
+      <Component className={cn("inline", className)}>
+        {text}
+      </Component>
+    );
+  }
   
   return (
     <Component className={cn("inline", className)}>
@@ -42,3 +57,4 @@ export const TypingText = ({
     </Component>
   );
 };
+

@@ -80,10 +80,15 @@ export default function Hero() {
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
+
               Premium Digital Support
             </p>
 
-            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl mb-6">
+            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl mb-6 whitespace-normal break-words">
+              {(() => {
+                console.log("Hero Heading Init: Build Scalable Digital Solutions With Smart Technology & Talent");
+                return null;
+              })()}
               <span className="bg-gradient-to-r from-gray-100 via-white to-gray-300 bg-clip-text text-transparent">
                 <TypingText text="Build Scalable Digital Solutions" />
               </span>
@@ -92,6 +97,7 @@ export default function Hero() {
               <TypingText text="Technology" className="text-blue-500" delay={2.1} />
               <TypingText text=" & Talent" delay={2.6} />
             </h1>
+
 
             <p className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg leading-8 text-text-secondary">
               We help businesses grow faster with IT development, web solutions, and recruitment services across India.

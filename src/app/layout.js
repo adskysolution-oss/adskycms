@@ -9,7 +9,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata = {
   title: 'AdSky Solution - Premium IT Company',
   description: 'Premium IT support, scalable digital systems, and modern software solutions for growing businesses.',
+  icons: {
+    icon: '/logo.png',
+  },
 };
+
+
 
 export default function RootLayout({ children }) {
   return (
@@ -29,4 +34,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-

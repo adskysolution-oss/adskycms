@@ -13,7 +13,7 @@ export default function ContactSection() {
 
           {/* Left Side: Image (background removed) */}
           <div className="relative group order-2 lg:order-1">
-            <PremiumImage src="/contact.png" alt="Vision and Mission illustration" />
+            <PremiumImage src="/contact.png" alt="contact section image" />
 
           </div>
 

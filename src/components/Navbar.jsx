@@ -125,20 +125,24 @@ export default function Navbar() {
           </Link>
 
           {/* Main Nav Links */}
-          <nav className="hidden xl:flex items-center gap-1 rounded-full border border-white/5 bg-white/5 px-2 py-2">
+          <nav className="hidden lg:flex items-center gap-1 rounded-full border border-white/5 bg-white/5 px-2 py-2">
             {navLinks.map((link) => {
               const active = isActive(link.href);
+              const isBlog = link.label === 'Blog';
+              
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ${active ? 'text-white' : 'text-text-secondary hover:text-white'
-                    }`}
+                  className={`relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ${
+                    active ? 'text-white' : 'text-text-secondary hover:text-white'
+                  } ${isBlog ? 'hidden xl:block' : ''}`}
                 >
                   {link.label}
                   <span
-                    className={`absolute left-4 right-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-all duration-300 ${active ? 'opacity-100' : 'opacity-0'
-                      }`}
+                    className={`absolute left-4 right-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-all duration-300 ${
+                      active ? 'opacity-100' : 'opacity-0'
+                    }`}
                   />
                 </Link>
               );
@@ -214,7 +218,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsOpen((value) => !value)}
-              className="xl:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white"
+              className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white"
               aria-label="Toggle navigation"
             >
               {isOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
@@ -224,9 +228,10 @@ export default function Navbar() {
 
         {/* Mobile Nav */}
         {isOpen && (
-          <div className="xl:hidden pb-5">
+          <div className="lg:hidden pb-5">
             <div className="rounded-2xl border border-white/10 bg-[#0b1220]/95 p-3 shadow-lg shadow-black/20">
               <nav className="grid gap-1">
+
                 {navLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
