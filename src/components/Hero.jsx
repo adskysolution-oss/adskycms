@@ -71,16 +71,15 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_30%)]" />
 
       <div className="container-custom relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-24 sm:pt-28 lg:pt-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-32 sm:pt-40 lg:pt-0">
 
           {/* LEFT — Text content */}
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <span className="h-px w-40 bg-white/30" />
+              <div className="h-[2px] w-40 bg-white/40 rounded-full" />
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
-
               Premium Digital Support
             </p>
 
