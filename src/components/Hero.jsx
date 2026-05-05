@@ -28,13 +28,13 @@ export default function Hero() {
   // LOGGED IN VIEW
   if (user) {
     return (
-      <section className="relative pt-24 sm:pt-28 md:pt-32 bg-black">
+      <section className="relative pt-20 bg-black">
         {/* Background Effects Wrapper */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)]" />
         </div>
 
-        <div className="container-custom relative z-10 w-full min-h-[calc(100vh-120px)] flex items-center py-12 lg:py-0">
+        <div className="container-custom relative z-10 w-full min-h-[calc(100vh-80px)] flex items-center py-10 lg:py-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/5 mb-8">
@@ -69,14 +69,14 @@ export default function Hero() {
 
   // LOGGED OUT VIEW (As requested by user)
   return (
-    <section className="relative pt-24 sm:pt-28 md:pt-32" style={{ backgroundColor: '#000000' }}>
+    <section className="relative pt-20" style={{ backgroundColor: '#000000' }}>
       {/* Background Effects Wrapper — Handles overflow without clipping content */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }} />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_30%)]" />
       </div>
 
-      <div className="container-custom relative z-10 w-full min-h-[calc(100vh-120px)] flex items-center py-16 lg:py-20">
+      <div className="container-custom relative z-10 w-full min-h-[calc(100vh-80px)] flex items-center py-12 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
 
           {/* LEFT — Text content */}
