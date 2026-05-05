@@ -84,10 +84,11 @@ export default function Navbar() {
 
   const getCandidateLinks = () => [
     { label: 'Dashboard', href: '/dashboard/candidate', icon: FaBriefcase },
-    { label: 'Applied Jobs', href: '/dashboard/candidate/applications', icon: FaHistory },
-    { label: 'Saved Jobs', href: '/dashboard/candidate/saved', icon: FaBookmark },
-    { label: 'Profile', href: '/dashboard/candidate/profile', icon: FaUserCircle },
+    { label: 'Applied Jobs', href: '/dashboard/candidate?tab=applications', icon: FaHistory },
+    { label: 'Saved Jobs', href: '/dashboard/candidate?tab=saved', icon: FaBookmark },
+    { label: 'Profile', href: '/dashboard/candidate?tab=profile', icon: FaUserCircle },
   ];
+
 
   const getAdminLinks = () => [
     { label: 'Admin Panel', href: '/admin', icon: FaCog },

@@ -7,15 +7,23 @@ import {
   FaSearch, FaBookmark, FaComments, FaGraduationCap, FaBuilding 
 } from 'react-icons/fa';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function CandidateDashboard() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [resumeFile, setResumeFile] = useState(null);
   const [skills, setSkills] = useState('');
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) setActiveTab(tab);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +32,7 @@ export default function CandidateDashboard() {
         const userData = await userRes.json();
         setUser(userData.user);
 
-        const appRes = await fetch(`/api/applications?candidateId=${userData.user._id}`);
+        const appRes = await fetch('/api/applications/me');
         const appData = await appRes.json();
         setApplications(appData.applications || []);
         
@@ -37,6 +45,11 @@ export default function CandidateDashboard() {
     };
     fetchData();
   }, []);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    router.push(`/dashboard/candidate?tab=${tabId}`, { scroll: false });
+  };
 
   const calculateProgress = () => {
     if (!user) return 0;
@@ -126,11 +139,12 @@ export default function CandidateDashboard() {
               </div>
               <ul className="space-y-3">
                 {[
-                  { label: 'Upload Resume', done: !!user.resumeUrl },
-                  { label: 'Add Skills', done: user.skills?.length > 0 },
-                  { label: 'Experience History', done: user.experience?.length > 0 },
+                  { label: 'Upload Resume', done: !!user?.resumeUrl },
+                  { label: 'Add Skills', done: user?.skills?.length > 0 },
+                  { label: 'Experience History', done: user?.experience?.length > 0 },
+                  { label: 'Education Details', done: user?.education?.length > 0 },
                 ].map((step, idx) => (
-                  <li key={idx} className={`text-[10px] flex items-center gap-2 font-bold uppercase tracking-wider ${step.done ? 'text-success' : 'text-text-muted'}`}>
+                  <li key={idx} className={`text-[10px] flex items-center gap-2 font-bold uppercase tracking-wider ${step.done ? 'text-green-400' : 'text-text-muted'}`}>
                     {step.done ? <FaCheckCircle size={10} /> : <div className="w-2.5 h-2.5 rounded-full border border-white/20" />}
                     {step.label}
                   </li>
@@ -170,7 +184,7 @@ export default function CandidateDashboard() {
               ].map(tab => (
                 <button 
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={`pb-4 text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === tab.id ? 'text-primary-light border-b-2 border-primary' : 'text-text-muted hover:text-text-primary'}`}
                 >
                   <tab.icon size={12} /> {tab.label}
@@ -210,8 +224,12 @@ export default function CandidateDashboard() {
                     {applications.slice(0, 3).map(app => (
                       <div key={app._id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-dark flex items-center justify-center text-text-muted">
-                            <FaBuilding size={16} />
+                          <div className="w-10 h-10 rounded-xl bg-dark flex items-center justify-center text-text-muted overflow-hidden">
+                            {app.job?.company?.logo ? (
+                              <img src={app.job.company.logo} alt="" className="w-full h-full object-contain p-1" />
+                            ) : (
+                              <FaBuilding size={16} />
+                            )}
                           </div>
                           <div>
                             <p className="text-sm font-bold text-text-primary">{app.job?.title}</p>
@@ -230,20 +248,29 @@ export default function CandidateDashboard() {
             {activeTab === 'applications' && (
               <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
                 {applications.length === 0 ? (
-                  <div className="glass-card p-20 text-center text-text-muted border border-white/5 uppercase tracking-widest italic font-bold">
-                    Mission log is empty. Start applying.
+                  <div className="glass-card p-20 text-center border border-white/5">
+                    <FaBriefcase className="mx-auto text-text-muted mb-6 opacity-20" size={64} />
+                    <h3 className="text-xl font-bold text-text-primary mb-2 uppercase italic tracking-widest">No Applications Yet</h3>
+                    <p className="text-text-muted text-sm max-w-md mx-auto mb-8">You haven't applied to any roles yet. Start your journey by exploring open positions.</p>
+                    <Link href="/careers" className="btn-primary !px-10 !py-3 text-xs uppercase font-black tracking-widest inline-block">
+                      Explore Careers
+                    </Link>
                   </div>
                 ) : (
                   applications.map((app) => (
                     <div key={app._id} className="glass-card p-6 border border-white/5 flex flex-col md:flex-row items-center justify-between hover:border-primary/20 transition-all group">
                       <div className="flex items-center gap-6 w-full">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center text-text-muted group-hover:text-primary-light transition-all border border-white/5">
-                          <FaBriefcase size={24} />
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center text-text-muted group-hover:text-primary-light transition-all border border-white/5 overflow-hidden">
+                          {app.job?.company?.logo ? (
+                            <img src={app.job.company.logo} alt={app.job.company.companyName} className="w-full h-full object-contain p-2" />
+                          ) : (
+                            <FaBriefcase size={24} />
+                          )}
                         </div>
                         <div>
                           <h3 className="font-bold text-text-primary text-xl mb-1">{app.job?.title}</h3>
                           <div className="flex items-center gap-4 text-xs text-text-muted font-bold tracking-tight uppercase">
-                            <span className="flex items-center gap-1.5"><FaBuilding size={12} /> TechFlow Corp</span>
+                            <span className="flex items-center gap-1.5"><FaBuilding size={12} /> {app.job?.company?.companyName || 'AdSky Partner'}</span>
                             <span className="flex items-center gap-1.5"><FaClock size={12} /> {new Date(app.createdAt).toLocaleDateString()}</span>
                           </div>
                         </div>

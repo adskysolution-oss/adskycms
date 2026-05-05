@@ -7,27 +7,42 @@ import { FaFileUpload, FaCheckCircle, FaSpinner, FaArrowLeft, FaPaperPlane } fro
 export default function JobApplyPage() {
   const { id } = useParams();
   const router = useRouter();
+  const [user, setUser] = useState(null);
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
+  const [useExistingResume, setUseExistingResume] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
   const [status, setStatus] = useState({ type: '', msg: '' });
 
   useEffect(() => {
-    const fetchJob = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`/api/jobs/${id}`);
-        const data = await res.json();
-        setJob(data.job);
-      } catch {} finally { setLoading(false); }
+        const jobRes = await fetch(`/api/jobs/${id}`);
+        const jobData = await jobRes.json();
+        setJob(jobData.job);
+
+        const userRes = await fetch('/api/user/me');
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUser(userData.user);
+          if (userData.user.resumeUrl) {
+            setUseExistingResume(true);
+          }
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchJob();
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!resumeFile) {
+    if (!useExistingResume && !resumeFile) {
       setStatus({ type: 'error', msg: 'Please upload your resume.' });
       return;
     }
@@ -36,16 +51,19 @@ export default function JobApplyPage() {
     setStatus({ type: '', msg: '' });
 
     try {
-      // 1. Upload Resume to Cloudinary
-      const formData = new FormData();
-      formData.append('file', resumeFile);
-      formData.append('folder', 'resumes');
+      let resumeUrl = user?.resumeUrl;
 
-      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
-      const uploadData = await uploadRes.json();
-      if (!uploadRes.ok) throw new Error(uploadData.error || 'Resume upload failed');
+        // 1. Upload Resume only if not using existing one
+        if(!useExistingResume && resumeFile) {
+        const formData = new FormData();
+        formData.append('file', resumeFile);
+        formData.append('folder', 'resumes');
 
-      const resumeUrl = uploadData.media.url;
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Resume upload failed');
+        resumeUrl = uploadData.media.url;
+      }
 
       // 2. Submit Application
       const appRes = await fetch('/api/applications', {
@@ -55,20 +73,21 @@ export default function JobApplyPage() {
           job: id,
           resumeUrl,
           coverLetter,
-          candidate: '6633768c8c8c8c8c8c8c8c8c', // Dummy User ID - in real app, get from auth session
         }),
       });
 
-      if (!appRes.ok) throw new Error('Application submission failed');
+      const appData = await appRes.json();
+      if (!appRes.ok) throw new Error(appData.error || 'Application submission failed');
 
       setStatus({ type: 'success', msg: 'Your application has been submitted successfully!' });
-      setTimeout(() => router.push('/careers'), 3000);
+      setTimeout(() => router.push('/dashboard/candidate'), 2000);
     } catch (err) {
       setStatus({ type: 'error', msg: err.message });
     } finally {
       setSubmitting(false);
     }
   };
+
 
   if (loading) return <div className="pt-32 text-center text-text-muted">Loading job details...</div>;
 
@@ -94,41 +113,66 @@ export default function JobApplyPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div>
             <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-3">Resume / CV (PDF) *</label>
-            <div className="relative group">
-              <input 
-                type="file" 
-                accept=".pdf,.doc,.docx"
-                required
-                className="hidden" 
-                id="resume-upload"
-                onChange={(e) => setResumeFile(e.target.files[0])}
-              />
-              <label 
-                htmlFor="resume-upload" 
-                className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 hover:border-primary/50 transition-all cursor-pointer"
-              >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary-light mb-4 group-hover:scale-110 transition-transform">
-                  <FaFileUpload size={24} />
+
+            {user?.resumeUrl && (
+              <div className="mb-6 p-6 rounded-2xl bg-primary/5 border border-primary/20 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary-light">
+                    <FaFileUpload size={20} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-text-primary">Using saved resume</p>
+                    <a href={user.resumeUrl} target="_blank" className="text-[10px] text-primary-light hover:underline font-bold uppercase">View Current Resume</a>
+                  </div>
                 </div>
-                {resumeFile ? (
-                  <div className="text-center">
-                    <p className="text-text-primary font-bold">{resumeFile.name}</p>
-                    <p className="text-text-muted text-xs mt-1">{(resumeFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                <button
+                  type="button"
+                  onClick={() => setUseExistingResume(!useExistingResume)}
+                  className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${useExistingResume ? 'bg-white/5 text-text-muted border border-white/10 hover:bg-white/10' : 'bg-primary text-white shadow-lg shadow-primary/20'}`}
+                >
+                  {useExistingResume ? 'Change Resume' : 'Use Saved'}
+                </button>
+              </div>
+            )}
+
+            {!useExistingResume && (
+              <div className="relative group animate-in fade-in slide-in-from-top-4 duration-300">
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  required={!useExistingResume}
+                  className="hidden"
+                  id="resume-upload"
+                  onChange={(e) => setResumeFile(e.target.files[0])}
+                />
+                <label
+                  htmlFor="resume-upload"
+                  className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 hover:border-primary/50 transition-all cursor-pointer"
+                >
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary-light mb-4 group-hover:scale-110 transition-transform">
+                    <FaFileUpload size={24} />
                   </div>
-                ) : (
-                  <div className="text-center">
-                    <p className="text-text-primary font-bold">Click to upload resume</p>
-                    <p className="text-text-muted text-xs mt-1">PDF, DOC, DOCX up to 5MB</p>
-                  </div>
-                )}
-              </label>
-            </div>
-            <p className="text-[10px] text-text-muted mt-3 italic">Resume will be uploaded only when you click "Submit Application".</p>
+                  {resumeFile ? (
+                    <div className="text-center">
+                      <p className="text-text-primary font-bold">{resumeFile.name}</p>
+                      <p className="text-text-muted text-xs mt-1">{(resumeFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <p className="text-text-primary font-bold">Click to upload new resume</p>
+                      <p className="text-text-muted text-xs mt-1">PDF, DOC, DOCX up to 5MB</p>
+                    </div>
+                  )}
+                </label>
+                <p className="text-[10px] text-text-muted mt-3 italic">Resume will be uploaded only when you click "Submit Application".</p>
+              </div>
+            )}
           </div>
+
 
           <div>
             <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-3">Cover Letter (Optional)</label>
-            <textarea 
+            <textarea
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell us why you are a good fit for this role..."
@@ -136,8 +180,8 @@ export default function JobApplyPage() {
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={submitting}
             className="btn-primary w-full justify-center !py-5 text-lg font-bold shadow-2xl shadow-primary/20"
           >

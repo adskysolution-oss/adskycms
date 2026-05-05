@@ -10,6 +10,7 @@ import Link from 'next/link';
 export default function CareersPage() {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [appliedJobIds, setAppliedJobIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     search: '',
@@ -21,7 +22,18 @@ export default function CareersPage() {
   useEffect(() => {
     fetchCategories();
     fetchJobs();
+    fetchAppliedJobs();
   }, []);
+
+  const fetchAppliedJobs = async () => {
+    try {
+      const res = await fetch('/api/applications/me');
+      if (res.ok) {
+        const data = await res.json();
+        setAppliedJobIds(data.applications?.map(app => app.job?._id || app.job) || []);
+      }
+    } catch {}
+  };
 
   const fetchCategories = async () => {
     try {
@@ -201,11 +213,16 @@ export default function CareersPage() {
                     </div>
                     <div className="flex items-center gap-4 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
                       <div className="hidden md:flex flex-wrap gap-2 mr-4 max-w-xs justify-end">
+                        {appliedJobIds.includes(job._id) && (
+                          <span className="px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-[10px] font-black uppercase tracking-widest border border-green-400/20">
+                            Applied
+                          </span>
+                        )}
                         {job.skills?.slice(0, 2).map((skill, i) => (
                           <span key={i} className="px-2 py-1 rounded-lg bg-white/5 text-[9px] font-bold text-text-muted uppercase tracking-tighter">#{skill}</span>
                         ))}
                       </div>
-                      <div className="p-4 rounded-xl bg-primary/10 text-primary-light group-hover:bg-primary group-hover:text-white transition-all shadow-xl shadow-primary/5">
+                      <div className={`p-4 rounded-xl transition-all shadow-xl ${appliedJobIds.includes(job._id) ? 'bg-green-400/10 text-green-400' : 'bg-primary/10 text-primary-light group-hover:bg-primary group-hover:text-white shadow-primary/5'}`}>
                         <FaChevronRight size={14} />
                       </div>
                     </div>

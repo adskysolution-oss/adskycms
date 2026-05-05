@@ -5,7 +5,7 @@ import Application from '@/models/Application';
 export async function PUT(req, { params }) {
   await dbConnect();
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const application = await Application.findByIdAndUpdate(id, body, { new: true });
     return NextResponse.json({ application }, { status: 200 });
@@ -17,7 +17,7 @@ export async function PUT(req, { params }) {
 export async function PATCH(req, { params }) {
   await dbConnect();
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     // Validate status if provided
     if (body.status && !['applied', 'shortlisted', 'rejected'].includes(body.status)) {
@@ -33,7 +33,7 @@ export async function PATCH(req, { params }) {
 export async function DELETE(req, { params }) {
   await dbConnect();
   try {
-    const { id } = params;
+    const { id } = await params;
     await Application.findByIdAndDelete(id);
     return NextResponse.json({ message: 'Application deleted' }, { status: 200 });
   } catch (error) {

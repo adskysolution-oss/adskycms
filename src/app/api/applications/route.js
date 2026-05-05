@@ -39,10 +39,52 @@ export async function GET(req) {
 export async function POST(req) {
   await dbConnect();
   try {
+    const decoded = authenticateRequest(req);
+    if (!decoded) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
-    const application = await Application.create(body);
-    return NextResponse.json({ application }, { status: 201 });
+    const { job, coverLetter } = body;
+    let { resumeUrl } = body;
+
+    if (!job) {
+      return NextResponse.json({ error: 'Job ID is required' }, { status: 400 });
+    }
+
+    // Check for duplicate application
+    const existingApplication = await Application.findOne({
+      job,
+      candidate: decoded.id
+    });
+
+    if (existingApplication) {
+      return NextResponse.json({ error: 'You have already applied for this job' }, { status: 400 });
+    }
+
+    // Resume logic: if not provided, try to get from user profile
+    if (!resumeUrl) {
+      const user = await User.findById(decoded.id);
+      if (user && user.resumeUrl) {
+        resumeUrl = user.resumeUrl;
+      }
+    }
+
+    if (!resumeUrl) {
+      return NextResponse.json({ error: 'Resume is required to apply' }, { status: 400 });
+    }
+
+    const application = await Application.create({
+      job,
+      candidate: decoded.id,
+      resumeUrl,
+      coverLetter,
+      status: 'applied'
+    });
+
+    return NextResponse.json({ application, success: true }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+

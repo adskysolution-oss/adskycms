@@ -1,29 +1,58 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaMapMarkerAlt, FaBriefcase, FaMoneyBillWave, FaClock, FaCheckCircle, FaBuilding, FaArrowLeft, FaShareAlt } from 'react-icons/fa';
 
 export default function JobDetailsPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isApplied, setIsApplied] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
 
   useEffect(() => {
-    const fetchJob = async () => {
+    const fetchJobData = async () => {
       try {
         const res = await fetch(`/api/jobs/${id}`);
         const data = await res.json();
         setJob(data.job);
+        
+        // Check if user is applied
+        const appRes = await fetch('/api/applications/me');
+        if (appRes.ok) {
+          const appData = await appRes.json();
+          const alreadyApplied = appData.applications?.some(app => app.job?._id === id || app.job === id);
+          setIsApplied(alreadyApplied);
+        }
       } catch (error) {
-        console.error('Failed to fetch job:', error);
+        console.error('Failed to fetch data:', error);
       } finally {
         setLoading(false);
+        setCheckingStatus(false);
       }
     };
-    fetchJob();
+    fetchJobData();
   }, [id]);
+
+  const handleApplyClick = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      if (!res.ok) {
+        // User not logged in, redirect to login
+        router.push('/auth/login');
+        return;
+      }
+      // User is logged in, redirect to apply page
+      router.push(`/jobs/${id}/apply`);
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      router.push('/auth/login');
+    }
+  };
 
   if (loading) return (
     <div className="pt-32 pb-24 container-custom">
@@ -78,9 +107,13 @@ export default function JobDetailsPage() {
                   <button className="flex-1 md:flex-none btn-secondary !py-3">
                     <FaShareAlt className="mr-2" /> Share
                   </button>
-                  <Link href={`/jobs/${job._id}/apply`} className="flex-1 md:flex-none btn-primary !py-3">
-                    Apply Now
-                  </Link>
+                  <button 
+                    onClick={handleApplyClick} 
+                    disabled={isApplied}
+                    className={`flex-1 md:flex-none btn-primary !py-3 ${isApplied ? '!bg-gray-600 !cursor-not-allowed opacity-70' : ''}`}
+                  >
+                    {isApplied ? 'Applied' : 'Apply Now'}
+                  </button>
                 </div>
               </div>
 
@@ -141,9 +174,13 @@ export default function JobDetailsPage() {
             <div className="glass-card p-10 bg-gradient-to-br from-primary/10 to-secondary/10 border-none text-center">
               <h3 className="text-2xl font-bold text-text-primary mb-4">Interested in this position?</h3>
               <p className="text-text-secondary mb-8">Click the button below to start your application process.</p>
-              <Link href={`/jobs/${job._id}/apply`} className="btn-primary !px-12 !py-4 text-lg">
-                Apply for this Job
-              </Link>
+              <button 
+                onClick={handleApplyClick} 
+                disabled={isApplied}
+                className={`btn-primary !px-12 !py-4 text-lg ${isApplied ? '!bg-gray-600 !cursor-not-allowed opacity-70' : ''}`}
+              >
+                {isApplied ? 'Application Submitted' : 'Apply for this Job'}
+              </button>
             </div>
           </div>
 
