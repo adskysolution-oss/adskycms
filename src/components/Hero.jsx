@@ -28,10 +28,14 @@ export default function Hero() {
   // LOGGED IN VIEW
   if (user) {
     return (
-      <section className="relative min-h-screen overflow-hidden flex items-center bg-black">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)]" />
-        <div className="container-custom relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pt-32 lg:pt-0">
+      <section className="relative pt-24 sm:pt-28 md:pt-32 bg-black">
+        {/* Background Effects Wrapper */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)]" />
+        </div>
+
+        <div className="container-custom relative z-10 w-full min-h-[calc(100vh-120px)] flex items-center py-12 lg:py-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/5 mb-8">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -65,18 +69,20 @@ export default function Hero() {
 
   // LOGGED OUT VIEW (As requested by user)
   return (
-    <section className="relative min-h-screen overflow-hidden flex items-center" style={{ backgroundColor: '#000000' }}>
-      {/* Dark overlay background */}
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_30%)]" />
+    <section className="relative pt-24 sm:pt-28 md:pt-32" style={{ backgroundColor: '#000000' }}>
+      {/* Background Effects Wrapper — Handles overflow without clipping content */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_30%)]" />
+      </div>
 
-      <div className="container-custom relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-32 sm:pt-40 lg:pt-0">
+      <div className="container-custom relative z-10 w-full min-h-[calc(100vh-120px)] flex items-center py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
 
           {/* LEFT — Text content */}
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <div className="h-[2px] w-40 bg-white/40 rounded-full" />
+              <div className="h-[2px] w-24 bg-white/40 rounded-full" />
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
