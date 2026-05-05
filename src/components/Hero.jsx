@@ -16,13 +16,13 @@ export default function Hero() {
       .then(data => {
         if (data.success) setUser(data.user);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
-  const dashboardHref = user?.role === 'admin' 
-    ? '/admin' 
-    : user?.role === 'employer' 
-      ? '/dashboard/employer' 
+  const dashboardHref = user?.role === 'admin'
+    ? '/admin/dashboard'
+    : user?.role === 'employer'
+      ? '/dashboard/employer'
       : '/dashboard/candidate';
 
   // LOGGED IN VIEW

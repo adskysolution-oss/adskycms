@@ -22,11 +22,17 @@ export default function JobCategoriesSection() {
     const fetchCategories = async () => {
       try {
         const res = await fetch('/api/categories?type=job');
+        if (!res.ok) {
+          const text = await res.text();
+          console.error('Category fetch error:', res.status, text.substring(0, 100));
+          return;
+        }
         const data = await res.json();
         setCategories(data.categories || []);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
-      } finally {
+      }
+ finally {
         setLoading(false);
       }
     };

@@ -45,10 +45,15 @@ export default function CareersPage() {
       const res = await fetch('/api/applications/me');
       if (res.ok) {
         const data = await res.json();
-        setAppliedJobIds(data.applications?.map(app => app.job?._id || app.job) || []);
+        const ids = data.applications?.map(app => (app.job?._id || app.jobId?._id || app.job || app.jobId)) || [];
+        console.log('[DEBUG] Careers Page - Applied Job IDs:', ids);
+        setAppliedJobIds(ids);
       }
-    } catch {}
+    } catch (error) {
+      console.error('[ERROR] Careers Page - Fetch Applied:', error);
+    }
   };
+
 
   const fetchCategories = async () => {
     try {

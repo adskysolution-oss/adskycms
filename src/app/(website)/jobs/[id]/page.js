@@ -24,9 +24,15 @@ export default function JobDetailsPage() {
         const appRes = await fetch('/api/applications/me');
         if (appRes.ok) {
           const appData = await appRes.json();
-          const alreadyApplied = appData.applications?.some(app => app.job?._id === id || app.job === id);
+          const applications = appData.applications || [];
+          const alreadyApplied = applications.some(app => {
+            const jobId = app.job?._id || app.jobId?._id || app.job || app.jobId;
+            return String(jobId) === String(id);
+          });
+          console.log('[DEBUG] Job Details - Applied:', alreadyApplied, 'for job:', id);
           setIsApplied(alreadyApplied);
         }
+
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {

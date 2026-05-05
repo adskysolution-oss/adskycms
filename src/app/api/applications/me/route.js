@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Application from '@/models/Application';
 import Job from '@/models/Job';
+import User from '@/models/User';
+import Company from '@/models/Company';
 import { authenticateRequest } from '@/lib/auth';
+
 
 export async function GET(req) {
   await dbConnect();
@@ -12,9 +15,14 @@ export async function GET(req) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const applications = await Application.find({ candidate: decoded.id })
+    const applications = await Application.find({ 
+      $or: [
+        { candidateId: decoded.id },
+        { candidate: decoded.id }
+      ]
+    })
       .populate({
-        path: 'job',
+        path: 'jobId',
         select: 'title location type salary company',
         populate: {
           path: 'company',
@@ -23,7 +31,20 @@ export async function GET(req) {
       })
       .sort({ createdAt: -1 });
 
-    return NextResponse.json({ applications }, { status: 200 });
+
+    // Normalize
+    const normalizedApps = applications.map(app => {
+      const doc = app.toObject();
+      return {
+        ...doc,
+        job: doc.jobId || doc.job,
+        candidate: doc.candidateId || doc.candidate,
+        employer: doc.employerId || doc.employer,
+        company: doc.companyId || doc.company
+      };
+    });
+
+    return NextResponse.json({ applications: normalizedApps }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

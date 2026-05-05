@@ -34,6 +34,18 @@ export async function PUT(req, { params }) {
   }
 }
 
+export async function PATCH(req, { params }) {
+  await dbConnect();
+  try {
+    const { id } = await params;
+    const body = await req.json();
+    const job = await Job.findByIdAndUpdate(id, { $set: body }, { new: true });
+    return NextResponse.json({ job }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+}
+
 export async function DELETE(req, { params }) {
   await dbConnect();
   try {

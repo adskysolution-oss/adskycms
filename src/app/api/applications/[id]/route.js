@@ -20,9 +20,10 @@ export async function PATCH(req, { params }) {
     const { id } = await params;
     const body = await req.json();
     // Validate status if provided
-    if (body.status && !['applied', 'shortlisted', 'rejected'].includes(body.status)) {
+    if (body.status && !['applied', 'shortlisted', 'interviewing', 'selected', 'rejected'].includes(body.status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
+
     const application = await Application.findByIdAndUpdate(id, { $set: body }, { new: true });
     return NextResponse.json({ application }, { status: 200 });
   } catch (error) {

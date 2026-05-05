@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt, FaChevronDown, FaBriefcase, FaUserTie, FaCog, FaHistory, FaBookmark } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt, FaChevronDown, FaBriefcase, FaUserTie, FaCog, FaHistory, FaBookmark, FaUsers, FaSearch } from 'react-icons/fa';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -76,11 +76,13 @@ export default function Navbar() {
   };
 
   const getEmployerLinks = () => [
-    { label: 'Dashboard', href: '/dashboard/employer', icon: FaBriefcase },
-    { label: 'My Jobs', href: '/admin/jobs', icon: FaUserTie },
-    { label: 'Applicants', href: '/admin/applications', icon: FaHistory },
+    { label: 'Intelligence Hub', href: '/dashboard/employer', icon: FaBriefcase },
+    { label: 'Hiring Pipeline', href: '/dashboard/employer?tab=ats', icon: FaUsers },
+    { label: 'Job Inventory', href: '/dashboard/employer?tab=jobs', icon: FaBriefcase },
+    { label: 'Talent Search', href: '/dashboard/employer?tab=search', icon: FaSearch },
     { label: 'Company Profile', href: '/dashboard/employer/settings', icon: FaCog },
   ];
+
 
   const getCandidateLinks = () => [
     { label: 'Dashboard', href: '/dashboard/candidate', icon: FaBriefcase },
@@ -92,13 +94,13 @@ export default function Navbar() {
 
 
   const getAdminLinks = () => [
-    { label: 'Admin Panel', href: '/admin', icon: FaCog },
-    { label: 'Logout', onClick: handleLogout, icon: FaSignOutAlt, danger: true },
+    { label: 'Admin Panel', href: '/admin/dashboard', icon: FaCog },
   ];
 
-  const roleLinks = user?.role === 'employer' 
-    ? getEmployerLinks() 
-    : user?.role === 'admin' 
+
+  const roleLinks = user?.role === 'employer'
+    ? getEmployerLinks()
+    : user?.role === 'admin'
       ? getAdminLinks()
       : getCandidateLinks();
 
@@ -111,7 +113,7 @@ export default function Navbar() {
 
       <div className="container-custom">
         <div className="flex h-20 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center gap-3">
             <Image
               src="/logo.png"
               alt="AdSky Solution Logo"
@@ -130,15 +132,13 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ${
-                    active ? 'text-white' : 'text-text-secondary hover:text-white'
-                  }`}
+                  className={`relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ${active ? 'text-white' : 'text-text-secondary hover:text-white'
+                    }`}
                 >
                   {link.label}
                   <span
-                    className={`absolute left-4 right-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-all duration-300 ${
-                      active ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className={`absolute left-4 right-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-all duration-300 ${active ? 'opacity-100' : 'opacity-0'
+                      }`}
                   />
                 </Link>
               );
@@ -169,8 +169,8 @@ export default function Navbar() {
                     <div className="px-3 py-2 mb-2 border-b border-white/5">
                       <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Account Menu</p>
                     </div>
-                    
-                    {roleLinks.map((link, idx) => (
+
+                    {roleLinks.map((link, idx) => link.href ? (
                       <Link
                         key={idx}
                         href={link.href}
@@ -179,7 +179,17 @@ export default function Navbar() {
                         <link.icon size={16} className="text-text-muted group-hover:text-primary-light transition-colors" />
                         {link.label}
                       </Link>
+                    ) : (
+                      <button
+                        key={idx}
+                        onClick={link.onClick}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group w-full ${link.danger ? 'text-danger hover:bg-danger/10' : 'text-text-secondary hover:text-white hover:bg-white/5'}`}
+                      >
+                        <link.icon size={16} className={`text-text-muted transition-colors ${link.danger ? 'group-hover:text-danger' : 'group-hover:text-primary-light'}`} />
+                        {link.label}
+                      </button>
                     ))}
+
 
                     <div className="mt-2 pt-2 border-t border-white/5">
                       <button
@@ -223,11 +233,10 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                        active
-                          ? 'bg-white/10 text-white'
-                          : 'text-text-secondary hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${active
+                        ? 'bg-white/10 text-white'
+                        : 'text-text-secondary hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       {link.label}
                     </Link>
