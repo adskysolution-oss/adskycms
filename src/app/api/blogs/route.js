@@ -3,11 +3,13 @@ import dbConnect from '@/lib/db';
 import Blog from '@/models/Blog';
 import User from '@/models/User';
 import { authenticateRequest } from '@/lib/auth';
+import { deleteImage } from '@/lib/cloudinary';
+import { revalidatePath } from 'next/cache';
 
-// GET all blogs (public: only published) or all (admin)
+
 export async function GET(request) {
+  await dbConnect();
   try {
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get('slug');
     const admin = searchParams.get('admin');
@@ -17,7 +19,6 @@ export async function GET(request) {
     if (slug) {
       const blog = await Blog.findOne({ slug }).populate('author', 'name avatar');
       if (!blog) return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
-      // Increment views
       blog.views += 1;
       await blog.save();
       return NextResponse.json({ success: true, blog });
@@ -41,72 +42,77 @@ export async function GET(request) {
   }
 }
 
-// CREATE a blog (admin only)
 export async function POST(request) {
+  await dbConnect();
   try {
     const decoded = authenticateRequest(request);
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    await dbConnect();
     const body = await request.json();
-    
-    // Validate required fields
-    if (!body.title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
-    if (!body.content) {
-      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
-    }
+    if (!body.title) return NextResponse.json({ error: 'Title required' }, { status: 400 });
+    if (!body.content) return NextResponse.json({ error: 'Content required' }, { status: 400 });
 
-    // Generate slug if not provided
     if (!body.slug) {
       const slugify = (await import('slugify')).default;
       body.slug = slugify(body.title, { lower: true, strict: true });
     }
 
     body.author = decoded.id;
-    
     const blog = await Blog.create(body);
     return NextResponse.json({ success: true, blog }, { status: 201 });
   } catch (error) {
-    console.error('Blog POST error:', error);
-    return NextResponse.json({ 
-      error: error.message,
-      details: error.errors ? Object.keys(error.errors).map(k => error.errors[k].message) : undefined
-    }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// UPDATE a blog (admin only)
 export async function PUT(request) {
+  await dbConnect();
   try {
     const decoded = authenticateRequest(request);
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    await dbConnect();
     const body = await request.json();
     const { id, ...updateData } = body;
 
-    const blog = await Blog.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true });
-    if (!blog) return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
+    const existingBlog = await Blog.findById(id);
+    if (!existingBlog) return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
+
+    // Handle Cloudinary Image Cleanup
+    if (updateData.coverImagePublicId && existingBlog.coverImagePublicId && updateData.coverImagePublicId !== existingBlog.coverImagePublicId) {
+      console.log('[DEBUG] Deleting old blog cover image:', existingBlog.coverImagePublicId);
+      await deleteImage(existingBlog.coverImagePublicId);
+    }
+
+    const blog = await Blog.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    revalidatePath('/');
+    revalidatePath('/blogs');
     return NextResponse.json({ success: true, blog });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// DELETE a blog (admin only)
 export async function DELETE(request) {
+  await dbConnect();
   try {
     const decoded = authenticateRequest(request);
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
-    const blog = await Blog.findByIdAndDelete(id);
+    const blog = await Blog.findById(id);
     if (!blog) return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
+
+    // Cleanup Cloudinary before DB deletion
+    if (blog.coverImagePublicId) {
+      console.log('[DEBUG] Deleting blog image on record deletion:', blog.coverImagePublicId);
+      await deleteImage(blog.coverImagePublicId);
+    }
+
+    await Blog.findByIdAndDelete(id);
+    revalidatePath('/');
+    revalidatePath('/blogs');
     return NextResponse.json({ success: true, message: 'Blog deleted' });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

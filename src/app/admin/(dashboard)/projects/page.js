@@ -52,6 +52,7 @@ export default function AdminProjectsPage() {
     setSaving(true); setMsg('');
     try {
       let image = editing.image || '';
+      let imagePublicId = editing.imagePublicId || '';
 
       if (imageFile) {
         setIsUploading(true);
@@ -63,12 +64,15 @@ export default function AdminProjectsPage() {
         const uploadData = await uploadRes.json();
         if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
         image = uploadData.media.url;
+        imagePublicId = uploadData.media.publicId;
       }
 
       if (!image) throw new Error('Please choose a project image');
 
       const payload = { ...editing, technologies: typeof editing.technologies === 'string' ? editing.technologies.split(',').map(s => s.trim()).filter(Boolean) : editing.technologies };
       payload.image = image;
+      payload.imagePublicId = imagePublicId;
+
       const method = editing._id ? 'PUT' : 'POST';
       if (editing._id) payload.id = editing._id;
       const res = await fetch('/api/projects', { method, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });

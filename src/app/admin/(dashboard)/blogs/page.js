@@ -56,6 +56,7 @@ export default function AdminBlogsPage() {
     setMsg('');
     try {
       let coverImage = editing.coverImage || '';
+      let coverImagePublicId = editing.coverImagePublicId || '';
 
       if (imageFile) {
         setIsUploading(true);
@@ -67,13 +68,15 @@ export default function AdminBlogsPage() {
         const uploadData = await uploadRes.json();
         if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
         coverImage = uploadData.media.url;
+        coverImagePublicId = uploadData.media.publicId;
       }
 
       if (!coverImage) throw new Error('Please choose a cover image');
 
-      const payload = { ...editing, coverImage, tags: typeof editing.tags === 'string' ? editing.tags.split(',').map((t) => t.trim()).filter(Boolean) : editing.tags };
+      const payload = { ...editing, coverImage, coverImagePublicId, tags: typeof editing.tags === 'string' ? editing.tags.split(',').map((t) => t.trim()).filter(Boolean) : editing.tags };
       const method = editing._id ? 'PUT' : 'POST';
       if (editing._id) payload.id = editing._id;
+
 
       const res = await fetch('/api/blogs', {
         method,

@@ -32,7 +32,7 @@ export default function JobCategoriesSection() {
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       }
- finally {
+      finally {
         setLoading(false);
       }
     };
@@ -70,7 +70,7 @@ export default function JobCategoriesSection() {
           {categories.map((cat) => {
             const Icon = IconMap[cat.icon] || FaBriefcase;
             return (
-              <Link 
+              <Link
                 key={cat._id}
                 href={`/careers?category=${cat._id}`}
                 className="glass-card-hover p-8 group flex flex-col items-center text-center transition-all duration-300"
