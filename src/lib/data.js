@@ -37,15 +37,17 @@ export async function getBlogBySlug(slug) {
 
 export async function getTeamMembers() {
   await dbConnect();
-  const docs = await TeamMember.find().sort({ order: 1 }).lean();
+  const docs = await TeamMember.find({ isActive: true }).sort({ order: 1 }).lean();
   return serialize(docs);
 }
 
+
 export async function getProjects() {
   await dbConnect();
-  const docs = await Project.find().sort({ order: 1 }).lean();
+  const docs = await Project.find({ isActive: true }).sort({ order: 1 }).lean();
   return serialize(docs);
 }
+
 
 export async function getActivePricingPlans() {
   await dbConnect();

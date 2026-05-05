@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaArrowUp } from 'react-icons/fa';
 
+import { usePathname } from 'next/navigation';
+
 const footerLinks = [
   {
     title: 'Services',
@@ -50,9 +52,15 @@ const socialIcons = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
+
     <footer className="bg-dark-light border-t border-border">
       <div className="container-custom py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-12 gap-x-8">

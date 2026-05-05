@@ -24,7 +24,9 @@ const userSchema = new mongoose.Schema(
       school: String,
       year: String
     }],
+    savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
     isActive: { type: Boolean, default: true },
+
   },
   { timestamps: true }
 );

@@ -86,8 +86,9 @@ export default function Navbar() {
     { label: 'Dashboard', href: '/dashboard/candidate', icon: FaBriefcase },
     { label: 'Applied Jobs', href: '/dashboard/candidate?tab=applications', icon: FaHistory },
     { label: 'Saved Jobs', href: '/dashboard/candidate?tab=saved', icon: FaBookmark },
-    { label: 'Profile', href: '/dashboard/candidate?tab=profile', icon: FaUserCircle },
+    { label: 'Profile', href: '/dashboard/candidate/profile', icon: FaUserCircle },
   ];
+
 
 
   const getAdminLinks = () => [
@@ -101,8 +102,13 @@ export default function Navbar() {
       ? getAdminLinks()
       : getCandidateLinks();
 
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#020617]/55 backdrop-blur-xl">
+
       <div className="container-custom">
         <div className="flex h-20 items-center justify-between gap-4">
           <Link href="/" className="flex items-center">

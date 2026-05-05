@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { 
   FaSearch, FaMapMarkerAlt, FaBriefcase, FaFilter, 
-  FaMoneyBillWave, FaClock, FaChevronRight, FaSpinner 
+  FaMoneyBillWave, FaClock, FaChevronRight, FaSpinner, FaBookmark, FaRegBookmark 
 } from 'react-icons/fa';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function CareersPage() {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [appliedJobIds, setAppliedJobIds] = useState([]);
+  const [savedJobIds, setSavedJobIds] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [filters, setFilters] = useState({
     search: '',
     location: '',
@@ -23,7 +26,19 @@ export default function CareersPage() {
     fetchCategories();
     fetchJobs();
     fetchAppliedJobs();
+    fetchSavedJobs();
   }, []);
+
+  const fetchSavedJobs = async () => {
+    try {
+      const res = await fetch('/api/user/me');
+      const data = await res.json();
+      if (data.success) {
+        setSavedJobIds(data.user.savedJobs || []);
+      }
+    } catch {}
+  };
+
 
   const fetchAppliedJobs = async () => {
     try {
@@ -61,6 +76,31 @@ export default function CareersPage() {
     setFilters(newFilters);
     fetchJobs(newFilters);
   };
+
+  const toggleSaveJob = async (e, jobId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const res = await fetch('/api/jobs/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.isSaved) {
+          setSavedJobIds([...savedJobIds, jobId]);
+          toast.success('Job saved!');
+        } else {
+          setSavedJobIds(savedJobIds.filter(id => id !== jobId));
+          toast.success('Job removed from saved');
+        }
+      }
+    } catch {
+      toast.error('Authentication required to save jobs');
+    }
+  };
+
 
   return (
     <div className="pt-32 pb-24">
@@ -212,6 +252,17 @@ export default function CareersPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-4 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
+                      <button 
+                        onClick={(e) => toggleSaveJob(e, job._id)}
+                        className={`p-3 rounded-xl border transition-all ${
+                          savedJobIds.includes(job._id) 
+                            ? 'bg-secondary/10 border-secondary/20 text-secondary-light' 
+                            : 'bg-white/5 border-white/5 text-text-muted hover:border-secondary/20'
+                        }`}
+                      >
+                        {savedJobIds.includes(job._id) ? <FaBookmark size={14} /> : <FaRegBookmark size={14} />}
+                      </button>
+
                       <div className="hidden md:flex flex-wrap gap-2 mr-4 max-w-xs justify-end">
                         {appliedJobIds.includes(job._id) && (
                           <span className="px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-[10px] font-black uppercase tracking-widest border border-green-400/20">

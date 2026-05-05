@@ -3,15 +3,24 @@ import dbConnect from '@/lib/db';
 import Project from '@/models/Project';
 import { authenticateRequest } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request) {
   try {
     await dbConnect();
-    const projects = await Project.find().sort({ order: 1 });
+    const { searchParams } = new URL(request.url);
+    const activeOnly = searchParams.get('active') === 'true';
+    
+    let query = {};
+    if (activeOnly) {
+      query.isActive = true;
+    }
+
+    const projects = await Project.find(query).sort({ order: 1 });
     return NextResponse.json({ success: true, projects });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
 
 export async function POST(request) {
   try {

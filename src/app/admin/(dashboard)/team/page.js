@@ -13,7 +13,7 @@ export default function AdminTeamPage() {
   const [imagePreview, setImagePreview] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  const empty = { name: '', role: '', image: '', bio: '', order: 0 };
+  const empty = { name: '', role: '', image: '', bio: '', order: 0, isActive: true };
 
   const resetEditor = () => {
     setEditing(null);
@@ -127,9 +127,21 @@ export default function AdminTeamPage() {
               <label className="text-text-secondary text-sm mb-1 block">Bio</label>
               <textarea value={editing.bio} onChange={(e) => setEditing({ ...editing, bio: e.target.value })} rows={3} className="w-full px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary resize-y" />
             </div>
-            <div>
-              <label className="text-text-secondary text-sm mb-1 block">Order</label>
-              <input type="number" value={editing.order} onChange={(e) => setEditing({ ...editing, order: parseInt(e.target.value) || 0 })} className="w-32 px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
+            <div className="flex items-center gap-6">
+              <div>
+                <label className="text-text-secondary text-sm mb-1 block">Order</label>
+                <input type="number" value={editing.order} onChange={(e) => setEditing({ ...editing, order: parseInt(e.target.value) || 0 })} className="w-32 px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
+              </div>
+              <div className="flex items-center gap-3 mt-5">
+                <input 
+                  type="checkbox" 
+                  id="isActive" 
+                  checked={editing.isActive} 
+                  onChange={(e) => setEditing({ ...editing, isActive: e.target.checked })}
+                  className="w-4 h-4 rounded border-border bg-surface text-primary focus:ring-primary" 
+                />
+                <label htmlFor="isActive" className="text-text-primary text-sm font-medium">Publicly Visible</label>
+              </div>
             </div>
             <button onClick={save} disabled={saving || isUploading} className="btn-primary text-sm">
               {saving || isUploading ? <><FaSpinner className="animate-spin" /> {isUploading ? 'Uploading...' : 'Saving...'}</> : <><FaSave /> Save</>}
@@ -155,9 +167,14 @@ export default function AdminTeamPage() {
                   <div className="text-text-muted text-xs">{item.role}</div>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => openEdit(item)} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
-                <button onClick={() => remove(item._id)} className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20"><FaTrash size={12} /></button>
+              <div className="flex items-center gap-4">
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest ${item.isActive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                  {item.isActive ? 'Active' : 'Inactive'}
+                </span>
+                <div className="flex gap-2">
+                  <button onClick={() => openEdit(item)} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
+                  <button onClick={() => remove(item._id)} className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20"><FaTrash size={12} /></button>
+                </div>
               </div>
             </div>
           ))}

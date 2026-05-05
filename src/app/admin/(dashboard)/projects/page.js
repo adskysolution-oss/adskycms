@@ -13,7 +13,7 @@ export default function AdminProjectsPage() {
   const [imagePreview, setImagePreview] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  const empty = { title: '', description: '', image: '', technologies: '', link: '', order: 0 };
+  const empty = { title: '', description: '', image: '', technologies: '', link: '', order: 0, isActive: true };
 
   const resetEditor = () => {
     setEditing(null);
@@ -135,6 +135,16 @@ export default function AdminProjectsPage() {
                 <input type="number" value={editing.order} onChange={(e) => setEditing({ ...editing, order: parseInt(e.target.value) || 0 })} className="w-full px-4 py-2.5 bg-surface border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary" />
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <input 
+                type="checkbox" 
+                id="isActive" 
+                checked={editing.isActive} 
+                onChange={(e) => setEditing({ ...editing, isActive: e.target.checked })}
+                className="w-4 h-4 rounded border-border bg-surface text-primary focus:ring-primary" 
+              />
+              <label htmlFor="isActive" className="text-text-primary text-sm font-medium">Publicly Visible</label>
+            </div>
             <button onClick={save} disabled={saving || isUploading} className="btn-primary text-sm">
               {saving || isUploading ? <><FaSpinner className="animate-spin" /> {isUploading ? 'Uploading...' : 'Saving...'}</> : <><FaSave /> Save</>}
             </button>
@@ -156,9 +166,14 @@ export default function AdminProjectsPage() {
                   {item.technologies?.map((t, j) => <span key={j} className="text-xs text-text-muted bg-surface px-2 py-0.5 rounded">{t}</span>)}
                 </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => openEdit(item)} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
-                <button onClick={() => remove(item._id)} className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20"><FaTrash size={12} /></button>
+              <div className="flex items-center gap-4">
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest ${item.isActive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                  {item.isActive ? 'Active' : 'Inactive'}
+                </span>
+                <div className="flex gap-2">
+                  <button onClick={() => openEdit(item)} className="p-2 rounded-lg bg-primary/10 text-primary-light hover:bg-primary/20"><FaEdit size={12} /></button>
+                  <button onClick={() => remove(item._id)} className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20"><FaTrash size={12} /></button>
+                </div>
               </div>
             </div>
           ))}

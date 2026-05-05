@@ -7,6 +7,7 @@ const teamMemberSchema = new mongoose.Schema(
     image: { type: String, default: '' },
     bio: { type: String, default: '' },
     order: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

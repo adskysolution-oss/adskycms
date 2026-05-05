@@ -8,6 +8,7 @@ const projectSchema = new mongoose.Schema(
     technologies: [{ type: String }],
     link: { type: String, default: '' },
     order: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

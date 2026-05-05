@@ -1,6 +1,8 @@
 import { Toaster } from 'react-hot-toast';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -13,7 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
       <body className="bg-[#000000] text-white antialiased">
+        <Navbar />
         {children}
+        <Footer />
         <Toaster position="top-right" toastOptions={{
           style: {
             background: '#0B0B10',
@@ -25,3 +29,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

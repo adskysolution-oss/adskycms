@@ -16,10 +16,24 @@ export async function GET(req) {
     const limit = parseInt(searchParams.get('limit')) || 10;
     const search = searchParams.get('search');
     const isMyJobs = searchParams.get('my') === 'true';
+    const recommend = searchParams.get('recommend') === 'true';
+    const ids = searchParams.get('ids');
 
     let query = { isActive: true };
 
+    if (ids) {
+      query._id = { $in: ids.split(',') };
+    }
+
+    if (recommend && decoded) {
+      const user = await User.findById(decoded.id);
+      if (user && user.skills?.length > 0) {
+        query.skills = { $in: user.skills.map(s => new RegExp(s, 'i')) };
+      }
+    }
+
     if (isMyJobs) {
+
       if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       
       // If employer, only show their company's jobs
