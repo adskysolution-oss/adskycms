@@ -1,4 +1,4 @@
-import Hero from '@/components/Hero';
+import Hero from '@/components/sections/Hero';
 import ServicesSection from '@/components/sections/ServicesSection';
 import StrategySection from '@/components/sections/StrategySection';
 import JobCategoriesSection from '@/components/sections/JobCategoriesSection';

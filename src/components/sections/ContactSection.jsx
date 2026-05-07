@@ -1,6 +1,6 @@
-import ContactForm from '../ContactForm';
+import ContactForm from '../forms/ContactForm';
 import Image from 'next/image';
-import PremiumImage from '../PremiumImage';
+import PremiumImage from '../ui/PremiumImage';
 
 export default function ContactSection() {
   return (

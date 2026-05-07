@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { FaEye, FaBullseye } from 'react-icons/fa';
-import PremiumImage from '../PremiumImage';
+import PremiumImage from '../ui/PremiumImage';
 
 export default function VisionMissionSection() {
   return (

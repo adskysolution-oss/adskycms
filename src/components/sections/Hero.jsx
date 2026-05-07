@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowRight, FaRocket, FaBriefcase } from 'react-icons/fa';
-import { TypingText } from './ui/typing-text';
-import PremiumImage from './PremiumImage';
+import { TypingText } from '../ui/typing-text';
+import PremiumImage from '../ui/PremiumImage';
 
 export default function Hero() {
   const [user, setUser] = useState(null);

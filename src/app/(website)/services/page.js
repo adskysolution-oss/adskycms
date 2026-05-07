@@ -1,5 +1,5 @@
 import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
-import IconByName from '@/components/IconByName';
+import IconByName from '@/components/ui/IconByName';
 import { getActiveServices } from '@/lib/data';
 
 export const metadata = { title: 'Services - AdSky Solution' };
