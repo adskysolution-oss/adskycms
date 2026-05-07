@@ -4,14 +4,23 @@ import bcrypt from 'bcryptjs';
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     password: { type: String, required: true, minlength: 6 },
+    phone: { type: String, trim: true },
     role: {
       type: String,
-      enum: ['admin', 'editor', 'partner', 'employer', 'candidate'],
-      default: 'admin',
+      enum: ['admin', 'employer', 'candidate', 'user'],
+      default: 'user',
     },
+    status: {
+      type: String,
+      enum: ['pending', 'active', 'suspended', 'banned'],
+      default: 'pending',
+      index: true
+    },
+    isVerified: { type: Boolean, default: false },
     avatar: { type: String, default: '' },
+    lastLogin: { type: Date },
     skills: { type: [String], default: [] },
     resumeUrl: { type: String, default: '' },
     experience: [{
