@@ -1,33 +1,44 @@
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export function signToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-}
+export const createToken = async (payload) => {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(secret);
+};
 
-export function verifyToken(token) {
+export const verifyToken = async (token) => {
   try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
+    const { payload } = await jwtVerify(token, secret);
+    return payload;
+  } catch (error) {
     return null;
   }
-}
+};
 
-export function getTokenFromRequest(request) {
-  const cookie = request.cookies.get('token');
-  if (cookie) return cookie.value;
+export const setAuthCookie = async (token) => {
+  const cookieStore = await cookies();
+  cookieStore.set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  });
+};
 
-  const authHeader = request.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.slice(7);
-  }
+export const removeAuthCookie = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete('token');
+};
 
-  return null;
-}
-
-export function authenticateRequest(request) {
-  const token = getTokenFromRequest(request);
+export const getAuthUser = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
   if (!token) return null;
-  return verifyToken(token);
-}
+  return await verifyToken(token);
+};

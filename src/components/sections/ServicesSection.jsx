@@ -1,5 +1,5 @@
 import { FaArrowRight } from 'react-icons/fa';
-import IconByName from '@/components/IconByName';
+import IconByName from '@/components/ui/IconByName';
 import { HoverEffect } from '../ui/card-hover-effect';
 
 export default function ServicesSection({ services = [] }) {

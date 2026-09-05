@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSpinner, FaSave, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
-import IconByName from '@/components/IconByName';
+import IconByName from '@/components/ui/IconByName';
 
 export default function AdminServicesPage() {
   const [items, setItems] = useState([]);

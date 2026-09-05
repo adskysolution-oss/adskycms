@@ -1,45 +1,77 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import { signToken } from '@/lib/auth';
+import { createToken, setAuthCookie } from '@/lib/auth';
+import { z } from 'zod';
 
-export async function POST(request) {
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+export async function POST(req) {
   try {
     await dbConnect();
-    const { email, password } = await request.json();
+    const body = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
-    }
+    // 1. Validate Input
+    const validatedData = loginSchema.parse(body);
 
-    const user = await User.findOne({ email, isActive: true });
+    // 2. Find User
+    const user = await User.findOne({ email: validatedData.email });
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const isMatch = await user.comparePassword(password);
+    // 3. Check Password
+    const isMatch = await user.comparePassword(validatedData.password);
     if (!isMatch) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const token = signToken({ id: user._id, email: user.email, role: user.role });
+    // 4. Check Status
+    if (user.status === 'suspended' || user.status === 'banned') {
+      return NextResponse.json({ error: `Your account is ${user.status}. Please contact support.` }, { status: 403 });
+    }
 
-    const response = NextResponse.json({
-      success: true,
-      user: user.toJSON(),
-      token,
+    if (!user.isVerified) {
+      return NextResponse.json({ 
+        error: 'Email not verified', 
+        isVerified: false, 
+        userId: user._id 
+      }, { status: 403 });
+    }
+
+    // 5. Generate Token
+    const token = await createToken({
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
     });
 
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
+    // 6. Set Cookie
+    await setAuthCookie(token);
+
+    // 7. Update Last Login
+    user.lastLogin = new Date();
+    await user.save();
+
+    return NextResponse.json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
 
-    return response;
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+    }
+    console.error('Login API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

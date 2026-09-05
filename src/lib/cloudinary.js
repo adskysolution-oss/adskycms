@@ -6,29 +6,27 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(file, folder = 'adskycms') {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const base64 = buffer.toString('base64');
-  const dataURI = `data:${file.type};base64,${base64}`;
+export const uploadImage = async (file, folder = 'adsky') => {
+  try {
+    const response = await cloudinary.uploader.upload(file, {
+      folder,
+      resource_type: 'auto',
+    });
+    return { success: true, url: response.secure_url, public_id: response.public_id };
+  } catch (error) {
+    console.error('Cloudinary Upload Error:', error);
+    return { success: false, error: error.message };
+  }
+};
 
-  const result = await cloudinary.uploader.upload(dataURI, {
-    folder,
-    resource_type: 'auto',
-    quality: 'auto',
-    fetch_format: 'auto',
-  });
-
-  return {
-    url: result.secure_url,
-    publicId: result.public_id,
-    width: result.width,
-    height: result.height,
-    format: result.format,
-  };
-}
-
-export async function deleteImage(publicId) {
-  return cloudinary.uploader.destroy(publicId);
-}
+export const deleteImage = async (publicId) => {
+  try {
+    await cloudinary.uploader.destroy(publicId);
+    return { success: true };
+  } catch (error) {
+    console.error('Cloudinary Delete Error:', error);
+    return { success: false, error: error.message };
+  }
+};
 
 export default cloudinary;

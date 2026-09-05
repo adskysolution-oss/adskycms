@@ -1,57 +1,65 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import { signToken } from '@/lib/auth';
+import OTPVerification from '@/models/OTPVerification';
+import { sendOTPEmail } from '@/services/emailService';
+import { z } from 'zod';
 
-export async function POST(request) {
+const registerSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  phone: z.string().optional(),
+});
+
+export async function POST(req) {
   try {
     await dbConnect();
-    const { name, email, password, role } = await request.json();
+    const body = await req.json();
 
-    if (!name || !email || !password || !role) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
-    }
+    // 1. Validate Input
+    const validatedData = registerSchema.parse(body);
 
-    if (!['candidate', 'employer'].includes(role)) {
-       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
-    }
-
-    const existingUser = await User.findOne({ email });
+    // 2. Check if user already exists
+    const existingUser = await User.findOne({ email: validatedData.email });
     if (existingUser) {
-      return NextResponse.json({ error: 'Email already exists' }, { status: 400 });
+      return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
+    // 3. Create User (Initially Pending)
     const user = await User.create({
-      name,
-      email,
-      password,
-      role,
-      isActive: true
+      ...validatedData,
+      status: 'pending',
+      isVerified: false,
     });
 
-    const token = signToken({ id: user._id, email: user.email, role: user.role });
+    // 4. Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      },
-      token,
+    await OTPVerification.create({
+      userId: user._id,
+      otp,
+      type: 'registration',
+      expiresAt,
+    });
+
+    // 5. Send OTP Email
+    const emailRes = await sendOTPEmail(user.email, otp, 'registration');
+    if (!emailRes.success) {
+      console.error('Failed to send OTP email:', emailRes.error);
+    }
+
+    return NextResponse.json({ 
+      message: 'Registration successful. Please verify your email.',
+      userId: user._id 
     }, { status: 201 });
 
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
-
-    return response;
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+    }
+    console.error('Registration API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
