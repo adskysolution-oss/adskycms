@@ -1,3 +1,5 @@
+'use client';
+
 import { FaArrowRight } from 'react-icons/fa';
 import IconByName from '@/components/ui/IconByName';
 import { HoverEffect } from '../ui/card-hover-effect';

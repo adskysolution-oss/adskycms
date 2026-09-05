@@ -42,3 +42,25 @@ export const getAuthUser = async () => {
   if (!token) return null;
   return await verifyToken(token);
 };
+
+export const authenticateRequest = async (request) => {
+  try {
+    const cookieHeader = request.headers.get('cookie');
+    if (!cookieHeader) return null;
+    
+    // Parse cookies from header
+    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    }, {});
+    
+    const token = cookies.token;
+    if (!token) return null;
+    
+    return await verifyToken(token);
+  } catch (error) {
+    console.error('Error authenticating request:', error);
+    return null;
+  }
+};
