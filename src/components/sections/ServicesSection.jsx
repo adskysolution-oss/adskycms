@@ -19,6 +19,7 @@ export default function ServicesSection({ services = [] }) {
         <HoverEffect
           items={services.map((svc, i) => ({
             id: svc._id,
+            link: '#',
             content: (
               <div className="group" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-5 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all">
