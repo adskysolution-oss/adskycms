@@ -1,318 +1,444 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/features/dashboard/DashboardLayout';
 import {
-  Settings, Save, AlertCircle, RefreshCw,
-  CreditCard, IndianRupee, Zap, History, ChevronDown
+  Sliders,
+  CreditCard,
+  Save,
+  RefreshCw,
+  ShieldCheck,
+  Zap,
+  History
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const GATEWAY_OPTIONS = [
-  { value: 'adsky_cashfree', label: 'AdSky — Cashfree', icon: '??' },
-  { value: 'adsky_razorpay', label: 'AdSky — Razorpay', icon: '??' },
-  { value: 'adsky_phonepe',  label: 'AdSky — PhonePe',  icon: '??' },
+  {
+    id: 'adsky_cashfree',
+    name: 'AdSky â€” Cashfree',
+    badge: 'Recommended',
+    description: 'Instant UPI, Cards & NetBanking via Cashfree PG',
+    status: 'ACTIVE',
+  },
+  {
+    id: 'adsky_razorpay',
+    name: 'AdSky â€” Razorpay',
+    badge: 'Standard',
+    description: 'Payment Links, Cards, UPI & Wallets via Razorpay',
+    status: 'READY',
+  },
+  {
+    id: 'adsky_phonepe',
+    name: 'AdSky â€” PhonePe',
+    badge: 'PG Direct',
+    description: 'PhonePe PG direct checkout flow',
+    status: 'READY',
+  },
 ];
 
-const gatewayLabel = (val) => {
-  const g = GATEWAY_OPTIONS.find((o) => o.value === val);
-  return g ? `${g.icon} ${g.label}` : (val || 'Select Gateway');
-};
+export default function AdminMlmConfigPage() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-export default function AdminMlmConfigurationPage() {
   const [config, setConfig] = useState({
-    platformFeeAmount: 100,
+    feeAmount: 100,
     gstPercent: 0,
-    description: 'Lifetime Membership & 3x15 Matrix Placement Fee',
+    description: 'Lifetime Membership and 3x15 Matrix Placement Fee',
     paymentProvider: 'adsky_cashfree',
     version: 1,
   });
-  const [initialConfig,   setInitialConfig]   = useState(null);
-  const [loading,         setLoading]         = useState(true);
-  const [saving,          setSaving]          = useState(false);
-  const [auditReason,     setAuditReason]     = useState('');
-  const [versionHistory,  setVersionHistory]  = useState([]);
-  const [showHistory,     setShowHistory]     = useState(false);
 
+  const [auditReason, setAuditReason] = useState('');
+  const [history, setHistory] = useState([]);
+
+  // Fetch active config on load
   const fetchConfig = async () => {
     setLoading(true);
     try {
-      const res  = await fetch('/api/admin/mlm/config');
+      const res = await fetch('/api/admin/mlm/config');
       const json = await res.json();
-      if (res.ok && json.success && json.data) {
+      if (json.success && json.data) {
         const d = json.data;
-        const mapped = {
-          platformFeeAmount: d.platformFeeAmount ?? d.feeAmount ?? 100,
-          gstPercent:        d.gstPercent  ?? 0,
-          description:       d.description ?? 'Lifetime Membership & 3x15 Matrix Placement Fee',
-          paymentProvider:   d.paymentProvider ?? 'adsky_cashfree',
-          version:           d.version ?? 1,
-        };
-        setConfig(mapped);
-        setInitialConfig(mapped);
-        if (json.history) setVersionHistory(json.history);
+        setConfig({
+          feeAmount: Number(d.feeAmount ?? d.platformFeeAmount ?? 100),
+          gstPercent: Number(d.gstPercent ?? 0),
+          description: d.description || 'Lifetime Membership and 3x15 Matrix Placement Fee',
+          paymentProvider: d.paymentProvider || 'adsky_cashfree',
+          version: d.version || 1,
+        });
+        if (json.history) {
+          setHistory(json.history);
+        }
+      } else {
+        toast.error(json.message || 'Failed to load configuration');
       }
-    } catch (e) {
-      toast.error('Failed to load configuration');
+    } catch (err) {
+      console.error('Error fetching config:', err);
+      toast.error('Network error loading configuration');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchConfig(); }, []);
+  useEffect(() => {
+    fetchConfig();
+  }, []);
 
-  const hasChanges = initialConfig &&
-    JSON.stringify(config) !== JSON.stringify(initialConfig);
+  // Derived live amounts
+  const feeAmount = Math.max(0, Number(config.feeAmount) || 0);
+  const gstPercent = Math.max(0, Number(config.gstPercent) || 0);
+  const gstAmount = Math.round((feeAmount * gstPercent) / 100);
+  const totalAmount = Math.round(feeAmount + gstAmount);
 
-  const totalAmount = Math.round(
-    (config.platformFeeAmount || 0) * (1 + (config.gstPercent || 0) / 100)
-  );
+  const selectedGateway =
+    GATEWAY_OPTIONS.find((g) => g.id === config.paymentProvider) || GATEWAY_OPTIONS[0];
 
-  const handleSave = async () => {
-    if (!config.platformFeeAmount || config.platformFeeAmount < 1) {
-      toast.error('Platform fee must be at least Rs.1');
+  // Handle submit / save
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (feeAmount <= 0) {
+      toast.error('Base platform fee must be greater than 0');
       return;
     }
+
     setSaving(true);
     try {
-      const res  = await fetch('/api/admin/mlm/config', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...config,
-          auditReason: auditReason || 'Admin updated platform fee configuration',
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.message || 'Save failed');
-      const updated = {
-        platformFeeAmount: json.data.platformFeeAmount ?? json.data.totalAmount ?? config.platformFeeAmount,
-        gstPercent:        json.data.gstPercent  ?? config.gstPercent,
-        description:       json.data.description ?? config.description,
-        paymentProvider:   json.data.paymentProvider ?? config.paymentProvider,
-        version:           json.data.version ?? config.version,
+      const payload = {
+        platformFeeAmount: feeAmount,
+        feeAmount: feeAmount,
+        gstPercent: gstPercent,
+        totalAmount: totalAmount,
+        description: config.description.trim(),
+        paymentProvider: config.paymentProvider,
+        auditReason: auditReason.trim() || 'Updated platform charges and gateway config',
       };
-      setConfig(updated);
-      setInitialConfig(updated);
-      setAuditReason('');
-      toast.success(json.message || 'Configuration saved successfully!');
-      fetchConfig();
+
+      const res = await fetch('/api/admin/mlm/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        toast.success(json.message || 'Platform fee configuration updated successfully!');
+        setAuditReason('');
+        await fetchConfig();
+      } else {
+        toast.error(json.message || 'Failed to save configuration');
+      }
     } catch (err) {
-      toast.error(err.message || 'Failed to save configuration');
+      console.error('Save error:', err);
+      toast.error('Network error while saving');
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      </DashboardLayout>
-    );
-  }
-
   return (
     <DashboardLayout>
-      <div className="max-w-3xl space-y-6 pb-16">
-
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
-          <div>
-            <h1 className="text-2xl font-black text-gray-900 flex items-center gap-3">
-              <span className="p-2 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                <Settings className="w-5 h-5 text-amber-600" />
-              </span>
-              MLM Platform Configuration
-            </h1>
-            <p className="text-gray-400 mt-1 text-xs font-medium">
-              Manage activation fee, payment gateway and pricing for NextView MLM.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            {hasChanges && (
-              <span className="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-black flex items-center gap-1.5 animate-pulse">
-                <AlertCircle className="w-3 h-3" /> Unsaved
-              </span>
-            )}
-            <button onClick={fetchConfig} disabled={loading || saving}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-              Reload
-            </button>
-            <button onClick={handleSave} disabled={saving || !hasChanges}
-              className="flex items-center gap-2 px-5 py-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-40 text-white font-black text-xs rounded-xl transition shadow-md shadow-amber-500/20">
-              <Save className="w-4 h-4" />
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </div>
-
-        {/* Platform Fee Card */}
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
-          <div className="flex items-center gap-2 border-b border-gray-100 pb-4">
-            <IndianRupee className="w-5 h-5 text-amber-500" />
-            <h2 className="text-base font-black text-gray-900">Platform Activation Fee</h2>
-            <span className="ml-auto text-[10px] font-mono text-gray-400 font-bold uppercase bg-gray-50 px-2 py-1 rounded-lg border border-gray-200">
-              Active v{config.version}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Base Fee */}
+      <div className="min-h-screen bg-slate-50/50 p-4 sm:p-6 lg:p-8">
+        {/* Page Header */}
+        <div className="max-w-5xl mx-auto mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-                Base Fee (Rs.) <span className="text-red-400">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-gray-400">Rs.</span>
-                <input type="number" min="1"
-                  value={config.platformFeeAmount}
-                  onChange={(e) => setConfig({ ...config, platformFeeAmount: Number(e.target.value) })}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-amber-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 font-black text-gray-900 bg-white text-sm outline-none transition" />
+              <div className="flex items-center gap-2.5 text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">
+                <Sliders className="w-4 h-4" />
+                <span>Payment Control Center</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                  v{config.version} Active
+                </span>
               </div>
-              <p className="text-[10px] text-gray-400 mt-1">Base amount before GST</p>
-            </div>
-
-            {/* GST */}
-            <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-                GST % <span className="text-gray-300">(0 = No GST)</span>
-              </label>
-              <div className="relative">
-                <input type="number" min="0" max="100"
-                  value={config.gstPercent}
-                  onChange={(e) => setConfig({ ...config, gstPercent: Number(e.target.value) })}
-                  className="w-full pr-10 pl-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-black text-gray-900 bg-white text-sm outline-none transition" />
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-gray-400">%</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Live Total */}
-          <div className="flex items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Final Amount Charged to Member</p>
-              <p className="text-xs opacity-70 mt-0.5">
-                Rs.{config.platformFeeAmount || 0} base
-                {(config.gstPercent || 0) > 0 && ` + ${config.gstPercent}% GST`}
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                MLM Platform Charges Config
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Configure global member activation charges, GST rates, and payment gateway routing.
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-4xl font-black">Rs.{totalAmount}</span>
-              <p className="text-[10px] opacity-70 font-bold mt-0.5">One-time · INR</p>
+
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={fetchConfig}
+                disabled={loading || saving}
+                className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition shadow-sm disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <span>Refresh</span>
+              </button>
             </div>
           </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-              Fee Description <span className="text-gray-300">(shown to member)</span>
-            </label>
-            <input type="text"
-              value={config.description}
-              onChange={(e) => setConfig({ ...config, description: e.target.value })}
-              placeholder="e.g. Lifetime Membership & 3x15 Matrix Placement Fee"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-medium text-gray-700 bg-white text-sm outline-none transition" />
-          </div>
         </div>
 
-        {/* Payment Gateway Card */}
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
-          <div className="flex items-center gap-2 border-b border-gray-100 pb-4">
-            <CreditCard className="w-5 h-5 text-amber-500" />
-            <h2 className="text-base font-black text-gray-900">Payment Gateway</h2>
+        {/* Loading Skeleton */}
+        {loading ? (
+          <div className="max-w-5xl mx-auto space-y-6 animate-pulse">
+            <div className="h-48 bg-white border border-slate-200 rounded-2xl p-6"></div>
+            <div className="h-64 bg-white border border-slate-200 rounded-2xl p-6"></div>
           </div>
+        ) : (
+          <form onSubmit={handleSave} className="max-w-5xl mx-auto space-y-6">
+            {/* Card 1: Architecture & Gateway Settings */}
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden transition hover:border-slate-300">
+              <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-amber-50 rounded-lg text-amber-600 border border-amber-100">
+                    <CreditCard className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900">Architecture & Gateway Settings</h2>
+                    <p className="text-xs text-slate-500">Select payment provider for member platform fee checkout</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Production (Live)
+                </span>
+              </div>
 
-          <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-              Payment Received Via (Gateway Account)
-            </label>
-            <div className="relative">
-              <select
-                value={config.paymentProvider}
-                onChange={(e) => setConfig({ ...config, paymentProvider: e.target.value })}
-                className="w-full appearance-none px-4 py-3 pr-10 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-bold text-gray-800 bg-white text-sm outline-none transition cursor-pointer">
-                {GATEWAY_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.icon} {opt.label}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <div className="p-6 space-y-6">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Payment Receive Via (Gateway Account) *
+                  </label>
+                  <select
+                    value={config.paymentProvider}
+                    onChange={(e) => setConfig({ ...config, paymentProvider: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm font-medium text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  >
+                    {GATEWAY_OPTIONS.map((opt) => (
+                      <option key={opt.id} value={opt.id}>
+                        {opt.name} ({opt.badge})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Gateway Routing Guarantee Box */}
+                <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-start gap-3">
+                  <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="text-xs leading-relaxed text-amber-900">
+                    <span className="font-bold uppercase tracking-wide">Payment Routing Guarantee: </span>
+                    All new MLM member activation and matrix placement charges are automatically processed and verified through{' '}
+                    <span className="font-bold underline text-amber-950">{selectedGateway.name}</span>{' '}
+                    under purpose <code className="px-1.5 py-0.5 bg-amber-100/80 rounded font-mono text-[11px] text-amber-900">mlm_platform_fee</code>.
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200">
-            <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest mb-1">Payment Routing</p>
-            <p className="text-xs text-blue-600 font-medium">
-              MLM activation charges are routed through{' '}
-              <span className="font-black">{gatewayLabel(config.paymentProvider)}</span>{' '}
-              under purpose <span className="font-mono font-black bg-blue-100 px-1 rounded">mlm_platform_fee</span>.
-            </p>
-          </div>
-        </div>
+            {/* Card 2: MLM Platform Fee & Pricing */}
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden transition hover:border-slate-300">
+              <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-amber-50 rounded-lg text-amber-600 border border-amber-100">
+                    <Zap className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900">MLM Platform Charges & Pricing</h2>
+                    <p className="text-xs text-slate-500">Dynamic membership fee charged to new members upon onboarding</p>
+                  </div>
+                </div>
+              </div>
 
-        {/* Audit + Save */}
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-gray-100 pb-4">
-            <Zap className="w-5 h-5 text-amber-500" />
-            <h2 className="text-base font-black text-gray-900">Save Configuration</h2>
-          </div>
-
-          <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-              Reason for Change <span className="text-gray-300">(stored in audit log)</span>
-            </label>
-            <input type="text"
-              value={auditReason}
-              onChange={(e) => setAuditReason(e.target.value)}
-              placeholder="e.g. Revised activation fee for Q4 campaign"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-medium text-gray-700 bg-white text-sm outline-none transition" />
-          </div>
-
-          <button onClick={handleSave} disabled={saving || !hasChanges}
-            className="w-full flex items-center justify-center gap-2 py-3.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-40 text-white font-black text-sm rounded-2xl transition shadow-lg shadow-amber-500/25">
-            <Save className="w-4 h-4" />
-            {saving ? 'Saving Configuration...' : `Save & Activate — Rs.${totalAmount} Platform Fee`}
-          </button>
-
-          {!hasChanges && (
-            <p className="text-center text-[11px] text-gray-400">No changes to save.</p>
-          )}
-        </div>
-
-        {/* Version History */}
-        {versionHistory.length > 0 && (
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-            <button onClick={() => setShowHistory((h) => !h)}
-              className="flex items-center gap-2 w-full text-left">
-              <History className="w-5 h-5 text-amber-500" />
-              <span className="text-base font-black text-gray-900">Version History</span>
-              <ChevronDown className={`w-4 h-4 text-gray-400 ml-auto transition-transform ${showHistory ? 'rotate-180' : ''}`} />
-            </button>
-            {showHistory && (
-              <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
-                {versionHistory.map((v, i) => (
-                  <div key={i}
-                    className={`flex items-center justify-between p-3 rounded-xl text-xs ${v.isActive ? 'bg-amber-50 border border-amber-200' : 'bg-gray-50 border border-gray-100'}`}>
-                    <div>
-                      <span className={`font-black ${v.isActive ? 'text-amber-700' : 'text-gray-600'}`}>
-                        v{v.version} — Rs.{v.totalAmount}
-                        {v.isActive && <span className="ml-2 text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-md">ACTIVE</span>}
-                      </span>
-                      {v.description && <p className="text-gray-400 mt-0.5">{v.description}</p>}
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Base Platform Fee */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                      Base Platform Fee (Rs.) *
+                    </label>
+                    <div className="relative rounded-xl shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 font-semibold text-sm">
+                        Rs.
+                      </div>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value={config.feeAmount}
+                        onChange={(e) => setConfig({ ...config, feeAmount: e.target.value })}
+                        className="block w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-base font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                        placeholder="100"
+                      />
                     </div>
-                    <div className="text-right text-gray-400">
-                      <p>{v.updatedBy || 'admin'}</p>
-                      <p>{v.effectiveFrom ? new Date(v.effectiveFrom).toLocaleDateString('en-IN') : ''}</p>
+                    <p className="text-[11px] text-slate-500 mt-1.5">Base activation fee before GST taxes</p>
+                  </div>
+
+                  {/* GST Percentage */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                      GST % (0 = No Tax) *
+                    </label>
+                    <div className="relative rounded-xl shadow-sm">
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={config.gstPercent}
+                        onChange={(e) => setConfig({ ...config, gstPercent: e.target.value })}
+                        className="block w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-base font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                        placeholder="0"
+                      />
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-semibold text-sm">
+                        %
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-1.5">Applied on base fee ({gstPercent}% = Rs. {gstAmount})</p>
+                  </div>
+                </div>
+
+                {/* Final Charged Amount Preview Banner */}
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 via-amber-100/40 to-amber-50/30 border border-amber-200/90 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
+                      Final Amount Charged To Member
+                    </div>
+                    <div className="text-xs text-amber-700 mt-0.5">
+                      Base: <span className="font-bold">Rs. {feeAmount}</span> + GST ({gstPercent}%):{' '}
+                      <span className="font-bold">Rs. {gstAmount}</span>
                     </div>
                   </div>
-                ))}
+                  <div className="text-left sm:text-right">
+                    <div className="text-3xl font-extrabold text-amber-900 tracking-tight">
+                      Rs. {totalAmount}
+                    </div>
+                    <div className="text-[11px] font-semibold text-amber-700">INR (One-time Activation)</div>
+                  </div>
+                </div>
+
+                {/* Fee Description */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Fee Description (Shown to Member at Checkout)
+                  </label>
+                  <input
+                    type="text"
+                    value={config.description}
+                    onChange={(e) => setConfig({ ...config, description: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                    placeholder="e.g. Lifetime Membership and 3x15 Matrix Placement Fee"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1.5">
+                    This label is displayed on the payment checkout screen and invoices.
+                  </p>
+                </div>
+
+                {/* Audit Reason */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Reason for Change (Admin Audit Log)
+                  </label>
+                  <input
+                    type="text"
+                    value={auditReason}
+                    onChange={(e) => setAuditReason(e.target.value)}
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                    placeholder="e.g. Updated platform fee to Rs. 100 as per management decision"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1.5">
+                    Logged in administrative audit records for compliance and tracking.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card Footer: Save Button */}
+              <div className="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-end gap-3">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{saving ? 'Saving Configuration...' : 'Save Configuration'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Card 3: Version History Log */}
+            {history && history.length > 0 && (
+              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 bg-slate-100 rounded-lg text-slate-600">
+                      <History className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-bold text-slate-900">Configuration Version History</h2>
+                      <p className="text-xs text-slate-500">Audit trail of previous platform fee changes</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-semibold text-slate-500">
+                    {history.length} record{history.length > 1 ? 's' : ''}
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-600">
+                    <thead className="bg-slate-50/60 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200/70">
+                      <tr>
+                        <th className="px-6 py-3">Version</th>
+                        <th className="px-6 py-3">Base Fee</th>
+                        <th className="px-6 py-3">GST %</th>
+                        <th className="px-6 py-3">Total Charged</th>
+                        <th className="px-6 py-3">Gateway</th>
+                        <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Updated Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {history.map((h, idx) => {
+                        const isCurrent = h.isActive;
+                        return (
+                          <tr
+                            key={h._id || idx}
+                            className={isCurrent ? 'bg-amber-50/30 font-medium' : 'hover:bg-slate-50/50'}
+                          >
+                            <td className="px-6 py-3.5 font-bold text-slate-900">v{h.version}</td>
+                            <td className="px-6 py-3.5">Rs. {h.feeAmount ?? h.totalAmount}</td>
+                            <td className="px-6 py-3.5">{h.gstPercent ?? 0}%</td>
+                            <td className="px-6 py-3.5 font-bold text-slate-900">
+                              Rs. {h.totalAmount ?? h.feeAmount}
+                            </td>
+                            <td className="px-6 py-3.5 capitalize">
+                              {h.paymentProvider ? h.paymentProvider.replace('_', ' ') : 'AdSky Cashfree'}
+                            </td>
+                            <td className="px-6 py-3.5">
+                              {isCurrent ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600">
+                                  Archived
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-6 py-3.5 text-slate-400">
+                              {h.effectiveFrom
+                                ? new Date(h.effectiveFrom).toLocaleDateString('en-IN', {
+                                    day: 'numeric',
+                                    month: 'short',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  })
+                                : 'â€”'}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
-          </div>
+          </form>
         )}
-
       </div>
     </DashboardLayout>
   );

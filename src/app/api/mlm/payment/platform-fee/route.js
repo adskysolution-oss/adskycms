@@ -126,7 +126,8 @@ export async function POST(req) {
       });
     }
 
-    const payableAmount = 100;
+    const feeConfig = await MlmPlatformFeeConfig.findOne({ isActive: true }).sort({ version: -1 }).lean();
+    const payableAmount = Number(feeConfig?.totalAmount ?? feeConfig?.feeAmount ?? 100);
 
     // ── ACTION 1: CREATE CASHFREE PAYMENT ORDER ─────────────────────────────
     if (body.action === "CREATE_ORDER" || !body.action) {
