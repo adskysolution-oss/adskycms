@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -44,8 +45,15 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 mb-4">
-            <span className="text-3xl">🔐</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/15 border border-blue-500/30 mb-4 p-2 shadow-lg shadow-blue-500/10">
+            <Image
+              src="/logoTitle.png"
+              alt="NextView Logo"
+              width={48}
+              height={48}
+              className="w-11 h-11 object-contain"
+              priority
+            />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
             NextView Login

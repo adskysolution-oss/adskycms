@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -166,9 +167,13 @@ export default function MlmMemberLayout({ children, activePath }) {
           </button>
 
           <Link href="/nextview/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-xs flex items-center justify-center shadow-xs">
-              NV
-            </div>
+            <Image
+              src="/logoTitle.png"
+              alt="NexVia Logo"
+              width={32}
+              height={32}
+              className="w-8 h-8 rounded-xl object-contain shadow-xs"
+            />
             <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight leading-none group-hover:text-amber-600 transition">
               NexVia
             </span>
@@ -339,9 +344,13 @@ export default function MlmMemberLayout({ children, activePath }) {
             <div className="relative w-72 max-w-[80vw] bg-white h-full flex flex-col z-50 shadow-2xl animate-in slide-in-from-left duration-200">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-xs flex items-center justify-center">
-                    NV
-                  </div>
+                  <Image
+                    src="/logoTitle.png"
+                    alt="NexVia Logo"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 rounded-xl object-contain shadow-xs"
+                  />
                   <span className="font-black text-base text-slate-900">NexVia</span>
                 </div>
                 <button

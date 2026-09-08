@@ -10,7 +10,9 @@ export const metadata = {
   title: 'AdSky Solution - Premium IT Company',
   description: 'Premium IT support, scalable digital systems, and modern software solutions for growing businesses.',
   icons: {
-    icon: '/logo.png',
+    icon: '/logoTitle.png',
+    shortcut: '/logoTitle.png',
+    apple: '/logoTitle.png',
   },
 };
 

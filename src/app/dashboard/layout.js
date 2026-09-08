@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import logoImg from '../../../public/logo.png';
 import { 
   FaRocket, FaBriefcase, FaUser, FaBookmark, 
   FaHistory, FaCog, FaSignOutAlt, FaChevronRight,
@@ -63,7 +65,9 @@ export default function DashboardLayout({ children }) {
       <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0b1220] border-r border-white/5 transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0`}>
         <div className="h-full flex flex-col p-6">
           <div className="flex items-center justify-between mb-10">
-            <Link href="/" className="text-xl font-black italic gradient-text">ADSKY DASH</Link>
+            <Link href="/" className="flex items-center">
+              <Image src={logoImg} alt="Logo" className="h-8 w-auto object-contain" priority />
+            </Link>
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-text-muted">
               <FaTimes />
             </button>

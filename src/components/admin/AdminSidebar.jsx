@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   FaTachometerAlt, FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram,
@@ -135,9 +136,13 @@ export default function AdminSidebar() {
         {/* Top Header */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800/80 shrink-0">
           <Link href="/admin/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-xs">
-              AD
-            </div>
+            <Image
+              src="/logoTitle.png"
+              alt="AdSky Logo"
+              width={32}
+              height={32}
+              className="w-8 h-8 rounded-xl object-contain shadow-xs shrink-0"
+            />
             {!collapsed && (
               <div className="flex flex-col">
                 <span className="font-extrabold text-sm text-white tracking-tight leading-none">

@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import logoImg from '../../../public/logo.png';
 import {
   FaBars,
   FaTimes,
@@ -176,11 +177,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
-              src="/logo.png"
+              src={logoImg}
               alt="AdSky Solution Logo"
-              width={135}
-              height={38}
-              className="h-8.5 w-auto object-contain"
+              className="h-10 w-auto object-contain"
               priority
             />
           </Link>

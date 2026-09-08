@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaArrowUp } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
+import logoImg from '../../../public/logo.png';
 
 const footerSections = [
   {
@@ -71,11 +72,9 @@ export default function Footer() {
             <div>
               <Link href="/" className="inline-block mb-5">
                 <Image
-                  src="/logo.png"
+                  src={logoImg}
                   alt="AdSky Solution Logo"
-                  width={140}
-                  height={45}
-                  className="h-9 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </Link>
               <p className="text-text-secondary text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   KeyRound,
   Mail,
@@ -170,8 +171,15 @@ function ForgotPasswordContent() {
       <div className="w-full max-w-md">
         {/* Header Branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 mb-4 shadow-lg shadow-blue-500/10">
-            <KeyRound className="w-8 h-8 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/15 border border-blue-500/30 mb-4 p-2 shadow-lg shadow-blue-500/10">
+            <Image
+              src="/logoTitle.png"
+              alt="NextView Logo"
+              width={48}
+              height={48}
+              className="w-11 h-11 object-contain"
+              priority
+            />
           </div>
           <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">
             {resetSuccess
