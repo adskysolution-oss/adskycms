@@ -7,7 +7,9 @@ import {
   FaTachometerAlt, FaCog, FaBlog, FaImage, FaUsers, FaProjectDiagram,
   FaDollarSign, FaUserFriends, FaSignOutAlt, FaBars, FaTimes, FaChevronLeft, 
   FaEye, FaEnvelope, FaBriefcase, FaFileAlt, FaTags, FaFolder, FaChevronDown,
-  FaBuilding
+  FaBuilding, FaCheckCircle, FaMoneyBillWave, FaShareAlt, FaAward, FaSlidersH,
+  FaWallet, FaCreditCard, FaChartBar, FaGraduationCap, FaFileSignature, FaBell,
+  FaHistory, FaShieldAlt
 } from 'react-icons/fa';
 
 const menuGroups = [
@@ -17,45 +19,58 @@ const menuGroups = [
     href: '/admin/dashboard',
   },
   {
+    title: 'MLM & FD PLATFORM',
+    icon: FaProjectDiagram,
+    items: [
+      { href: '/admin/mlm', icon: FaTachometerAlt, label: 'MLM Overview' },
+      { href: '/admin/mlm/members', icon: FaUsers, label: 'MLM Members' },
+      { href: '/admin/mlm/kyc', icon: FaShieldAlt, label: 'KYC Verification' },
+      { href: '/admin/mlm/fd', icon: FaCreditCard, label: 'FD Applications' },
+      { href: '/admin/mlm/matrix', icon: FaProjectDiagram, label: '3×15 Matrix' },
+      { href: '/admin/mlm/rewards', icon: FaAward, label: 'MLM Rewards' },
+      { href: '/admin/mlm/levels', icon: FaSlidersH, label: 'Level 1–15 Config' },
+      { href: '/admin/mlm/wallet', icon: FaWallet, label: 'MLM Wallet' },
+      { href: '/admin/mlm/withdrawals', icon: FaMoneyBillWave, label: 'Withdrawal Payouts' },
+      { href: '/admin/mlm/payments', icon: FaDollarSign, label: 'Platform Payments' },
+      { href: '/admin/mlm/reports', icon: FaChartBar, label: 'MLM Reports' },
+      { href: '/admin/mlm/training', icon: FaGraduationCap, label: 'Training & Marketing' },
+      { href: '/admin/mlm/cms', icon: FaFileSignature, label: 'MLM CMS' },
+      { href: '/admin/mlm/notifications', icon: FaBell, label: 'MLM Notifications' },
+      { href: '/admin/mlm/audit-logs', icon: FaHistory, label: 'MLM Audit Logs' },
+    ],
+  },
+  {
+    title: 'Agency Recruitment',
+    icon: FaBriefcase,
+    items: [
+      { href: '/admin/recruitment', icon: FaTachometerAlt, label: 'Recruitment Overview' },
+      { href: '/admin/recruitment/partners', icon: FaBuilding, label: 'Partner Agencies' },
+      { href: '/admin/recruitment/candidates', icon: FaUserFriends, label: 'Candidates Pipeline' },
+      { href: '/admin/recruitment/jobs', icon: FaBriefcase, label: 'Client Openings' },
+    ],
+  },
+  {
     title: 'Content Management',
     icon: FaFolder,
     items: [
-      { href: '/admin/services', icon: FaCog, label: 'Services' },
+      { href: '/admin/services', icon: FaBriefcase, label: 'Services' },
       { href: '/admin/projects', icon: FaProjectDiagram, label: 'Projects' },
-      { href: '/admin/blogs', icon: FaBlog, label: 'Blogs' },
-      { href: '/admin/team', icon: FaUserFriends, label: 'Team' },
-    ],
-  },
-  {
-    title: 'Careers Management',
-    icon: FaBriefcase,
-    items: [
-      { href: '/admin/jobs', icon: FaBriefcase, label: 'Jobs' },
-      { href: '/admin/applications', icon: FaFileAlt, label: 'Applications' },
+      { href: '/admin/blog', icon: FaBlog, label: 'Blog Posts' },
       { href: '/admin/categories', icon: FaTags, label: 'Categories' },
-    ],
-  },
-  {
-    title: 'User Management',
-    icon: FaUsers,
-    items: [
+      { href: '/admin/media', icon: FaImage, label: 'Media Library' },
+      { href: '/admin/legal-pages', icon: FaFileAlt, label: 'Legal Pages' },
       { href: '/admin/users', icon: FaUsers, label: 'Users' },
-      { href: '/admin/companies', icon: FaBuilding, label: 'Companies' },
-      { href: '/admin/contacts', icon: FaEnvelope, label: 'Contacts' },
     ],
   },
   {
-    title: 'Media',
-    icon: FaImage,
-    href: '/admin/media',
+    title: 'Inquiries',
+    icon: FaEnvelope,
+    href: '/admin/contacts',
   },
   {
     title: 'Settings',
     icon: FaCog,
-    items: [
-      { href: '/admin/pricing', icon: FaDollarSign, label: 'Pricing' },
-      { href: '/admin/settings', icon: FaCog, label: 'General Settings' },
-    ],
+    href: '/admin/settings',
   },
 ];
 
@@ -64,66 +79,26 @@ export default function AdminSidebar() {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [expandedGroups, setExpandedGroups] = useState({});
-
-  useEffect(() => {
-    fetch('/api/auth/me').then((r) => r.json()).then((d) => {
-      if (d.user) setUser(d.user);
-    }).catch(() => {});
-  }, []);
-
-  // Role-based filtering logic
-  const filteredGroups = menuGroups.filter(group => {
-    if (!user) return false;
-    const role = user.role;
-    
-    // Admin/Editor see everything
-    if (role === 'admin' || role === 'editor') return true;
-    
-    // Employer view
-    if (role === 'employer') {
-      return ['Dashboard', 'Careers Management', 'Media'].includes(group.title);
-    }
-    
-    // Candidate view (if applicable)
-    if (role === 'candidate') {
-      return ['Dashboard'].includes(group.title);
-    }
-    
-    return false;
-  }).map(group => {
-    if (user?.role === 'employer' && group.title === 'Careers Management') {
-      // Filter sub-items for employer
-      return {
-        ...group,
-        items: group.items.filter(item => ['Jobs', 'Applications'].includes(item.label))
-      };
-    }
-    return group;
+  const [openGroups, setOpenGroups] = useState({
+    'MLM & FD PLATFORM': true,
+    'Agency Recruitment': false,
+    'Content Management': false,
   });
 
-  // Initialize expanded groups based on current path
+  // Expand group if active page is within it
   useEffect(() => {
-    const initialExpanded = {};
     menuGroups.forEach((group) => {
-      if (group.items?.some(item => pathname.startsWith(item.href))) {
-        initialExpanded[group.title] = true;
+      if (group.items) {
+        const hasActive = group.items.some((item) => pathname === item.href || (item.href !== '/admin/mlm' && pathname.startsWith(item.href)));
+        if (hasActive) {
+          setOpenGroups((prev) => ({ ...prev, [group.title]: true }));
+        }
       }
     });
-    setExpandedGroups(prev => ({ ...prev, ...initialExpanded }));
   }, [pathname]);
 
   const toggleGroup = (title) => {
-    if (collapsed) {
-      setCollapsed(false);
-      setExpandedGroups({ [title]: true });
-      return;
-    }
-    setExpandedGroups(prev => ({
-      ...prev,
-      [title]: !prev[title]
-    }));
+    setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] }));
   };
 
   const handleLogout = async () => {
@@ -131,138 +106,148 @@ export default function AdminSidebar() {
     router.push('/admin/login');
   };
 
-  const sidebarContent = (
-    <div className="flex flex-col h-full bg-dark-light select-none">
-      <div className="p-4 border-b border-white/5 flex items-center justify-between">
-        <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary/20">AS</div>
-          {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-text-primary leading-tight">AdSky Solution</span>
-              <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold">Admin Panel</span>
-            </div>
-          )}
-        </Link>
-        <button onClick={() => setCollapsed(!collapsed)} className="hidden lg:block text-text-muted hover:text-text-primary transition-colors p-1.5 hover:bg-white/5 rounded-lg">
-          <FaChevronLeft size={12} className={`transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
-        </button>
-      </div>
-
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-        {filteredGroups.map((group) => {
-          const isSingle = !group.items;
-          const isExpanded = expandedGroups[group.title];
-          const isActive = isSingle ? pathname === group.href : group.items.some(item => pathname.startsWith(item.href));
-          const Icon = group.icon;
-
-          if (isSingle) {
-            return (
-              <Link
-                key={group.title}
-                href={group.href}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  pathname === group.href
-                    ? 'bg-primary/20 text-primary-light shadow-sm shadow-primary/10'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                }`}
-              >
-                <Icon size={18} className={pathname === group.href ? 'text-primary-light' : ''} />
-                {!collapsed && <span>{group.title}</span>}
-              </Link>
-            );
-          }
-
-          return (
-            <div key={group.title} className="space-y-1">
-              <button
-                onClick={() => toggleGroup(group.title)}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive && !isExpanded
-                    ? 'bg-primary/10 text-primary-light'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon size={18} className={isActive ? 'text-primary-light' : ''} />
-                  {!collapsed && <span>{group.title}</span>}
-                </div>
-                {!collapsed && (
-                  <FaChevronDown size={10} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-                )}
-              </button>
-              
-              {!collapsed && isExpanded && (
-                <div className="ml-4 pl-4 border-l border-white/5 space-y-1 mt-1 animate-fade-in">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3.5 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                        pathname.startsWith(item.href)
-                          ? 'text-primary-light bg-primary/10'
-                          : 'text-text-muted hover:text-text-primary hover:bg-white/5'
-                      }`}
-                    >
-                      <item.icon size={14} />
-                      <span>{item.label}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        <div className="pt-4 mt-4 border-t border-white/5">
-          <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all">
-            <FaEye size={18} />
-            {!collapsed && <span>View Site</span>}
-          </a>
-        </div>
-      </nav>
-
-      <div className="p-4 border-t border-white/5 space-y-3 bg-dark/20">
-        {user && !collapsed && (
-          <div className="flex items-center gap-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-surface border border-white/10 flex items-center justify-center text-[10px] font-bold text-primary-light">
-              {user.name?.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs font-bold text-text-primary truncate">{user.name}</span>
-              <span className="text-[10px] text-text-muted uppercase font-semibold">{user.role}</span>
-            </div>
-          </div>
-        )}
-        <button onClick={handleLogout} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-text-secondary hover:text-danger hover:bg-danger/10 w-full transition-all group">
-          <FaSignOutAlt size={18} className="group-hover:scale-110 transition-transform" />
-          {!collapsed && <span>Logout</span>}
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <>
-      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-surface border border-white/10 text-text-primary shadow-xl">
-        <FaBars size={18} />
+      {/* Mobile menu button */}
+      <button
+        type="button"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="lg:hidden fixed bottom-5 right-5 z-50 p-3 bg-amber-500 text-slate-950 rounded-full shadow-lg hover:bg-amber-600 transition"
+      >
+        {mobileOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
       </button>
 
+      {/* Backdrop */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-dark-light border-r border-white/10 z-50 animate-slide-right">
-            <button onClick={() => setMobileOpen(false)} className="absolute top-4 right-4 text-text-muted hover:text-text-primary">
-              <FaTimes size={18} />
-            </button>
-            {sidebarContent}
-          </div>
-        </div>
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
-      <aside className={`hidden lg:block fixed left-0 top-0 bottom-0 bg-dark-light border-r border-white/5 transition-all duration-300 z-30 ${collapsed ? 'w-20' : 'w-64'}`}>
-        {sidebarContent}
+      {/* Sidebar container */}
+      <aside
+        className={`fixed top-0 left-0 h-screen z-40 flex flex-col bg-slate-950 border-r border-slate-800/80 transition-all duration-300 ${
+          collapsed ? 'w-20' : 'w-72'
+        } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+      >
+        {/* Top Header */}
+        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800/80 shrink-0">
+          <Link href="/admin/dashboard" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-xs">
+              AD
+            </div>
+            {!collapsed && (
+              <div className="flex flex-col">
+                <span className="font-extrabold text-sm text-white tracking-tight leading-none">
+                  AdSky Solution
+                </span>
+                <span className="text-[10px] text-amber-400 font-mono font-bold mt-0.5">
+                  Admin Command Center
+                </span>
+              </div>
+            )}
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/80 transition"
+            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          >
+            <FaChevronLeft className={`w-3.5 h-3.5 transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+
+        {/* Menu Items */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-2 select-none">
+          {menuGroups.map((group) => {
+            const Icon = group.icon;
+            const isSingle = !group.items;
+            const isActive = isSingle && pathname === group.href;
+            const isOpen = openGroups[group.title];
+
+            if (isSingle) {
+              return (
+                <Link
+                  key={group.title}
+                  href={group.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
+                    isActive
+                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-900'
+                  } ${collapsed ? 'justify-center px-0' : ''}`}
+                  title={collapsed ? group.title : undefined}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  {!collapsed && <span>{group.title}</span>}
+                </Link>
+              );
+            }
+
+            return (
+              <div key={group.title} className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(group.title)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white hover:bg-slate-900/60 transition ${
+                    collapsed ? 'justify-center px-0' : ''
+                  }`}
+                  title={collapsed ? group.title : undefined}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!collapsed && <span>{group.title}</span>}
+                  </div>
+                  {!collapsed && (
+                    <FaChevronDown className={`w-2.5 h-2.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                  )}
+                </button>
+
+                {(!collapsed || mobileOpen) && isOpen && (
+                  <div className="pl-3 space-y-0.5 border-l border-slate-800 ml-5 my-1">
+                    {group.items.map((item) => {
+                      const SubIcon = item.icon;
+                      const isSubActive = pathname === item.href || (item.href !== '/admin/mlm' && pathname.startsWith(item.href));
+
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition ${
+                            isSubActive
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                          }`}
+                        >
+                          <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-amber-400' : 'text-slate-500'}`} />
+                          <span className="truncate">{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div className="p-3 border-t border-slate-800/80 shrink-0">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition ${
+              collapsed ? 'justify-center px-0' : ''
+            }`}
+            title={collapsed ? 'Logout' : undefined}
+          >
+            <FaSignOutAlt className="w-4 h-4 shrink-0" />
+            {!collapsed && <span>Sign Out</span>}
+          </button>
+        </div>
       </aside>
     </>
   );

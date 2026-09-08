@@ -1,4 +1,4 @@
-import Hero from '@/components/sections/Hero';
+﻿import Hero from '@/components/sections/Hero';
 import ServicesSection from '@/components/sections/ServicesSection';
 import StrategySection from '@/components/sections/StrategySection';
 import JobCategoriesSection from '@/components/sections/JobCategoriesSection';
@@ -7,6 +7,7 @@ import HowItWorksSection from '@/components/sections/HowItWorksSection';
 import MeetTeamSection from '@/components/sections/MeetTeamSection';
 import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import CTASection from '@/components/sections/CTASection';
+import CorporateAndMlmCTA from '@/components/sections/CorporateAndMlmCTA';
 import AboutCompanySection from '@/components/sections/AboutCompanySection';
 import { getActiveServices, getPublishedBlogs, getTeamMembers } from '@/lib/data';
 import ContactSection from '@/components/sections/ContactSection';
@@ -41,6 +42,9 @@ export default async function HomePage() {
 
         <VisionMissionSection />
         <HowItWorksSection />
+
+        {/* Corporate Partner & MLM Referral Network Section */}
+        <CorporateAndMlmCTA />
 
         <BlogPreviewSection blogs={blogs} />
         <MeetTeamSection team={team} />

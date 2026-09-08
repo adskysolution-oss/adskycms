@@ -64,3 +64,7 @@ export const authenticateRequest = async (request) => {
     return null;
   }
 };
+
+export const getAuthSession = async () => {
+  return await getAuthUser();
+};
