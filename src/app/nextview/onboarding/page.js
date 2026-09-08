@@ -399,7 +399,7 @@ export default function NextViewOnboardingPage() {
             </div>
             <p className="text-xs font-black text-white">Platform Activation</p>
             <p className="text-[10px] mt-0.5 opacity-80">
-              {isFeePaid ? 'Paid & Activated' : isKycVerified ? '₹100 Deposit Ready' : 'Locked until KYC'}
+              {isFeePaid ? 'Paid & Activated' : isKycVerified ? (feeData?.amount !== undefined ? `₹${feeData.amount} Deposit Ready` : 'Deposit Ready') : 'Locked until KYC'}
             </p>
           </div>
 
@@ -641,14 +641,14 @@ export default function NextViewOnboardingPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
-                    Lifetime Membership &amp; Matrix Placement
+                    {feeData?.feeDescription || feeData?.feeName || 'Lifetime Membership & Matrix Placement'}
                   </span>
                   <h4 className="text-xl font-black text-white mt-0.5">
                     Platform Activation Fee
                   </h4>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-amber-400 font-mono">₹100</span>
+                  <span className="text-2xl font-black text-amber-400 font-mono">₹{feeData?.amount ?? 100}</span>
                   <span className="text-[10px] text-text-muted block">One-time Fee</span>
                 </div>
               </div>
@@ -673,7 +673,7 @@ export default function NextViewOnboardingPage() {
                 disabled={payingFee}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.01] transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                <span>{payingFee ? 'Activating Account & Matrix...' : 'Pay ₹100 & Activate Matrix Position'}</span>
+                <span>{payingFee ? 'Activating Account & Matrix...' : `Pay ₹${feeData?.amount ?? 100} & Activate Matrix Position`}</span>
                 <ArrowRight size={18} />
               </button>
             </div>

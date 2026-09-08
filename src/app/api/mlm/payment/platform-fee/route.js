@@ -38,11 +38,12 @@ export async function GET(req) {
     const response = NextResponse.json({
       success: true,
       data: {
-        feeName: "NexVia 3×15 Matrix Platform Activation Fee",
+        feeName: feeConfig?.description || "NexVia 3×15 Matrix Platform Activation Fee",
+        feeDescription: feeConfig?.description || "Lifetime Membership & 3×15 Matrix Placement",
         amount,
         currency: "INR",
         activationRequired: true,
-        provider: "cashfree",
+        provider: feeConfig?.paymentProvider || "adsky_cashfree",
         environment: process.env.CASHFREE_ENV || "production",
         member: {
           _id: member._id,
