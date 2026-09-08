@@ -190,26 +190,69 @@ export default function AdminMlmConfigurationPage() {
 
               <div>
                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                  Platform Activation Fee (₹)
+                  Base Platform Fee (₹) <span className="text-amber-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-3 text-xs font-black text-gray-400">
-                    ₹
-                  </span>
-                  <input type="number" min="0" value={config.platformFeeAmount} onChange={(e) => setConfig({
-            ...config,
-            platformFeeAmount: Number(e.target.value),
-        })} className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500/20 font-black text-gray-900 bg-white text-sm"/>
+                  <span className="absolute left-3.5 top-3 text-xs font-black text-gray-400">₹</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={config.platformFeeAmount}
+                    onChange={(e) => setConfig({ ...config, platformFeeAmount: Number(e.target.value) })}
+                    className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-amber-300 focus:ring-2 focus:ring-amber-500/30 font-black text-gray-900 bg-white text-sm"
+                  />
                 </div>
+                <p className="text-[10px] text-gray-400 mt-1">This is the base activation charge before GST</p>
               </div>
 
               <div>
                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                  Currency
+                  GST % (0 = No GST)
                 </label>
-                <input type="text" readOnly value={config.currency || 'INR'} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 font-bold text-gray-500 bg-gray-100 text-sm"/>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={config.gstPercent ?? 0}
+                    onChange={(e) => setConfig({ ...config, gstPercent: Number(e.target.value) })}
+                    className="w-full pr-8 px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500/20 font-black text-gray-900 bg-white text-sm"
+                  />
+                  <span className="absolute right-3.5 top-3 text-xs font-black text-gray-400">%</span>
+                </div>
+              </div>
+
+              {/* Live Total Preview */}
+              <div className="col-span-1 md:col-span-2 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest">Final Amount Charged to Member</p>
+                  <p className="text-xs text-amber-600 mt-0.5">
+                    ₹{config.platformFeeAmount || 0} base
+                    {(config.gstPercent ?? 0) > 0 && <> + {config.gstPercent}% GST = </>}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-3xl font-black text-amber-600">
+                    ₹{Math.round((config.platformFeeAmount || 0) * (1 + (config.gstPercent ?? 0) / 100))}
+                  </span>
+                  <p className="text-[10px] text-amber-500 font-bold">INR (One-time)</p>
+                </div>
+              </div>
+
+              <div className="col-span-1 md:col-span-2">
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
+                  Fee Description (shown to member)
+                </label>
+                <input
+                  type="text"
+                  value={config.description ?? ''}
+                  onChange={(e) => setConfig({ ...config, description: e.target.value })}
+                  placeholder="e.g. Lifetime Membership & Matrix Placement Fee"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500/20 font-semibold text-gray-700 bg-white text-sm"
+                />
               </div>
             </div>
+
 
             {/* Activation Flow Diagram */}
             <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 space-y-2">

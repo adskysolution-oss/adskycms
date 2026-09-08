@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import { getAuthUser } from '@/lib/auth';
 import MlmPlatformFeeConfig from '@/models/mlm/MlmPlatformFeeConfig';
-import PaymentConfig from '@/models/PaymentConfig';
 import MlmAuditLog from '@/models/mlm/MlmAuditLog';
+
 export async function GET() {
     try {
         const session = await getAuthUser();
@@ -12,7 +12,8 @@ export async function GET() {
         }
         await dbConnect();
         const paymentConfig = await PaymentConfig.findOne({ key: 'default' }).lean();
-        const feeConfig = await MlmPlatformFeeConfig.findOne({ status: 'active' }).sort({ version: -1 }).lean();
+        // Use isActive:true — model has isActive field, NOT status field
+        const feeConfig = await MlmPlatformFeeConfig.findOne({ isActive: true }).sort({ version: -1 }).lean();
         const configData = {
             registrationEnabled: true,
             requireSponsorCode: true,
@@ -24,10 +25,12 @@ export async function GET() {
             aadhaarRequired: true,
             bankDetailsRequired: true,
             kycApprovalRequiredBeforeActivation: true,
-            platformFeeRequired: paymentConfig?.subscriptionRequired?.mlm_member ?? feeConfig?.activationRequired ?? true,
-            platformFeeAmount: paymentConfig?.subscriptionAmount?.mlm_member ?? feeConfig?.amount ?? 100,
-            currency: feeConfig?.currency ?? 'INR',
-            paymentProvider: paymentConfig?.paymentAccount?.mlm_member ?? feeConfig?.paymentGateway ?? 'sakhihub_cashfree',
+            platformFeeRequired: true,
+            // totalAmount is the final charged amount in the model
+            platformFeeAmount: feeConfig?.totalAmount ?? feeConfig?.feeAmount ?? 100,
+            gstPercent: feeConfig?.gstPercent ?? 0,
+            currency: 'INR',
+            paymentProvider: 'cashfree',
             rewardsEnabled: true,
             withdrawalsEnabled: true,
             minWithdrawalAmount: 100,
@@ -37,6 +40,7 @@ export async function GET() {
             upiEnabled: true,
             walletEnabled: true,
             version: feeConfig?.version ?? 1,
+            description: feeConfig?.description ?? '',
         };
         return NextResponse.json({
             success: true,
@@ -57,62 +61,61 @@ export async function POST(req) {
         await dbConnect();
         const body = await req.json();
         const { auditReason, ...configPayload } = body;
-        const amount = Number(configPayload.platformFeeAmount) || 100;
-        const required = configPayload.platformFeeRequired !== false;
-        const provider = configPayload.paymentProvider || 'sakhihub_cashfree';
-        // 1. Update MlmPlatformFeeConfig
-        const updatedFeeConfig = await MlmPlatformFeeConfig.findOneAndUpdate({ status: 'active' }, {
-            feeName: 'MLM Platform Activation Charge',
-            amount,
-            activationRequired: required,
-            paymentGateway: provider,
+        const feeAmount = Number(configPayload.platformFeeAmount) || 100;
+        const gstPercent = Number(configPayload.gstPercent) || 0;
+        const totalAmount = Math.round(feeAmount * (1 + gstPercent / 100));
+        const description = configPayload.description || 'MLM Platform Activation Fee';
+
+        // 1. Deactivate all existing active configs
+        await MlmPlatformFeeConfig.updateMany({ isActive: true }, { $set: { isActive: false } });
+
+        // 2. Create new version (find last version number first)
+        const lastConfig = await MlmPlatformFeeConfig.findOne().sort({ version: -1 }).lean();
+        const newVersion = (lastConfig?.version ?? 0) + 1;
+
+        const updatedFeeConfig = await MlmPlatformFeeConfig.create({
+            version: newVersion,
+            feeAmount,
+            gstPercent,
+            totalAmount,
+            isActive: true,
+            description,
             effectiveFrom: new Date(),
-            status: 'active',
-            $inc: { version: 1 },
-        }, { upsert: true, new: true });
-        // 2. Update PaymentConfig to stay in sync
-        let paymentConfig = await PaymentConfig.findOne({ key: 'default' });
-        if (paymentConfig) {
-            const subAmount = paymentConfig.subscriptionAmount || {};
-            const subReq = paymentConfig.subscriptionRequired || {};
-            const payAcc = paymentConfig.paymentAccount || {};
-            subAmount.mlm_member = amount;
-            subReq.mlm_member = required;
-            payAcc.mlm_member = provider;
-            paymentConfig.subscriptionAmount = subAmount;
-            paymentConfig.subscriptionRequired = subReq;
-            paymentConfig.paymentAccount = payAcc;
-            paymentConfig.markModified('subscriptionAmount');
-            paymentConfig.markModified('subscriptionRequired');
-            paymentConfig.markModified('paymentAccount');
-            await paymentConfig.save();
-        }
+            updatedBy: session.email || session.id || 'admin',
+        });
+
         // 3. Log Audit
         try {
             await MlmAuditLog.create({
-                action: 'UPDATE_CONFIG',
-                adminId: session.id,
-                adminEmail: session.email || 'admin@sakhihub.com',
-                details: {
-                    platformFeeAmount: amount,
-                    platformFeeRequired: required,
-                    paymentProvider: provider,
-                    auditReason: auditReason || 'MLM Configuration updated by super admin',
+                action: 'UPDATE_PLATFORM_FEE_CONFIG',
+                performedBy: session.id,
+                performedByRole: session.role || 'admin',
+                performedByName: session.name || session.email || 'Admin',
+                newValue: {
+                    version: newVersion,
+                    feeAmount,
+                    gstPercent,
+                    totalAmount,
+                    description,
+                    auditReason: auditReason || 'Platform fee config updated by admin',
                 },
             });
         }
         catch (auditErr) {
             console.warn('MLM Audit Log warning:', auditErr.message);
         }
+
         return NextResponse.json({
             success: true,
-            message: 'MLM Configuration updated successfully',
+            message: `Platform fee updated to ₹${totalAmount} (v${newVersion}) successfully`,
             data: {
                 ...configPayload,
-                platformFeeAmount: amount,
-                platformFeeRequired: required,
-                paymentProvider: provider,
-                version: updatedFeeConfig?.version ?? 1,
+                platformFeeAmount: totalAmount,
+                feeAmount,
+                gstPercent,
+                totalAmount,
+                version: newVersion,
+                description,
             },
         });
     }
