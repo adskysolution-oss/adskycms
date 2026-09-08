@@ -44,10 +44,11 @@ export async function POST(req) {
 
     // 5. Generate Token
     const token = await createToken({
-      id: user._id,
+      id: user._id.toString(),
       email: user.email,
       role: user.role,
       name: user.name,
+      fullName: user.name,
     });
 
     // 6. Set Cookie

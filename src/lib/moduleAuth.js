@@ -56,6 +56,40 @@ export async function requireModuleAuth(req, module, allowedRoles) {
     );
   }
 
+  // Normalize id / _id / userId if serialized as buffer/object
+  const normalizeId = (raw) => {
+    if (!raw) return raw;
+    if (typeof raw === "string") return raw;
+    if (typeof raw === "object") {
+      if (raw.buffer) {
+        try {
+          const buf = Buffer.from(Object.values(raw.buffer));
+          if (buf.length === 12) return buf.toString("hex");
+        } catch (e) {}
+      }
+      if (typeof raw.toString === "function") {
+        const str = raw.toString();
+        if (str !== "[object Object]") return str;
+      }
+    }
+    return raw;
+  };
+
+  if (payload) {
+    if (payload.id) payload.id = normalizeId(payload.id);
+    if (payload._id) payload._id = normalizeId(payload._id);
+    if (payload.userId) payload.userId = normalizeId(payload.userId);
+    if (!payload.id && (payload._id || payload.userId)) {
+      payload.id = payload._id || payload.userId;
+    }
+    if (payload.name && !payload.fullName) {
+      payload.fullName = payload.name;
+    }
+    if (payload.fullName && !payload.name) {
+      payload.name = payload.fullName;
+    }
+  }
+
   const role = payload.role;
 
   // Admin always passes for admin or any general module

@@ -4,7 +4,14 @@ import { cookies } from 'next/headers';
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export const createToken = async (payload) => {
-  return await new SignJWT(payload)
+  const cleanPayload = { ...payload };
+  if (cleanPayload.id && typeof cleanPayload.id !== 'string') {
+    cleanPayload.id = cleanPayload.id.toString();
+  }
+  if (cleanPayload._id && typeof cleanPayload._id !== 'string') {
+    cleanPayload._id = cleanPayload._id.toString();
+  }
+  return await new SignJWT(cleanPayload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
@@ -14,6 +21,33 @@ export const createToken = async (payload) => {
 export const verifyToken = async (token) => {
   try {
     const { payload } = await jwtVerify(token, secret);
+    if (payload) {
+      const normalizeId = (raw) => {
+        if (!raw) return raw;
+        if (typeof raw === 'string') return raw;
+        if (typeof raw === 'object') {
+          if (raw.buffer) {
+            try {
+              const buf = Buffer.from(Object.values(raw.buffer));
+              if (buf.length === 12) return buf.toString('hex');
+            } catch (e) {}
+          }
+          if (typeof raw.toString === 'function') {
+            const str = raw.toString();
+            if (str !== '[object Object]') return str;
+          }
+        }
+        return raw;
+      };
+      if (payload.id) payload.id = normalizeId(payload.id);
+      if (payload._id) payload._id = normalizeId(payload._id);
+      if (payload.userId) payload.userId = normalizeId(payload.userId);
+      if (!payload.id && (payload._id || payload.userId)) {
+        payload.id = payload._id || payload.userId;
+      }
+      if (payload.name && !payload.fullName) payload.fullName = payload.name;
+      if (payload.fullName && !payload.name) payload.name = payload.fullName;
+    }
     return payload;
   } catch (error) {
     return null;
