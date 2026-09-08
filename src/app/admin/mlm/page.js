@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import DashboardLayout from '@/components/features/dashboard/DashboardLayout';
-import { Network, Users, ShieldCheck, Award, Wallet, IndianRupee, RefreshCw, ArrowRight, CheckCircle2, Layers, SlidersHorizontal, FileText, CreditCard, Sparkles, BarChart3 } from 'lucide-react';
+import { Network, Users, ShieldCheck, Award, Wallet, IndianRupee, RefreshCw, ArrowRight, CheckCircle2, Layers, SlidersHorizontal, FileText, CreditCard, Sparkles, BarChart3, Settings } from 'lucide-react';
 export default function AdminMlmOverviewPage() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -184,6 +184,7 @@ export default function AdminMlmOverviewPage() {
             { title: 'MLM Wallets', href: '/admin/mlm/wallet', icon: Wallet, desc: 'Financial balances' },
             { title: 'Withdrawals', href: '/admin/mlm/withdrawals', icon: IndianRupee, desc: 'Payout requests' },
             { title: 'Platform Payments', href: '/admin/mlm/payments', icon: CreditCard, desc: '₹100 fee orders' },
+            { title: 'Payment Config', href: '/admin/mlm/configuration', icon: Settings, desc: 'Fee & PG routing' },
             { title: 'Reports & Analytics', href: '/admin/mlm/reports', icon: BarChart3, desc: 'State/District data' },
             { title: 'Training Materials', href: '/admin/mlm/training', icon: Sparkles, desc: 'Learning & banners' },
             { title: 'Audit Logs', href: '/admin/mlm/audit-logs', icon: FileText, desc: 'Immutable trail' },

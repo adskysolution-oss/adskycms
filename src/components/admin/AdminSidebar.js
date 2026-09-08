@@ -32,6 +32,7 @@ const menuGroups = [
       { href: '/admin/mlm/wallet', icon: FaWallet, label: 'MLM Wallet' },
       { href: '/admin/mlm/withdrawals', icon: FaMoneyBillWave, label: 'Withdrawal Payouts' },
       { href: '/admin/mlm/payments', icon: FaDollarSign, label: 'Platform Payments' },
+      { href: '/admin/mlm/configuration', icon: FaCog, label: 'Payment Config' },
       { href: '/admin/mlm/reports', icon: FaChartBar, label: 'MLM Reports' },
       { href: '/admin/mlm/training', icon: FaGraduationCap, label: 'Training & Marketing' },
       { href: '/admin/mlm/cms', icon: FaFileSignature, label: 'MLM CMS' },

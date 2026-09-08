@@ -127,6 +127,7 @@ export const ADMIN_DASHBOARD_LINKS = [
     { section: 'MLM & FD Platform', name: 'MLM Wallet', icon: Wallet, href: '/admin/mlm/wallet' },
     { section: 'MLM & FD Platform', name: 'Withdrawal Payouts', icon: IndianRupee, href: '/admin/mlm/withdrawals' },
     { section: 'MLM & FD Platform', name: 'Platform Payments', icon: CreditCard, href: '/admin/mlm/payments' },
+    { section: 'MLM & FD Platform', name: 'Payment Config', icon: Settings, href: '/admin/mlm/configuration' },
     { section: 'MLM & FD Platform', name: 'MLM Reports', icon: BarChart3, href: '/admin/mlm/reports' },
     { section: 'MLM & FD Platform', name: 'Training & Marketing', icon: Sparkles, href: '/admin/mlm/training' },
     { section: 'MLM & FD Platform', name: 'MLM CMS', icon: FileText, href: '/admin/mlm/cms' },
