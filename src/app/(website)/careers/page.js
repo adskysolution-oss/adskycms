@@ -124,7 +124,7 @@ export default function CareersPage() {
           </p>
 
           {/* Advanced Search Bar */}
-          <div className="max-w-4xl mx-auto glass-card p-2 md:p-3 rounded-2xl flex flex-col md:flex-row gap-2 border border-white/10 shadow-2xl">
+          <div className="max-w-4xl mx-auto glass-card p-2 md:p-3 rounded-2xl flex flex-col md:flex-row gap-2 border border-slate-200/80 shadow-md">
             <div className="flex-1 relative">
               <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
               <input 
@@ -135,7 +135,7 @@ export default function CareersPage() {
                 className="w-full bg-transparent py-4 pl-12 pr-4 text-text-primary focus:outline-none font-medium"
               />
             </div>
-            <div className="hidden md:block w-px bg-white/10 my-2" />
+            <div className="hidden md:block w-px bg-slate-200 my-2" />
             <div className="flex-1 relative">
               <FaMapMarkerAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
               <input 
@@ -161,9 +161,9 @@ export default function CareersPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* Filters Sidebar */}
           <aside className="lg:col-span-1 space-y-8">
-            <div className="glass-card p-8 border border-white/5 sticky top-32">
+            <div className="glass-card p-8 border border-slate-200/80 sticky top-32 shadow-xs">
               <h3 className="text-sm font-black text-text-primary mb-8 uppercase tracking-[0.2em] flex items-center gap-2">
-                <FaFilter className="text-primary-light" size={12} /> Refine Search
+                <FaFilter className="text-primary" size={12} /> Refine Search
               </h3>
               
               <div className="space-y-8">
@@ -173,7 +173,7 @@ export default function CareersPage() {
                     name="category"
                     value={filters.category}
                     onChange={handleFilterChange}
-                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-text-primary focus:border-primary/50"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-text-primary focus:border-primary/50 focus:bg-white"
                   >
                     <option value="">All Categories</option>
                     {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
@@ -196,12 +196,12 @@ export default function CareersPage() {
                         <span className="text-sm text-text-secondary group-hover:text-text-primary transition-colors">{type}</span>
                       </label>
                     ))}
-                    <button onClick={() => { setFilters({...filters, type: ''}); fetchJobs({...filters, type: ''}); }} className="text-[10px] text-primary-light font-bold hover:underline mt-2">Clear Type</button>
+                    <button onClick={() => { setFilters({...filters, type: ''}); fetchJobs({...filters, type: ''}); }} className="text-[10px] text-primary font-bold hover:underline mt-2">Clear Type</button>
                   </div>
                 </div>
 
-                <div className="pt-8 border-t border-white/5">
-                  <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20">
+                <div className="pt-8 border-t border-slate-100">
+                  <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/20">
                     <p className="text-xs font-bold text-text-primary mb-2">Want personalized alerts?</p>
                     <p className="text-[10px] text-text-muted mb-4 leading-relaxed">Save your search and we'll notify you when matching jobs drop.</p>
                     <button className="w-full btn-secondary !py-2 text-[10px] font-black uppercase tracking-widest">Save Search</button>
@@ -225,7 +225,7 @@ export default function CareersPage() {
                 <p className="text-text-muted font-bold uppercase tracking-tighter">Syncing listings...</p>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="glass-card p-20 text-center border border-white/5">
+              <div className="glass-card p-20 text-center border border-slate-200">
                 <FaBriefcase className="mx-auto text-text-muted mb-4" size={40} />
                 <h3 className="text-xl font-bold text-text-primary mb-2 italic">Zero matches found</h3>
                 <p className="text-text-secondary text-sm">Try adjusting your filters or search keywords.</p>
@@ -236,10 +236,10 @@ export default function CareersPage() {
                   <Link 
                     key={job._id} 
                     href={`/jobs/${job._id}`}
-                    className="glass-card p-6 md:p-8 border border-white/5 hover:border-primary/30 transition-all group flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+                    className="glass-card p-6 md:p-8 border border-slate-200/80 hover:border-primary/40 transition-all group flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xs"
                   >
                     <div className="flex gap-6 w-full md:w-auto">
-                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
                         {job.company?.logo ? (
                           <img src={job.company.logo} alt={job.company.companyName} className="w-full h-full object-contain p-2" />
                         ) : (
@@ -247,22 +247,22 @@ export default function CareersPage() {
                         )}
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-text-primary mb-1 group-hover:text-primary-light transition-colors">{job.title}</h3>
+                        <h3 className="text-xl font-bold text-text-primary mb-1 group-hover:text-primary transition-colors">{job.title}</h3>
                         <p className="text-sm font-bold text-text-secondary mb-3">{job.company?.companyName}</p>
                         <div className="flex flex-wrap gap-4 text-xs text-text-muted font-medium">
-                          <span className="flex items-center gap-1.5"><FaMapMarkerAlt size={12} className="text-primary-light" /> {job.location}</span>
-                          <span className="flex items-center gap-1.5"><FaMoneyBillWave size={12} className="text-secondary-light" /> {job.salary}</span>
-                          <span className="flex items-center gap-1.5"><FaClock size={12} className="text-accent-light" /> {job.type}</span>
+                          <span className="flex items-center gap-1.5"><FaMapMarkerAlt size={12} className="text-primary" /> {job.location}</span>
+                          <span className="flex items-center gap-1.5"><FaMoneyBillWave size={12} className="text-emerald-600" /> {job.salary}</span>
+                          <span className="flex items-center gap-1.5"><FaClock size={12} className="text-primary" /> {job.type}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
+                    <div className="flex items-center gap-4 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
                       <button 
                         onClick={(e) => toggleSaveJob(e, job._id)}
                         className={`p-3 rounded-xl border transition-all ${
                           savedJobIds.includes(job._id) 
-                            ? 'bg-secondary/10 border-secondary/20 text-secondary-light' 
-                            : 'bg-white/5 border-white/5 text-text-muted hover:border-secondary/20'
+                            ? 'bg-blue-50 border-blue-200 text-primary' 
+                            : 'bg-slate-100 border-slate-200 text-text-muted hover:border-primary/40'
                         }`}
                       >
                         {savedJobIds.includes(job._id) ? <FaBookmark size={14} /> : <FaRegBookmark size={14} />}
@@ -270,15 +270,15 @@ export default function CareersPage() {
 
                       <div className="hidden md:flex flex-wrap gap-2 mr-4 max-w-xs justify-end">
                         {appliedJobIds.includes(job._id) && (
-                          <span className="px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-[10px] font-black uppercase tracking-widest border border-green-400/20">
+                          <span className="px-3 py-1 rounded-full bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest border border-green-500/20">
                             Applied
                           </span>
                         )}
                         {job.skills?.slice(0, 2).map((skill, i) => (
-                          <span key={i} className="px-2 py-1 rounded-lg bg-white/5 text-[9px] font-bold text-text-muted uppercase tracking-tighter">#{skill}</span>
+                          <span key={i} className="px-2 py-1 rounded-lg bg-slate-100 text-[9px] font-bold text-text-muted uppercase tracking-tighter">#{skill}</span>
                         ))}
                       </div>
-                      <div className={`p-4 rounded-xl transition-all shadow-xl ${appliedJobIds.includes(job._id) ? 'bg-green-400/10 text-green-400' : 'bg-primary/10 text-primary-light group-hover:bg-primary group-hover:text-white shadow-primary/5'}`}>
+                      <div className={`p-4 rounded-xl transition-all shadow-md ${appliedJobIds.includes(job._id) ? 'bg-green-500/10 text-green-600' : 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white shadow-primary/5'}`}>
                         <FaChevronRight size={14} />
                       </div>
                     </div>

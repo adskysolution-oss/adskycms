@@ -31,10 +31,10 @@ export default function AdminDashboard() {
       <div className="space-y-8 animate-pulse">
         <div className="grid grid-cols-4 gap-6">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-32 bg-slate-900 rounded-2xl"></div>
+            <div key={i} className="h-32 bg-slate-200 rounded-2xl"></div>
           ))}
         </div>
-        <div className="h-96 bg-slate-900 rounded-2xl"></div>
+        <div className="h-96 bg-slate-200 rounded-2xl"></div>
       </div>
     );
   }
@@ -49,16 +49,16 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-slate-400 mt-2">Welcome back! Here's what's happening today.</p>
+        <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
+        <p className="text-slate-500 mt-2">Welcome back! Here's what's happening today.</p>
       </header>
 
       <DashboardCards stats={data?.stats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* User Growth Chart */}
-        <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
-          <h3 className="text-lg font-semibold mb-6">User Growth (Last 7 Days)</h3>
+        <div className="lg:col-span-2 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs">
+          <h3 className="text-lg font-bold text-slate-900 mb-6">User Growth (Last 7 Days)</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data?.userGrowth}>
@@ -68,12 +68,12 @@ export default function AdminDashboard() {
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="_id" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="_id" stroke="#64748b" />
+                <YAxis stroke="#64748b" />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }}
-                  itemStyle={{ color: '#fff' }}
+                  contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  itemStyle={{ color: '#0f172a' }}
                 />
                 <Area 
                   type="monotone" 
@@ -88,8 +88,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Application Stats */}
-        <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
-          <h3 className="text-lg font-semibold mb-6">Application Status</h3>
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs">
+          <h3 className="text-lg font-bold text-slate-900 mb-6">Application Status</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -115,9 +115,9 @@ export default function AdminDashboard() {
               <div key={entry.name} className="flex items-center justify-between text-sm">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                  <span className="capitalize text-slate-400">{entry.name}</span>
+                  <span className="capitalize text-slate-600">{entry.name}</span>
                 </div>
-                <span className="font-semibold">{entry.value}</span>
+                <span className="font-semibold text-slate-900">{entry.value}</span>
               </div>
             ))}
           </div>

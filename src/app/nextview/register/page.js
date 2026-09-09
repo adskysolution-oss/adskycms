@@ -320,31 +320,31 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-xl text-center mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 mb-3 shadow-lg shadow-amber-500/10">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 mb-3 shadow-sm">
           <span className="text-2xl font-black">NV</span>
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight sm:text-4xl">
-          Join <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">NexVia Network</span>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight sm:text-4xl">
+          Join <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">NexVia Network</span>
         </h1>
-        <p className="mt-1 text-xs sm:text-sm text-text-secondary font-medium">
+        <p className="mt-1 text-xs sm:text-sm text-slate-600 font-medium">
           Create your member account &amp; enter the 3×15 reward matrix
         </p>
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-[#0b1220]/95 py-8 px-6 sm:px-10 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-xl">
+        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-slate-200/80 shadow-xl">
           {error && (
-            <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs sm:text-sm font-medium flex items-start gap-2.5">
-              <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-medium flex items-start gap-2.5">
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {successMessage && (
-            <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm font-medium flex items-start gap-2.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs sm:text-sm font-medium flex items-start gap-2.5">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
               <span>{successMessage}</span>
             </div>
           )}
@@ -352,13 +352,13 @@ function RegisterForm() {
           {step === 1 ? (
             <form className="space-y-5" onSubmit={handleRegisterSubmit} autoComplete="off">
               {/* SECTION A: REFERRAL / SPONSOR */}
-              <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-2">
+              <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-black uppercase tracking-wider text-amber-400">
+                  <label className="block text-xs font-black uppercase tracking-wider text-amber-800">
                     Sponsor / Referral Code *
                   </label>
                   {validatingSponsor && (
-                    <span className="text-[11px] text-amber-400 flex items-center gap-1 font-semibold">
+                    <span className="text-[11px] text-amber-600 flex items-center gap-1 font-semibold">
                       <RefreshCw className="w-3 h-3 animate-spin" /> Verifying...
                     </span>
                   )}
@@ -376,15 +376,15 @@ function RegisterForm() {
                     placeholder="Enter sponsor code (e.g. NEX-ROOT-001)"
                     className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-mono font-bold uppercase transition focus:outline-none ${
                       isLockedSponsor
-                        ? 'bg-amber-500/10 border border-amber-500/30 text-amber-300 cursor-not-allowed'
-                        : 'bg-dark border border-white/10 text-white placeholder:text-text-muted focus:border-amber-500 focus:ring-1 focus:ring-amber-500'
+                        ? 'bg-amber-100/60 border border-amber-300 text-amber-900 cursor-not-allowed'
+                        : 'bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500'
                     }`}
                   />
                   {!isLockedSponsor && (
                     <button
                       type="button"
                       onClick={() => verifySponsor(form.sponsorCode)}
-                      className="px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 text-xs font-bold transition"
+                      className="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300 text-xs font-bold transition"
                     >
                       Verify
                     </button>
@@ -392,16 +392,16 @@ function RegisterForm() {
                 </div>
 
                 {sponsorDetails ? (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs text-emerald-400">
+                  <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs text-emerald-700">
                     <span className="font-semibold">✓ Referred by {sponsorDetails.fullName}</span>
-                    <span className="font-mono font-bold text-emerald-300">{sponsorDetails.mlmCode}</span>
+                    <span className="font-mono font-bold text-emerald-800">{sponsorDetails.mlmCode}</span>
                   </div>
                 ) : sponsorError ? (
-                  <p className="text-[11px] font-bold text-red-400 flex items-center gap-1">
+                  <p className="text-[11px] font-bold text-red-600 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5" /> {sponsorError}
                   </p>
                 ) : (
-                  <p className="text-[11px] text-text-muted">
+                  <p className="text-[11px] text-slate-500">
                     Enter valid sponsor code from an active Network member.
                   </p>
                 )}
@@ -409,16 +409,16 @@ function RegisterForm() {
 
               {/* SECTION B: PERSONAL DETAILS */}
               <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-wider text-text-muted border-b border-white/5 pb-2">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2">
                   Personal Information
                 </h3>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Full Name (As per Aadhaar/PAN) *
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                    <User className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                     <input
                       type="text"
                       required
@@ -426,18 +426,18 @@ function RegisterForm() {
                       value={form.fullName}
                       onChange={handleChange}
                       placeholder="Enter legal full name"
-                      className="w-full pl-10 pr-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Mobile Number (10 Digits) *
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                      <Phone className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                       <input
                         type="tel"
                         required
@@ -449,17 +449,17 @@ function RegisterForm() {
                           setForm((prev) => ({ ...prev, mobile: val }));
                         }}
                         placeholder="10-digit number"
-                        className="w-full pl-10 pr-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Email Address *
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                      <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                       <input
                         type="email"
                         required
@@ -467,7 +467,7 @@ function RegisterForm() {
                         value={form.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className="w-full pl-10 pr-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -475,15 +475,15 @@ function RegisterForm() {
 
                 {/* Send OTP Method Selection */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                     Send OTP Verification To: *
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <label
                       className={`flex items-center gap-2.5 p-3 rounded-xl border text-xs font-bold cursor-pointer transition ${
                         form.verificationMethod === 'EMAIL'
-                          ? 'bg-amber-500/10 border-amber-500/40 text-amber-300'
-                          : 'bg-dark border-white/10 text-text-secondary hover:bg-white/5'
+                          ? 'bg-amber-50 border-amber-500 text-slate-900 ring-1 ring-amber-500'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <input
@@ -492,7 +492,7 @@ function RegisterForm() {
                         value="EMAIL"
                         checked={form.verificationMethod === 'EMAIL'}
                         onChange={handleChange}
-                        className="text-amber-500 focus:ring-amber-500"
+                        className="text-amber-600 focus:ring-amber-500"
                       />
                       <span>Email Address</span>
                     </label>
@@ -500,8 +500,8 @@ function RegisterForm() {
                     <label
                       className={`flex items-center gap-2.5 p-3 rounded-xl border text-xs font-bold cursor-pointer transition ${
                         form.verificationMethod === 'MOBILE'
-                          ? 'bg-amber-500/10 border-amber-500/40 text-amber-300'
-                          : 'bg-dark border-white/10 text-text-secondary hover:bg-white/5'
+                          ? 'bg-amber-50 border-amber-500 text-slate-900 ring-1 ring-amber-500'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <input
@@ -510,7 +510,7 @@ function RegisterForm() {
                         value="MOBILE"
                         checked={form.verificationMethod === 'MOBILE'}
                         onChange={handleChange}
-                        className="text-amber-500 focus:ring-amber-500"
+                        className="text-amber-600 focus:ring-amber-500"
                       />
                       <span>Mobile Number</span>
                     </label>
@@ -520,11 +520,11 @@ function RegisterForm() {
                 {/* Password Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Password (Min. 8 Chars) *
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                      <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         required
@@ -533,12 +533,12 @@ function RegisterForm() {
                         value={form.password}
                         onChange={handleChange}
                         placeholder="Create strong password"
-                        className="w-full pl-10 pr-10 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-text-muted hover:text-white focus:outline-none"
+                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-700 focus:outline-none"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -546,11 +546,11 @@ function RegisterForm() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Confirm Password *
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                      <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
                         required
@@ -558,12 +558,12 @@ function RegisterForm() {
                         value={form.confirmPassword}
                         onChange={handleChange}
                         placeholder="Re-enter password"
-                        className="w-full pl-10 pr-10 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-3 text-text-muted hover:text-white focus:outline-none"
+                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-700 focus:outline-none"
                       >
                         {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -574,24 +574,24 @@ function RegisterForm() {
 
               {/* SECTION C: LOCATION & ADDRESS WITH PIN CODE AUTO-FETCH */}
               <div className="space-y-4 pt-2">
-                <h3 className="text-xs font-black uppercase tracking-wider text-text-muted border-b border-white/5 pb-2">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2">
                   Location &amp; Address (Auto-Fetch via PIN Code)
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                         PIN Code *
                       </label>
                       {fetchingPincode && (
-                        <span className="text-[10px] text-amber-400 flex items-center gap-1 font-semibold">
+                        <span className="text-[10px] text-amber-600 flex items-center gap-1 font-semibold">
                           <RefreshCw className="w-2.5 h-2.5 animate-spin" /> Fetching...
                         </span>
                       )}
                     </div>
                     <div className="relative">
-                      <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+                      <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                       <input
                         type="text"
                         required
@@ -600,16 +600,16 @@ function RegisterForm() {
                         value={form.pincode}
                         onChange={handlePincodeChange}
                         placeholder="6-digit PIN"
-                        className="w-full pl-10 pr-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                     {pincodeError && (
-                      <p className="text-[10px] text-amber-400 font-semibold mt-1">{pincodeError}</p>
+                      <p className="text-[10px] text-amber-600 font-semibold mt-1">{pincodeError}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       State *
                     </label>
                     <input
@@ -619,12 +619,12 @@ function RegisterForm() {
                       value={form.state}
                       onChange={handleChange}
                       placeholder="State"
-                      className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       District *
                     </label>
                     <input
@@ -634,14 +634,14 @@ function RegisterForm() {
                       value={form.district}
                       onChange={handleChange}
                       placeholder="District"
-                      className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       City / Area / Town *
                     </label>
                     {areaOptions.length > 0 ? (
@@ -649,10 +649,10 @@ function RegisterForm() {
                         name="city"
                         value={form.city}
                         onChange={handleChange}
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       >
                         {areaOptions.map((area, idx) => (
-                          <option key={idx} value={area} className="bg-slate-900 text-white">
+                          <option key={idx} value={area} className="bg-white text-slate-900">
                             {area}
                           </option>
                         ))}
@@ -664,13 +664,13 @@ function RegisterForm() {
                         value={form.city}
                         onChange={handleChange}
                         placeholder="City or Town"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Block / Tehsil
                     </label>
                     <input
@@ -679,13 +679,13 @@ function RegisterForm() {
                       value={form.block}
                       onChange={handleChange}
                       placeholder="Block / Tehsil (Optional)"
-                      className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Complete Address (Optional)
                   </label>
                   <input
@@ -694,7 +694,7 @@ function RegisterForm() {
                     value={form.address}
                     onChange={handleChange}
                     placeholder="House/Flat No., Street, Landmark"
-                    className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                   />
                 </div>
               </div>
@@ -709,13 +709,13 @@ function RegisterForm() {
                     onChange={handleChange}
                     className="mt-0.5 rounded text-amber-500 focus:ring-amber-500"
                   />
-                  <span className="text-xs text-text-secondary leading-relaxed">
+                  <span className="text-xs text-slate-600 leading-relaxed">
                     I agree to the{' '}
-                    <Link href="/terms-and-conditions" target="_blank" className="font-bold text-amber-400 hover:underline">
+                    <Link href="/terms-and-conditions" target="_blank" className="font-bold text-amber-600 hover:underline">
                       Terms &amp; Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link href="/privacy-policy" target="_blank" className="font-bold text-amber-400 hover:underline">
+                    <Link href="/privacy-policy" target="_blank" className="font-bold text-amber-600 hover:underline">
                       Privacy Policy
                     </Link>{' '}
                     of NexVia Network.
@@ -733,9 +733,9 @@ function RegisterForm() {
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <p className="text-center text-xs text-text-muted pt-2">
+              <p className="text-center text-xs text-slate-500 pt-2">
                 Already an active member?{' '}
-                <Link href="/nextview/login" className="font-bold text-amber-400 hover:underline">
+                <Link href="/nextview/login" className="font-bold text-amber-600 hover:underline">
                   Login here
                 </Link>
               </p>
@@ -744,22 +744,22 @@ function RegisterForm() {
             /* STEP 2: OTP VERIFICATION */
             <form className="space-y-6" onSubmit={handleVerifyOtpSubmit} autoComplete="off">
               <div className="text-center space-y-2">
-                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400 shadow-sm mb-1">
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-600 shadow-sm mb-1">
                   <KeyRound className="w-7 h-7" />
                 </div>
-                <h2 className="text-xl font-extrabold text-white">
+                <h2 className="text-xl font-extrabold text-slate-900">
                   Verify {form.verificationMethod === 'EMAIL' ? 'Email' : 'Mobile'} OTP
                 </h2>
-                <p className="text-xs text-text-secondary max-w-sm mx-auto">
+                <p className="text-xs text-slate-600 max-w-sm mx-auto">
                   Enter the 6-digit verification code sent to{' '}
-                  <strong className="text-amber-400">
+                  <strong className="text-amber-600">
                     {form.verificationMethod === 'EMAIL' ? form.email : form.mobile}
                   </strong>
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-2 text-center">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 text-center">
                   6-Digit OTP Code
                 </label>
                 <input
@@ -770,7 +770,7 @@ function RegisterForm() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="• • • • • •"
-                  className="w-full text-center tracking-[0.6em] text-2xl font-mono font-bold py-3.5 bg-dark border border-white/10 rounded-2xl text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none transition"
+                  className="w-full text-center tracking-[0.6em] text-2xl font-mono font-bold py-3.5 bg-slate-50 border border-slate-300 rounded-2xl text-slate-900 focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none transition"
                 />
               </div>
 
@@ -778,7 +778,7 @@ function RegisterForm() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-text-muted hover:text-white font-semibold"
+                  className="text-slate-500 hover:text-slate-800 font-semibold"
                 >
                   &larr; Edit Details
                 </button>
@@ -787,7 +787,7 @@ function RegisterForm() {
                   type="button"
                   onClick={handleResendOtp}
                   disabled={resendTimer > 0 || loading}
-                  className="text-amber-400 hover:text-amber-300 font-bold disabled:text-text-muted inline-flex items-center gap-1"
+                  className="text-amber-600 hover:text-amber-700 font-bold disabled:text-slate-400 inline-flex items-center gap-1"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                   <span>{resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend OTP'}</span>
@@ -812,7 +812,7 @@ function RegisterForm() {
 
 export default function NextViewRegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#020617] flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600">Loading...</div>}>
       <RegisterForm />
     </Suspense>
   );

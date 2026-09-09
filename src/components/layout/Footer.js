@@ -87,7 +87,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-text-secondary hover:text-primary-light hover:border-primary-light/30 transition-all hover:-translate-y-0.5"
+                  className="w-9 h-9 rounded-xl bg-white border border-border flex items-center justify-center text-text-secondary hover:text-primary hover:border-primary/40 transition-all hover:-translate-y-0.5 shadow-xs"
                 >
                   <Icon size={16} />
                 </a>
@@ -106,9 +106,9 @@ export default function Footer() {
                   <li key={`${group.title}-${index}`}>
                     <Link
                       href={link.href}
-                      className="text-text-secondary text-xs hover:text-primary-light transition-all flex items-center group"
+                      className="text-text-secondary text-xs hover:text-primary transition-all flex items-center group"
                     >
-                      <span className="w-0 h-[1px] bg-primary-light mr-0 group-hover:w-2.5 group-hover:mr-1.5 transition-all duration-300"></span>
+                      <span className="w-0 h-[1px] bg-primary mr-0 group-hover:w-2.5 group-hover:mr-1.5 transition-all duration-300"></span>
                       {link.label}
                     </Link>
                   </li>
@@ -125,13 +125,13 @@ export default function Footer() {
             <ul className="space-y-3.5 text-xs text-text-secondary">
               <li className="flex flex-col gap-0.5">
                 <span className="text-text-muted text-[10px] uppercase font-bold tracking-wider">Email</span>
-                <a href="mailto:info@adskysolution.com" className="hover:text-primary-light transition-colors break-all">
+                <a href="mailto:info@adskysolution.com" className="hover:text-primary transition-colors break-all">
                   info@adskysolution.com
                 </a>
               </li>
               <li className="flex flex-col gap-0.5">
                 <span className="text-text-muted text-[10px] uppercase font-bold tracking-wider">Phone</span>
-                <a href="tel:8076611842" className="hover:text-primary-light transition-colors">
+                <a href="tel:8076611842" className="hover:text-primary transition-colors">
                   +91 8076611842
                 </a>
               </li>
@@ -149,21 +149,21 @@ export default function Footer() {
         <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-muted">
           <p>&copy; {new Date().getFullYear()} AdSky Solution. All rights reserved.</p>
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/privacy-policy" className="hover:text-primary-light transition-colors">
+            <Link href="/privacy-policy" className="hover:text-primary transition-colors">
               Privacy Policy
             </Link>
             <span>&bull;</span>
-            <Link href="/terms-and-conditions" className="hover:text-primary-light transition-colors">
+            <Link href="/terms-and-conditions" className="hover:text-primary transition-colors">
               Terms &amp; Conditions
             </Link>
             <span>&bull;</span>
-            <Link href="/refund-policy" className="hover:text-primary-light transition-colors">
+            <Link href="/refund-policy" className="hover:text-primary transition-colors">
               Refund Policy
             </Link>
           </div>
           <button
             onClick={scrollToTop}
-            className="w-8 h-8 rounded-lg bg-surface hover:bg-primary/20 flex items-center justify-center text-text-secondary hover:text-primary-light transition-all"
+            className="w-8 h-8 rounded-lg bg-white border border-border hover:bg-slate-50 flex items-center justify-center text-text-secondary hover:text-primary transition-all shadow-xs"
             aria-label="Scroll to top"
           >
             <FaArrowUp size={12} />

@@ -63,10 +63,10 @@ export default function JobDetailsPage() {
   if (loading) return (
     <div className="pt-32 pb-24 container-custom">
       <div className="animate-pulse space-y-8">
-        <div className="h-12 bg-white/5 rounded-xl w-3/4" />
+        <div className="h-12 bg-slate-100 rounded-xl w-3/4" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 h-96 bg-white/5 rounded-2xl" />
-          <div className="h-96 bg-white/5 rounded-2xl" />
+          <div className="lg:col-span-2 h-96 bg-slate-100 rounded-2xl" />
+          <div className="h-96 bg-slate-100 rounded-2xl" />
         </div>
       </div>
     </div>
@@ -83,17 +83,17 @@ export default function JobDetailsPage() {
     <div className="pt-32 pb-24">
       <div className="container-custom">
         {/* Breadcrumb / Back */}
-        <Link href="/careers" className="inline-flex items-center gap-2 text-text-muted hover:text-primary-light transition-colors mb-10 font-medium">
+        <Link href="/careers" className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors mb-10 font-medium">
           <FaArrowLeft size={14} /> Back to Job Listings
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <div className="glass-card p-8 md:p-12 mb-8 border border-white/5">
+            <div className="glass-card p-8 md:p-12 mb-8 border border-slate-200/80 bg-white shadow-xs rounded-2xl">
               <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
                 <div className="flex gap-6">
-                  <div className="w-20 h-20 rounded-2xl bg-surface border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-xl">
+                  <div className="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                     {job.company?.logo ? (
                       <img src={job.company.logo} alt={job.company.companyName} className="w-full h-full object-cover" />
                     ) : (
@@ -105,7 +105,7 @@ export default function JobDetailsPage() {
                       {job.title}
                     </h1>
                     <p className="text-text-secondary font-bold flex items-center gap-2">
-                      <FaBuilding size={14} className="text-primary-light" /> {job.company?.companyName}
+                      <FaBuilding size={14} className="text-primary" /> {job.company?.companyName}
                     </p>
                   </div>
                 </div>
@@ -123,34 +123,34 @@ export default function JobDetailsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-8 border-y border-white/5 mb-10">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-8 border-y border-slate-200 mb-10">
                 <div className="space-y-1">
                   <span className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Location</span>
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-                    <FaMapMarkerAlt className="text-primary-light" /> {job.location}
+                    <FaMapMarkerAlt className="text-primary" /> {job.location}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Salary</span>
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-                    <FaMoneyBillWave className="text-primary-light" /> {job.salary}
+                    <FaMoneyBillWave className="text-primary" /> {job.salary}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Job Type</span>
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-                    <FaClock className="text-primary-light" /> {job.type}
+                    <FaClock className="text-primary" /> {job.type}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Experience</span>
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-                    <FaBriefcase className="text-primary-light" /> {job.experience}
+                    <FaBriefcase className="text-primary" /> {job.experience}
                   </div>
                 </div>
               </div>
 
-              <div className="prose prose-invert max-w-none">
+              <div className="prose max-w-none">
                 <h3 className="text-2xl font-bold text-text-primary mb-6">Job Description</h3>
                 <div className="text-text-secondary leading-relaxed mb-10 whitespace-pre-wrap">
                   {job.description}
@@ -160,7 +160,7 @@ export default function JobDetailsPage() {
                 <ul className="space-y-4 mb-10 list-none p-0">
                   {job.requirements?.map((req, i) => (
                     <li key={i} className="flex items-start gap-3 text-text-secondary">
-                      <FaCheckCircle className="text-primary-light mt-1 flex-shrink-0" />
+                      <FaCheckCircle className="text-primary mt-1 flex-shrink-0" />
                       <span>{req}</span>
                     </li>
                   ))}
@@ -169,7 +169,7 @@ export default function JobDetailsPage() {
                 <h3 className="text-2xl font-bold text-text-primary mb-6">Required Skills</h3>
                 <div className="flex flex-wrap gap-3 mb-10">
                   {job.skills?.map((skill, i) => (
-                    <span key={i} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-primary">
+                    <span key={i} className="px-4 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800">
                       {skill}
                     </span>
                   ))}
@@ -177,7 +177,7 @@ export default function JobDetailsPage() {
               </div>
             </div>
 
-            <div className="glass-card p-10 bg-gradient-to-br from-primary/10 to-secondary/10 border-none text-center">
+            <div className="glass-card p-10 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 text-center rounded-2xl shadow-xs">
               <h3 className="text-2xl font-bold text-text-primary mb-4">Interested in this position?</h3>
               <p className="text-text-secondary mb-8">Click the button below to start your application process.</p>
               <button 
@@ -192,32 +192,32 @@ export default function JobDetailsPage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="glass-card p-8 border border-white/5">
+            <div className="glass-card p-8 border border-slate-200/80 bg-white shadow-xs rounded-2xl">
               <h3 className="text-lg font-bold text-text-primary mb-6 flex items-center gap-2">
-                <FaBuilding className="text-primary-light" /> About {job.company?.companyName}
+                <FaBuilding className="text-primary" /> About {job.company?.companyName}
               </h3>
               <p className="text-text-secondary text-sm leading-relaxed mb-6">
                 {job.company?.description || 'No description available for this company.'}
               </p>
               <div className="space-y-4">
-                <div className="flex justify-between text-sm py-3 border-b border-white/5">
+                <div className="flex justify-between text-sm py-3 border-b border-slate-200">
                   <span className="text-text-muted">Industry</span>
                   <span className="text-text-primary font-bold">{job.company?.industry || 'IT Services'}</span>
                 </div>
-                <div className="flex justify-between text-sm py-3 border-b border-white/5">
+                <div className="flex justify-between text-sm py-3 border-b border-slate-200">
                   <span className="text-text-muted">Location</span>
                   <span className="text-text-primary font-bold">{job.company?.location || 'India'}</span>
                 </div>
                 {job.company?.website && (
                   <div className="flex justify-between text-sm py-3">
                     <span className="text-text-muted">Website</span>
-                    <a href={job.company.website} target="_blank" rel="noopener" className="text-primary-light hover:underline font-bold">Visit Site</a>
+                    <a href={job.company.website} target="_blank" rel="noopener" className="text-primary hover:underline font-bold">Visit Site</a>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="glass-card p-8 border border-white/5">
+            <div className="glass-card p-8 border border-slate-200/80 bg-white shadow-xs rounded-2xl">
               <h3 className="text-lg font-bold text-text-primary mb-6">Job Summary</h3>
               <div className="space-y-4">
                 <div className="flex justify-between text-sm py-2">
@@ -230,7 +230,7 @@ export default function JobDetailsPage() {
                 </div>
                 <div className="flex justify-between text-sm py-2">
                   <span className="text-text-muted">Job Status</span>
-                  <span className="text-green-400 font-bold">Active</span>
+                  <span className="text-green-600 font-bold">Active</span>
                 </div>
               </div>
             </div>

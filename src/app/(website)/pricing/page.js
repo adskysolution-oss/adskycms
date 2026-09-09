@@ -38,11 +38,11 @@ export default async function PricingPage() {
               {plans.map((plan) => (
                 <CardSpotlight
                   key={plan._id}
-                  color="rgba(59, 130, 246, 0.15)"
+                  color="rgba(37, 99, 235, 0.08)"
                   className={`relative rounded-2xl p-8 transition-all duration-300 h-full ${
                     plan.highlighted
-                      ? 'bg-gradient-to-b from-primary/20 to-dark-light border border-primary/30 scale-105 shadow-2xl shadow-primary/10'
-                      : 'bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20'
+                      ? 'bg-gradient-to-b from-blue-50/70 to-white border-2 border-primary scale-105 shadow-xl shadow-primary/10'
+                      : 'bg-white border border-slate-200/80 hover:border-slate-300 shadow-xs'
                   }`}
                 >
                   {plan.highlighted && (

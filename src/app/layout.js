@@ -21,15 +21,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-[#000000] text-white antialiased">
+      <body className="bg-white text-slate-900 antialiased">
         <Navbar />
         {children}
         <Footer />
         <Toaster position="top-right" toastOptions={{
           style: {
-            background: '#0B0B10',
-            color: '#FFFFFF',
-            border: '1px solid #1A1A2E',
+            background: '#FFFFFF',
+            color: '#0F172A',
+            border: '1px solid #E2E8F0',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
           },
         }} />
       </body>

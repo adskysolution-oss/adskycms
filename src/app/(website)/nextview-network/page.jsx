@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -62,19 +62,19 @@ const FAQ = [
 
 export default function NextViewNetworkPage() {
   return (
-    <div className="min-h-screen bg-[#020617] text-white pt-24 pb-20">
+    <div className="min-h-screen bg-white text-slate-900 pt-24 pb-20">
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 md:py-24 border-b border-white/5">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_30%,rgba(245,158,11,0.15),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(234,88,12,0.1),transparent_50%)]" />
+      <section className="relative overflow-hidden py-16 md:py-24 border-b border-slate-200/80">
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_30%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(234,88,12,0.05),transparent_50%)]" />
         <div className="container-custom relative z-10">
           <div className="text-center max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20 backdrop-blur-md">
-              <TrendingUp size={14} className="text-amber-400" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 border border-amber-500/20 backdrop-blur-md">
+              <TrendingUp size={14} className="text-amber-500" />
               <span>AdSky Solution Growth Network</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-slate-900">
               NexVia<br />
-              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">3×15 Referral Matrix</span>
+              <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">3×15 Referral Matrix</span>
             </h1>
             <p className="text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mx-auto font-normal">
               A fair, deterministic 3×15 network where members unlock structured Level 1–15 rewards through verified FD-Card activations and transparent downline growth.
@@ -89,7 +89,7 @@ export default function NextViewNetworkPage() {
               </Link>
               <Link
                 href="/nextview/login"
-                className="py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 backdrop-blur-md transition flex items-center justify-center gap-2"
+                className="py-4 px-8 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm border border-slate-200 transition flex items-center justify-center gap-2 shadow-xs"
               >
                 <span>Member Login</span>
                 <ChevronRight size={16} />
@@ -100,14 +100,14 @@ export default function NextViewNetworkPage() {
       </section>
 
       {/* ── WHAT IS NEXVIA ──────────────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-400">
+              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-500">
                 <BookOpen size={14} /> <span>Matrix Mechanics</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
                 Fair, Deterministic &amp; Transparent Rewards
               </h2>
               <p className="text-text-secondary leading-relaxed text-sm md:text-base">
@@ -119,11 +119,11 @@ export default function NextViewNetworkPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {BENEFITS.slice(0, 4).map((b) => (
-                <div key={b.title} className="p-6 rounded-2xl bg-surface border border-white/5 hover:border-amber-500/40 transition duration-300 space-y-3 group">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                <div key={b.title} className="p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-amber-500/40 transition duration-300 space-y-3 group shadow-xs">
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
                     <b.icon size={22} />
                   </div>
-                  <h3 className="font-bold text-white text-base">{b.title}</h3>
+                  <h3 className="font-bold text-slate-900 text-base">{b.title}</h3>
                   <p className="text-xs text-text-secondary leading-relaxed">{b.desc}</p>
                 </div>
               ))}
@@ -133,20 +133,20 @@ export default function NextViewNetworkPage() {
       </section>
 
       {/* ── 3×15 MATRIX CAPACITY VISUALIZER ─────────────────────── */}
-      <section className="py-20 bg-dark-light/50 border-b border-white/5">
+      <section className="py-20 bg-slate-50/70 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-400">
+            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-500">
               <Network size={14} /> <span>Matrix Structure</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900">
               Exponential Tier Capacity
             </h2>
             <p className="text-text-secondary text-sm">
               Each level multiplies capacity by 3x (3<sup>Level</sup>), providing deep reward opportunities across 15 complete tiers.
             </p>
           </div>
-          <div className="max-w-3xl mx-auto space-y-3 bg-surface p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl">
+          <div className="max-w-3xl mx-auto space-y-3 bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-md">
             {LEVEL_SIZES.map((size, i) => {
               const level = i + 1;
               const fullSize = Math.pow(3, level);
@@ -154,9 +154,9 @@ export default function NextViewNetworkPage() {
               return (
                 <div key={level} className="flex items-center gap-4">
                   <div className="w-12 shrink-0 text-right">
-                    <span className="text-xs font-black text-amber-400">L{level}</span>
+                    <span className="text-xs font-black text-amber-500">L{level}</span>
                   </div>
-                  <div className="flex-1 h-7 bg-dark rounded-full overflow-hidden border border-white/5">
+                  <div className="flex-1 h-7 bg-slate-100 rounded-full overflow-hidden border border-slate-200/80">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-end pr-2.5 transition-all"
                       style={{ width: `${barWidth}%`, minWidth: '40px' }}
@@ -170,7 +170,7 @@ export default function NextViewNetworkPage() {
                 </div>
               );
             })}
-            <div className="text-center pt-4 border-t border-white/5">
+            <div className="text-center pt-4 border-t border-slate-100">
               <span className="text-xs text-text-muted">Levels 8 to 15 scale smoothly up to 14,348,907 total network positions</span>
             </div>
           </div>
@@ -178,19 +178,19 @@ export default function NextViewNetworkPage() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
-            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-400">
+            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-500">
               <ChevronRight size={14} /> <span>Step-by-Step</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">How It Works</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900">How It Works</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {HOW_IT_WORKS.map((item) => (
-              <div key={item.step} className="p-6 rounded-2xl border border-white/5 bg-surface hover:border-amber-500/40 transition duration-300 space-y-3">
+              <div key={item.step} className="p-6 rounded-2xl border border-slate-200/80 bg-white hover:border-amber-500/40 transition duration-300 space-y-3 shadow-xs">
                 <span className="text-3xl font-black text-amber-500/30">{item.step}</span>
-                <h3 className="font-bold text-white text-base">{item.title}</h3>
+                <h3 className="font-bold text-slate-900 text-base">{item.title}</h3>
                 <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
               </div>
             ))}
@@ -199,25 +199,25 @@ export default function NextViewNetworkPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom max-w-4xl">
           <div className="text-center mb-14 space-y-3">
-            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-400">
+            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-amber-500">
               <HelpCircle size={14} /> <span>FAQ</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">Frequently Asked Questions</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-4">
             {FAQ.map((item) => (
               <details
                 key={item.q}
-                className="group border border-white/5 rounded-2xl bg-surface overflow-hidden hover:border-amber-500/30 transition p-1"
+                className="group border border-slate-200/80 rounded-2xl bg-white overflow-hidden hover:border-amber-500/30 transition p-1 shadow-xs"
               >
-                <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-white text-sm list-none">
+                <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-slate-900 text-sm list-none">
                   <span>{item.q}</span>
-                  <ChevronRight size={16} className="text-amber-400 group-open:rotate-90 transition-transform shrink-0 ml-3" />
+                  <ChevronRight size={16} className="text-amber-500 group-open:rotate-90 transition-transform shrink-0 ml-3" />
                 </summary>
-                <div className="px-6 pb-5 text-xs text-text-secondary leading-relaxed border-t border-white/5 pt-4">
+                <div className="px-6 pb-5 text-xs text-text-secondary leading-relaxed border-t border-slate-100 pt-4">
                   {item.a}
                 </div>
               </details>
@@ -227,9 +227,9 @@ export default function NextViewNetworkPage() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────────────── */}
-      <section className="py-20 bg-gradient-to-br from-amber-500/20 via-surface to-dark relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-amber-50/50 via-white to-orange-50/30 border-t border-slate-200/80 relative overflow-hidden">
         <div className="container-custom text-center max-w-3xl space-y-6 relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
             Ready to Join the Network?
           </h2>
           <p className="text-text-secondary text-sm md:text-base leading-relaxed">
@@ -245,7 +245,7 @@ export default function NextViewNetworkPage() {
             </Link>
             <Link
               href="/nextview/login"
-              className="py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 backdrop-blur-md transition flex items-center justify-center gap-2"
+              className="py-4 px-8 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-xs transition flex items-center justify-center gap-2"
             >
               <span>Member Login</span>
               <ChevronRight size={16} />

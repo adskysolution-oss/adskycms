@@ -44,7 +44,7 @@ export default function JobCategoriesSection() {
   }, []);
 
   if (loading) return (
-    <section className="section-padding bg-dark/30">
+    <section className="section-padding bg-slate-50/60">
       <div className="container-custom flex flex-col items-center justify-center py-20">
         <FaSpinner className="animate-spin text-primary mb-4" size={32} />
         <p className="text-text-muted font-bold uppercase tracking-widest text-[10px]">Analyzing Categories...</p>
@@ -53,7 +53,7 @@ export default function JobCategoriesSection() {
   );
 
   return (
-    <section className="section-padding bg-dark/30">
+    <section className="section-padding bg-slate-50/60">
       <div className="container-custom">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">
@@ -78,7 +78,7 @@ export default function JobCategoriesSection() {
         </div>
         
         {categories.length === 0 && (
-          <div className="text-center py-20 glass-card border border-white/5">
+          <div className="text-center py-20 glass-card border border-slate-200">
             <p className="text-text-muted italic">No categories found in active listings.</p>
           </div>
         )}
@@ -93,22 +93,22 @@ function CategoryCard({ name, count }) {
       href={`/careers?search=${encodeURIComponent(name)}`} // Navigates to careers filtered by category name
       className="glass-card-hover p-8 group flex flex-col items-center text-center transition-all duration-300"
     >
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-        <FaBriefcase size={28} className="text-primary-light group-hover:text-white transition-colors" />
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+        <FaBriefcase size={28} className="text-primary group-hover:scale-105 transition-all" />
       </div>
       
-      <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-primary-light transition-colors uppercase tracking-tighter italic">
+      <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-primary transition-colors uppercase tracking-tighter italic">
         {name}
       </h3>
       
       <div className="flex items-center gap-2 mb-4">
         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-        <span className="text-[10px] uppercase tracking-[0.2em] font-black text-text-muted group-hover:text-white transition-colors">
+        <span className="text-[10px] uppercase tracking-[0.2em] font-black text-text-muted group-hover:text-slate-900 transition-colors">
           {count} {count === 1 ? 'Job' : 'Jobs'} Available
         </span>
       </div>
 
-      <div className="mt-6 text-[10px] font-black uppercase tracking-widest text-primary-light opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+      <div className="mt-6 text-[10px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
         Browse Opportunities
       </div>
     </Link>

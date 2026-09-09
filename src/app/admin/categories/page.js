@@ -68,9 +68,9 @@ export default function AdminCategories() {
         {categories.map((cat) => {
           const IconComp = IconOptions.find(i => i.name === cat.icon)?.icon || FaBriefcase;
           return (
-            <div key={cat._id} className="glass-card p-6 border border-white/5 group">
+            <div key={cat._id} className="glass-card p-6 border border-border group shadow-xs">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary-light">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                   <IconComp size={24} />
                 </div>
                 <div className="flex-1">
@@ -78,7 +78,7 @@ export default function AdminCategories() {
                   <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">{cat.tag}</span>
                 </div>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => { setEditingCategory(cat); setFormData(cat); setIsModalOpen(true); }} className="p-2 text-text-muted hover:text-primary-light">
+                  <button onClick={() => { setEditingCategory(cat); setFormData(cat); setIsModalOpen(true); }} className="p-2 text-text-muted hover:text-primary">
                     <FaEdit size={14} />
                   </button>
                   <button onClick={() => handleDelete(cat._id)} className="p-2 text-text-muted hover:text-danger">
@@ -97,8 +97,8 @@ export default function AdminCategories() {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
-          <div className="relative glass-card p-8 w-full max-w-md border border-white/10 shadow-2xl">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" onClick={() => setIsModalOpen(false)} />
+          <div className="relative bg-white p-8 w-full max-w-md border border-border rounded-2xl shadow-xl">
             <h2 className="text-2xl font-bold text-text-primary mb-6">
               {editingCategory ? 'Edit Category' : 'Add New Category'}
             </h2>
@@ -108,7 +108,7 @@ export default function AdminCategories() {
                 <input 
                   type="text" 
                   required 
-                  className="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-text-primary"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:bg-white text-slate-900"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
@@ -117,7 +117,7 @@ export default function AdminCategories() {
                 <div>
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Tag</label>
                   <select 
-                    className="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-text-primary"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:bg-white text-slate-900"
                     value={formData.tag}
                     onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
                   >
@@ -129,7 +129,7 @@ export default function AdminCategories() {
                 <div>
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Icon</label>
                   <select 
-                    className="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-text-primary"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:bg-white text-slate-900"
                     value={formData.icon}
                     onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                   >
@@ -142,7 +142,7 @@ export default function AdminCategories() {
               <div>
                 <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Description</label>
                 <textarea 
-                  className="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-text-primary h-24 resize-none"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:bg-white text-slate-900 h-24 resize-none"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />

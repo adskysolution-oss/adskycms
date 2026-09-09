@@ -171,7 +171,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#020617]/75 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-xs">
       <div className="container-custom">
         <div className="flex h-20 items-center justify-between gap-3">
           {/* Logo */}
@@ -185,7 +185,7 @@ export default function Navbar() {
           </Link>
 
           {/* Main Nav Links (Compact & Centered) */}
-          <nav className="hidden lg:flex items-center gap-0.5 rounded-full border border-white/5 bg-white/5 px-2 py-1.5">
+          <nav className="hidden lg:flex items-center gap-0.5 rounded-full border border-slate-200 bg-slate-100/80 px-2 py-1.5">
             {mainNavLinks.map((link) => {
               if (link.isDropdown) {
                 const partnerActive = isPartnerActive();
@@ -201,8 +201,8 @@ export default function Navbar() {
                       onClick={() => setPartnerNavOpen(!partnerNavOpen)}
                       className={`relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all duration-300 rounded-full ${
                         partnerActive || partnerNavOpen
-                          ? 'text-white bg-white/10'
-                          : 'text-text-secondary hover:text-white'
+                          ? 'text-primary bg-white shadow-xs font-bold'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <span>{link.label}</span>
@@ -214,18 +214,18 @@ export default function Navbar() {
 
                     {/* Partners Dropdown */}
                     {partnerNavOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 rounded-2xl border border-white/10 bg-[#0b1220]/95 p-2 shadow-2xl backdrop-blur-xl z-50 animate-fade-in space-y-1">
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl backdrop-blur-xl z-50 animate-fade-in space-y-1">
                         {link.items.map((item) => (
                           <Link
                             key={item.title}
                             href={item.href}
-                            className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group"
+                            className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-all group"
                           >
                             <div className={`w-8 h-8 rounded-lg ${item.bg} flex items-center justify-center ${item.color} shrink-0 mt-0.5 group-hover:scale-110 transition-transform`}>
                               <item.icon size={16} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold text-white group-hover:text-primary-light transition-colors">
+                              <p className="text-xs font-bold text-slate-800 group-hover:text-primary transition-colors">
                                 {item.title}
                               </p>
                               <p className="text-[10px] text-text-muted truncate">
@@ -245,16 +245,11 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-3 py-1.5 text-xs font-semibold transition-all duration-300 whitespace-nowrap ${
-                    active ? 'text-white' : 'text-text-secondary hover:text-white'
+                  className={`relative px-3 py-1.5 text-xs font-semibold transition-all duration-300 whitespace-nowrap rounded-full ${
+                    active ? 'text-primary bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {link.label}
-                  <span
-                    className={`absolute left-2.5 right-2.5 -bottom-0.5 h-0.5 rounded-full bg-primary-light transition-all duration-300 ${
-                      active ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
                 </Link>
               );
             })}
@@ -266,10 +261,10 @@ export default function Navbar() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all group"
+                  className="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-all group shadow-xs"
                 >
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs font-bold text-white leading-none mb-0.5">{user.name}</p>
+                    <p className="text-xs font-bold text-slate-900 leading-none mb-0.5">{user.name}</p>
                     <p className="text-[10px] text-text-muted uppercase tracking-wider font-semibold leading-none">{user.role}</p>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20">
@@ -280,8 +275,8 @@ export default function Navbar() {
 
                 {/* Account Dropdown */}
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/10 bg-[#0b1220]/95 p-2 shadow-2xl backdrop-blur-xl animate-fade-in">
-                    <div className="px-3 py-2 mb-2 border-b border-white/5">
+                  <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl backdrop-blur-xl animate-fade-in">
+                    <div className="px-3 py-2 mb-2 border-b border-slate-100">
                       <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Account Menu</p>
                     </div>
 
@@ -289,23 +284,23 @@ export default function Navbar() {
                       <Link
                         key={idx}
                         href={rLink.href}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-all group"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-700 hover:text-primary hover:bg-slate-50 transition-all group"
                       >
-                        <rLink.icon size={16} className="text-text-muted group-hover:text-primary-light transition-colors" />
+                        <rLink.icon size={16} className="text-text-muted group-hover:text-primary transition-colors" />
                         {rLink.label}
                       </Link>
                     ) : (
                       <button
                         key={idx}
                         onClick={rLink.onClick}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group w-full ${rLink.danger ? 'text-danger hover:bg-danger/10' : 'text-text-secondary hover:text-white hover:bg-white/5'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group w-full ${rLink.danger ? 'text-danger hover:bg-danger/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'}`}
                       >
-                        <rLink.icon size={16} className={`text-text-muted transition-colors ${rLink.danger ? 'group-hover:text-danger' : 'group-hover:text-primary-light'}`} />
+                        <rLink.icon size={16} className={`text-text-muted transition-colors ${rLink.danger ? 'group-hover:text-danger' : 'group-hover:text-primary'}`} />
                         {rLink.label}
                       </button>
                     ))}
 
-                    <div className="mt-2 pt-2 border-t border-white/5">
+                    <div className="mt-2 pt-2 border-t border-slate-100">
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/10 transition-all"
@@ -323,19 +318,19 @@ export default function Navbar() {
                 <div className="relative" ref={portalRef}>
                   <button
                     onClick={() => setPortalDropdownOpen(!portalDropdownOpen)}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-all"
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200 bg-slate-100/90 hover:bg-slate-200/80 text-xs font-bold text-slate-800 transition-all shadow-xs"
                   >
                     <span>Portals</span>
                     <FaChevronDown size={9} className={`text-text-muted transition-transform duration-300 ${portalDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {portalDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-[#0b1220]/95 p-3 shadow-2xl backdrop-blur-xl space-y-3 z-50 animate-fade-in">
+                    <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl backdrop-blur-xl space-y-3 z-50 animate-fade-in">
                       {/* NexVia Matrix */}
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-amber-400 uppercase tracking-wider px-2">NexVia 3×15 Matrix</p>
+                        <p className="text-[10px] font-black text-amber-500 uppercase tracking-wider px-2">NexVia 3×15 Matrix</p>
                         <div className="grid grid-cols-2 gap-1.5">
-                          <Link href="/nextview/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-text-secondary hover:text-white bg-white/5 hover:bg-white/10 transition-colors font-bold text-[11px] border border-white/5">
+                          <Link href="/nextview/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
                             Login
                           </Link>
                           <Link href="/nextview/register" className="flex items-center justify-center py-2 px-2 rounded-xl text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 transition-colors font-bold text-[11px]">
@@ -344,13 +339,13 @@ export default function Navbar() {
                         </div>
                       </div>
 
-                      <div className="h-px bg-white/5"></div>
+                      <div className="h-px bg-slate-100"></div>
 
                       {/* Corporate Partner */}
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-primary-light uppercase tracking-wider px-2">Corporate Partner</p>
+                        <p className="text-[10px] font-black text-primary uppercase tracking-wider px-2">Corporate Partner</p>
                         <div className="grid grid-cols-2 gap-1.5">
-                          <Link href="/corporate-partner" className="flex items-center justify-center py-2 px-2 rounded-xl text-text-secondary hover:text-white bg-white/5 hover:bg-white/10 transition-colors font-bold text-[11px] border border-white/5">
+                          <Link href="/corporate-partner" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
                             Details
                           </Link>
                           <Link href="/nextview/register" className="flex items-center justify-center py-2 px-2 rounded-xl text-white btn-primary transition-colors font-bold text-[11px]">
@@ -359,16 +354,16 @@ export default function Navbar() {
                         </div>
                       </div>
 
-                      <div className="h-px bg-white/5"></div>
+                      <div className="h-px bg-slate-100"></div>
 
                       {/* Recruitment */}
                       <div className="space-y-1">
                         <p className="text-[10px] font-black text-text-muted uppercase tracking-wider px-2">Recruitment Partner</p>
                         <div className="grid grid-cols-2 gap-1.5">
-                          <Link href="/recruitment/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-text-secondary hover:text-white bg-white/5 hover:bg-white/10 transition-colors font-bold text-[11px] border border-white/5">
+                          <Link href="/recruitment/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
                             Login
                           </Link>
-                          <Link href="/recruitment/register" className="flex items-center justify-center py-2 px-2 rounded-xl text-text-secondary hover:text-white bg-white/5 hover:bg-white/10 transition-colors font-bold text-[11px] border border-white/5">
+                          <Link href="/recruitment/register" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
                             Register
                           </Link>
                         </div>
@@ -386,7 +381,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsOpen((value) => !value)}
-              className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white"
+              className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 hover:text-slate-900"
               aria-label="Toggle navigation"
             >
               {isOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
@@ -397,7 +392,7 @@ export default function Navbar() {
         {/* Mobile Nav */}
         {isOpen && (
           <div className="lg:hidden pb-5">
-            <div className="rounded-2xl border border-white/10 bg-[#0b1220]/95 p-4 shadow-lg shadow-black/20 space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xl space-y-4">
               <nav className="grid gap-1">
                 {mainNavLinks.map((link) => {
                   if (link.isDropdown) {
@@ -411,7 +406,7 @@ export default function Navbar() {
                             <Link
                               key={sub.title}
                               href={sub.href}
-                              className="rounded-xl px-4 py-2 text-sm font-medium text-text-secondary hover:bg-white/5 hover:text-white flex items-center justify-between"
+                              className="rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center justify-between"
                             >
                               <span>{sub.title}</span>
                               <ArrowRight size={14} className="text-text-muted" />
@@ -429,8 +424,8 @@ export default function Navbar() {
                       href={link.href}
                       className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
                         active
-                          ? 'bg-primary/20 text-white border border-primary/30'
-                          : 'text-text-secondary hover:bg-white/5 hover:text-white'
+                          ? 'bg-primary/10 text-primary font-bold border border-primary/20'
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
                       }`}
                     >
                       {link.label}
@@ -439,14 +434,14 @@ export default function Navbar() {
                 })}
               </nav>
 
-              <div className="h-px bg-white/5"></div>
+              <div className="h-px bg-slate-100"></div>
 
               {/* Mobile Quick Portals */}
               <div className="space-y-3 pt-1">
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-black text-primary-light uppercase tracking-wider">Corporate Partner</p>
+                  <p className="text-[10px] font-black text-primary uppercase tracking-wider">Corporate Partner</p>
                   <div className="grid grid-cols-2 gap-2">
-                    <Link href="/corporate-partner" className="py-2 px-3 rounded-xl bg-white/5 text-center text-xs font-bold text-white border border-white/10">
+                    <Link href="/corporate-partner" className="py-2 px-3 rounded-xl bg-slate-50 text-center text-xs font-bold text-slate-800 border border-slate-200 hover:bg-slate-100">
                       Learn More
                     </Link>
                     <Link href="/nextview/register" className="py-2 px-3 rounded-xl btn-primary text-center text-xs font-bold">
@@ -456,9 +451,9 @@ export default function Navbar() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-black text-amber-400 uppercase tracking-wider">NexVia 3×15 Matrix</p>
+                  <p className="text-[10px] font-black text-amber-500 uppercase tracking-wider">NexVia 3×15 Matrix</p>
                   <div className="grid grid-cols-2 gap-2">
-                    <Link href="/nextview/login" className="py-2 px-3 rounded-xl bg-white/5 text-center text-xs font-bold text-white border border-white/10">
+                    <Link href="/nextview/login" className="py-2 px-3 rounded-xl bg-slate-50 text-center text-xs font-bold text-slate-800 border border-slate-200 hover:bg-slate-100">
                       Member Login
                     </Link>
                     <Link href="/nextview/register" className="py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-center text-xs font-bold text-white">

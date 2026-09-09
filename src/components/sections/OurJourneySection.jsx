@@ -55,12 +55,12 @@ export default function OurJourneySection() {
         {/* Timeline Container */}
         <div ref={containerRef} className="relative max-w-4xl mx-auto">
           {/* Vertical line background (Static) */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/10" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-slate-200" />
           
           {/* Vertical line progress (Animated) */}
           <motion.div 
             style={{ scaleY, originY: 0 }}
-            className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-gradient-to-b from-blue-500 via-primary-light to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.5)] z-0"
+            className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-gradient-to-b from-blue-500 via-primary-light to-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] z-0"
           />
 
           <div className="flex flex-col md:block">
@@ -70,7 +70,7 @@ export default function OurJourneySection() {
               return (
                 <div key={i} className={`w-full relative flex flex-col ${isLeft ? 'items-start' : 'items-end'} md:block`}>
                   {/* Dot (Desktop only) */}
-                  <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-primary-light to-secondary border-[3px] border-dark z-10" />
+                  <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-primary to-secondary border-[3px] border-white shadow-md z-10" />
 
                   {/* Card */}
                   <motion.div
@@ -83,7 +83,7 @@ export default function OurJourneySection() {
                       ${isLeft ? 'md:mr-auto md:pr-6' : 'md:ml-auto md:pl-6'}
                     `}
                   >
-                    <div className="glass-card p-6 lg:p-8 transition-all duration-300 hover:border-white/10">
+                    <div className="glass-card p-6 lg:p-8 transition-all duration-300 hover:border-primary/40 shadow-sm">
                       <div className="flex items-center justify-between mb-3 md:block">
                         <h3 className="text-xl font-bold gradient-text">
                           {item.year}

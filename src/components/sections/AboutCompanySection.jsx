@@ -6,7 +6,7 @@ export default function AboutCompanySection() {
             <div className="container-custom relative z-10">
                 {/* Decorative Top Line */}
                 <div className="mb-6 flex">
-                    <span className="h-px w-24 bg-white/30" />
+                    <span className="h-px w-24 bg-primary/40" />
                 </div>
 
                 <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
@@ -15,7 +15,7 @@ export default function AboutCompanySection() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
                     <div>
-                        <h2 className="text-4xl lg:text-6xl font-bold text-white mb-8 leading-[1.1]">
+                        <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-8 leading-[1.1]">
                             The Future of <span className="gradient-text">Digital Growth</span>
                         </h2>
                         

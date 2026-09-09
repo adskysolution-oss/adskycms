@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export const CardSpotlight = ({
   children,
   radius = 350,
-  color = "#262626",
+  color = "rgba(37, 99, 235, 0.08)",
   className,
   ...props
 }) => {
@@ -26,7 +26,7 @@ export const CardSpotlight = ({
   return (
     <div
       className={cn(
-        "group/canvas-card relative overflow-hidden rounded-2xl p-8 transition-all duration-300 bg-black",
+        "group/canvas-card relative overflow-hidden rounded-2xl p-8 transition-all duration-300 bg-white border border-slate-200/80 shadow-xs",
         className
       )}
       onMouseMove={onMouseMove}
@@ -48,7 +48,7 @@ export const CardSpotlight = ({
       >
         {/* Dot pattern overlay */}
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]">
-           <div className="absolute inset-0 bg-[radial-gradient(#ffffff1a_1px,transparent_1px)] [background-size:16px_16px]" />
+           <div className="absolute inset-0 bg-[radial-gradient(#0000000a_1px,transparent_1px)] [background-size:16px_16px]" />
         </div>
       </motion.div>
       <div className="relative z-10">{children}</div>

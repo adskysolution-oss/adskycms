@@ -129,12 +129,12 @@ export default function AdminSidebar() {
 
       {/* Sidebar container */}
       <aside
-        className={`fixed top-0 left-0 h-screen z-40 flex flex-col bg-slate-950 border-r border-slate-800/80 transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-screen z-40 flex flex-col bg-white border-r border-slate-200 shadow-xs transition-all duration-300 ${
           collapsed ? 'w-20' : 'w-72'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Top Header */}
-        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800/80 shrink-0">
+        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-200 shrink-0">
           <Link href="/admin/dashboard" className="flex items-center gap-2.5">
             <Image
               src="/logoTitle.png"
@@ -145,10 +145,10 @@ export default function AdminSidebar() {
             />
             {!collapsed && (
               <div className="flex flex-col">
-                <span className="font-extrabold text-sm text-white tracking-tight leading-none">
+                <span className="font-extrabold text-sm text-slate-900 tracking-tight leading-none">
                   AdSky Solution
                 </span>
-                <span className="text-[10px] text-amber-400 font-mono font-bold mt-0.5">
+                <span className="text-[10px] text-amber-600 font-mono font-bold mt-0.5">
                   Admin Command Center
                 </span>
               </div>
@@ -158,7 +158,7 @@ export default function AdminSidebar() {
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/80 transition"
+            className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition"
             title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             <FaChevronLeft className={`w-3.5 h-3.5 transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
@@ -181,8 +181,8 @@ export default function AdminSidebar() {
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
                     isActive
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-900'
+                      ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/20'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   } ${collapsed ? 'justify-center px-0' : ''}`}
                   title={collapsed ? group.title : undefined}
                 >
@@ -197,13 +197,13 @@ export default function AdminSidebar() {
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.title)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white hover:bg-slate-900/60 transition ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition ${
                     collapsed ? 'justify-center px-0' : ''
                   }`}
                   title={collapsed ? group.title : undefined}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Icon className="w-4 h-4 text-amber-600 shrink-0" />
                     {!collapsed && <span>{group.title}</span>}
                   </div>
                   {!collapsed && (
@@ -212,7 +212,7 @@ export default function AdminSidebar() {
                 </button>
 
                 {(!collapsed || mobileOpen) && isOpen && (
-                  <div className="pl-3 space-y-0.5 border-l border-slate-800 ml-5 my-1">
+                  <div className="pl-3 space-y-0.5 border-l border-slate-200 ml-5 my-1">
                     {group.items.map((item) => {
                       const SubIcon = item.icon;
                       const isSubActive = pathname === item.href || (item.href !== '/admin/mlm' && pathname.startsWith(item.href));
@@ -224,11 +224,11 @@ export default function AdminSidebar() {
                           onClick={() => setMobileOpen(false)}
                           className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition ${
                             isSubActive
-                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200/80'
+                              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                           }`}
                         >
-                          <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-amber-400' : 'text-slate-500'}`} />
+                          <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-amber-600' : 'text-slate-400'}`} />
                           <span className="truncate">{item.label}</span>
                         </Link>
                       );
@@ -241,11 +241,11 @@ export default function AdminSidebar() {
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-slate-800/80 shrink-0">
+        <div className="p-3 border-t border-slate-200 shrink-0">
           <button
             type="button"
             onClick={handleLogout}
-            className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition ${
+            className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition ${
               collapsed ? 'justify-center px-0' : ''
             }`}
             title={collapsed ? 'Logout' : undefined}

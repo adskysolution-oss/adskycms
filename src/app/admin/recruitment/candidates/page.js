@@ -66,11 +66,11 @@ export default function AdminRecruitmentCandidatesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center space-x-2">
-            <UserCheck className="w-6 h-6 text-purple-400" />
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center space-x-2">
+            <UserCheck className="w-6 h-6 text-purple-600" />
             <span>Recruitment Candidate Pipeline</span>
           </h1>
-          <p className="text-slate-400 text-sm">Review candidate resumes, schedule interviews, mark selections, and trigger partner payouts.</p>
+          <p className="text-slate-500 text-sm">Review candidate resumes, schedule interviews, mark selections, and trigger partner payouts.</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function AdminRecruitmentCandidatesPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
+          className="bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs"
         >
           <option value="">All Candidate Stages</option>
           <option value="SUBMITTED">Submitted</option>
@@ -95,14 +95,14 @@ export default function AdminRecruitmentCandidatesPage() {
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
         </div>
       ) : candidates.length === 0 ? (
-        <div className="text-center py-12 text-slate-500 text-sm border border-slate-800 rounded-2xl bg-slate-900/20">
+        <div className="text-center py-12 text-slate-500 text-sm border border-slate-200 rounded-2xl bg-slate-50">
           No candidates found in this stage.
         </div>
       ) : (
-        <div className="overflow-x-auto border border-slate-800 rounded-2xl bg-slate-900/40">
+        <div className="overflow-x-auto border border-slate-200 rounded-2xl bg-white shadow-xs">
           <table className="w-full text-sm text-left">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/40">
+              <tr className="border-b border-slate-200 text-slate-600 bg-slate-50">
                 <th className="p-4">Candidate</th>
                 <th className="p-4">Role / Experience</th>
                 <th className="p-4">Partner Agency</th>
@@ -113,37 +113,37 @@ export default function AdminRecruitmentCandidatesPage() {
             </thead>
             <tbody>
               {candidates.map((c) => (
-                <tr key={c._id} className="border-b border-slate-900/60 hover:bg-slate-900/50 transition">
+                <tr key={c._id} className="border-b border-slate-100 hover:bg-slate-50 transition">
                   <td className="p-4">
-                    <div className="font-bold text-white">{c.fullName}</div>
-                    <div className="text-xs text-slate-400">{c.email} | {c.phone}</div>
+                    <div className="font-bold text-slate-900">{c.fullName}</div>
+                    <div className="text-xs text-slate-500">{c.email} | {c.phone}</div>
                     {c.resumeUrl && (
-                      <a href={c.resumeUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-400 hover:underline flex items-center space-x-1 mt-1">
+                      <a href={c.resumeUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline flex items-center space-x-1 mt-1">
                         <span>View Resume</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                   </td>
                   <td className="p-4 text-xs">
-                    <div className="font-semibold text-white">{c.currentRole || 'Not specified'}</div>
-                    <div className="text-slate-400">{c.totalExperienceYears ? `${c.totalExperienceYears} yrs experience` : '-'}</div>
-                    <div className="text-slate-400">Notice: {c.noticePeriodDays ? `${c.noticePeriodDays} days` : 'Immediate'}</div>
+                    <div className="font-semibold text-slate-900">{c.currentRole || 'Not specified'}</div>
+                    <div className="text-slate-500">{c.totalExperienceYears ? `${c.totalExperienceYears} yrs experience` : '-'}</div>
+                    <div className="text-slate-500">Notice: {c.noticePeriodDays ? `${c.noticePeriodDays} days` : 'Immediate'}</div>
                   </td>
                   <td className="p-4 text-xs">
-                    <div className="font-semibold text-slate-300">{c.partnerId?.companyName || 'Direct'}</div>
-                    <div className="text-slate-500 font-mono">{c.partnerId?.partnerCode}</div>
+                    <div className="font-semibold text-slate-700">{c.partnerId?.companyName || 'Direct'}</div>
+                    <div className="text-slate-400 font-mono">{c.partnerId?.partnerCode}</div>
                   </td>
                   <td className="p-4">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                      c.status === 'PLACED' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                      c.status === 'SELECTED' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                      c.status === 'REJECTED' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
-                      'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                      c.status === 'PLACED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                      c.status === 'SELECTED' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                      c.status === 'REJECTED' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                      'bg-purple-50 text-purple-700 border border-purple-200'
                     }`}>
                       {c.status}
                     </span>
                   </td>
-                  <td className="p-4 text-xs text-slate-400">
+                  <td className="p-4 text-xs text-slate-500">
                     {c.submittedAt ? new Date(c.submittedAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td className="p-4 text-right">
@@ -154,7 +154,7 @@ export default function AdminRecruitmentCandidatesPage() {
                         setAdminNotes(c.adminNotes || '');
                         setModalOpen(true);
                       }}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition"
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition shadow-xs"
                     >
                       Update Status
                     </button>
@@ -168,17 +168,17 @@ export default function AdminRecruitmentCandidatesPage() {
 
       {/* Modal for updating status */}
       {modalOpen && selectedCandidate && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <form onSubmit={handleUpdateStatus} className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
-            <h3 className="font-bold text-white text-lg">Update Candidate Pipeline Stage</h3>
-            <p className="text-xs text-slate-400">Candidate: <span className="text-white font-semibold">{selectedCandidate.fullName}</span></p>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <form onSubmit={handleUpdateStatus} className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+            <h3 className="font-bold text-slate-900 text-lg">Update Candidate Pipeline Stage</h3>
+            <p className="text-xs text-slate-500">Candidate: <span className="text-slate-900 font-semibold">{selectedCandidate.fullName}</span></p>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Pipeline Status</label>
+              <label className="block text-xs text-slate-600 font-medium mb-1">Pipeline Status</label>
               <select
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
               >
                 <option value="SUBMITTED">Submitted</option>
                 <option value="SHORTLISTED">Shortlisted</option>
@@ -191,24 +191,24 @@ export default function AdminRecruitmentCandidatesPage() {
 
             {newStatus === 'PLACED' && (
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Official Joining Date</label>
+                <label className="block text-xs text-slate-600 font-medium mb-1">Official Joining Date</label>
                 <input
                   type="date"
                   value={joiningDate}
                   onChange={(e) => setJoiningDate(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Admin Notes / Feedback</label>
+              <label className="block text-xs text-slate-600 font-medium mb-1">Admin Notes / Feedback</label>
               <textarea
                 rows={3}
                 value={adminNotes}
                 onChange={(e) => setAdminNotes(e.target.value)}
                 placeholder="e.g. Cleared round 2 interview, salary offered Rs 8 LPA"
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
               />
             </div>
 
@@ -216,13 +216,13 @@ export default function AdminRecruitmentCandidatesPage() {
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow-xs"
               >
                 Save Changes
               </button>

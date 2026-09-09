@@ -28,21 +28,21 @@ export default function Hero() {
   // LOGGED IN VIEW
   if (user) {
     return (
-      <section className="relative pt-20 bg-black">
+      <section className="relative pt-20 bg-slate-50/50">
         {/* Background Effects Wrapper */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.05),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.03),transparent_35%)]" />
         </div>
 
         <div className="container-custom relative z-10 w-full min-h-[calc(100vh-80px)] flex items-center py-10 lg:py-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/5 mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white mb-8 shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Welcome Back</span>
               </div>
               <div className="mb-8 animate-slide-up">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
                   Welcome back, <span className="gradient-text">{user.name}</span> 👋
                 </h2>
                 <p className="text-text-secondary text-xl font-medium">Ready to continue your journey with AdSky?</p>
@@ -52,7 +52,7 @@ export default function Hero() {
                   Go to Dashboard
                   <FaRocket size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </Link>
-                <Link href="/careers" className="btn-secondary !rounded-2xl !px-8 !py-4 backdrop-blur-md group">
+                <Link href="/careers" className="btn-secondary !rounded-2xl !px-8 !py-4 group">
                   Explore Careers
                   <FaBriefcase size={14} className="group-hover:scale-110 transition-transform" />
                 </Link>
@@ -69,11 +69,10 @@ export default function Hero() {
 
   // LOGGED OUT VIEW (As requested by user)
   return (
-    <section className="relative pt-20" style={{ backgroundColor: '#000000' }}>
+    <section className="relative pt-20 bg-gradient-to-b from-slate-50 via-white to-white">
       {/* Background Effects Wrapper — Handles overflow without clipping content */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_30%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.06),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.04),transparent_35%)]" />
       </div>
 
       <div className="container-custom relative z-10 w-full min-h-[calc(100vh-80px)] flex items-center py-12 lg:py-0">
@@ -82,24 +81,24 @@ export default function Hero() {
           {/* LEFT — Text content */}
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <div className="h-[2px] w-24 bg-white/40 rounded-full" />
+              <div className="h-[2px] w-24 bg-primary/40 rounded-full" />
             </div>
 
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-text-secondary">
               Premium Digital Support
             </p>
 
-            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl mb-6 whitespace-normal break-words">
+            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl mb-6 whitespace-normal break-words">
               {(() => {
                 console.log("Hero Heading Init: Build Scalable Digital Solutions With Smart Technology & Talent");
                 return null;
               })()}
-              <span className="bg-gradient-to-r from-gray-100 via-white to-gray-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-primary bg-clip-text text-transparent">
                 <TypingText text="Build Scalable Digital Solutions" />
               </span>
               <br />
               <TypingText text="With Smart " delay={1.6} />
-              <TypingText text="Technology" className="text-blue-500" delay={2.1} />
+              <TypingText text="Technology" className="text-primary" delay={2.1} />
               <TypingText text=" & Talent" delay={2.6} />
             </h1>
 

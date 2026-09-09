@@ -60,15 +60,15 @@ export default function DashboardLayout({ children }) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#020617] flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0b1220] border-r border-white/5 transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0`}>
         <div className="h-full flex flex-col p-6">
           <div className="flex items-center justify-between mb-10">
             <Link href="/" className="flex items-center">
               <Image src={logoImg} alt="Logo" className="h-8 w-auto object-contain" priority />
             </Link>
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-text-muted">
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-500 hover:text-slate-800">
               <FaTimes />
             </button>
           </div>
@@ -83,10 +83,10 @@ export default function DashboardLayout({ children }) {
                   className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold transition-all group ${
                     active 
                       ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                      : 'text-text-secondary hover:bg-white/5 hover:text-white'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
-                  <link.icon className={active ? 'text-white' : 'text-text-muted group-hover:text-primary-light'} size={18} />
+                  <link.icon className={active ? 'text-white' : 'text-slate-400 group-hover:text-primary'} size={18} />
                   {link.label}
                   {active && <FaChevronRight className="ml-auto opacity-50" size={10} />}
                 </Link>
@@ -94,19 +94,19 @@ export default function DashboardLayout({ children }) {
             })}
           </nav>
 
-          <div className="mt-auto pt-6 border-t border-white/5 space-y-2">
-            <div className="flex items-center gap-3 px-4 py-3 mb-4 rounded-2xl bg-white/5">
+          <div className="mt-auto pt-6 border-t border-slate-200 space-y-2">
+            <div className="flex items-center gap-3 px-4 py-3 mb-4 rounded-2xl bg-slate-50 border border-slate-200/80">
                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black">
                  {user.name?.charAt(0)}
                </div>
                <div className="overflow-hidden">
-                 <p className="text-sm font-bold text-white truncate">{user.name}</p>
-                 <p className="text-[10px] text-text-muted uppercase tracking-widest">{user.role}</p>
+                 <p className="text-sm font-bold text-slate-900 truncate">{user.name}</p>
+                 <p className="text-[10px] text-slate-500 uppercase tracking-widest">{user.role}</p>
                </div>
             </div>
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold text-danger hover:bg-danger/10 transition-all"
+              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold text-red-600 hover:bg-red-50 transition-all"
             >
               <FaSignOutAlt size={18} />
               Sign Out
@@ -118,8 +118,8 @@ export default function DashboardLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 relative overflow-y-auto">
         {/* Mobile Toggle */}
-        <div className="lg:hidden p-4 sticky top-0 bg-[#020617]/80 backdrop-blur-xl border-b border-white/5 z-40">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg bg-white/5 text-white">
+        <div className="lg:hidden p-4 sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-40">
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg bg-slate-100 text-slate-700">
             <FaBars />
           </button>
         </div>

@@ -55,42 +55,42 @@ export default function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-1.5">
-          <label className="text-text-secondary text-xs font-medium uppercase tracking-wider ml-1">Full Name*</label>
+          <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider ml-1">Full Name*</label>
           <input 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
-            className="w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all" 
+            className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
             placeholder="John Doe"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="text-text-secondary text-xs font-medium uppercase tracking-wider ml-1">E-mail Address*</label>
+          <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider ml-1">E-mail Address*</label>
           <input 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-            className="w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all" 
+            className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
             placeholder="john@example.com"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-text-secondary text-xs font-medium uppercase tracking-wider ml-1">Phone Number*</label>
+        <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider ml-1">Phone Number*</label>
         <input 
           value={phone} 
           onChange={(e) => setPhone(e.target.value)} 
-          className="w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all" 
+          className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
           placeholder="+1 (555) 000-0000"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-text-secondary text-xs font-medium uppercase tracking-wider ml-1">Message*</label>
+        <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider ml-1">Message*</label>
         <textarea 
           value={message} 
           onChange={(e) => setMessage(e.target.value)} 
           rows={5} 
-          className="w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all resize-none" 
+          className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none shadow-xs" 
           placeholder="How can we help you?"
         />
       </div>
@@ -99,7 +99,7 @@ export default function ContactForm() {
         <button 
           type="submit" 
           disabled={loading} 
-          className="w-full py-4 bg-white text-black font-semibold rounded-xl hover:bg-white/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:active:scale-100"
+          className="btn-primary w-full justify-center !py-4 text-base font-semibold shadow-lg shadow-primary/25 disabled:opacity-50"
         >
           {loading ? 'Sending Message...' : 'Submit Now'}
         </button>

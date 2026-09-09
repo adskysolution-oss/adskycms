@@ -167,11 +167,11 @@ function ForgotPasswordContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-black text-white">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-slate-50/50 text-slate-900">
       <div className="w-full max-w-md">
         {/* Header Branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/15 border border-blue-500/30 mb-4 p-2 shadow-lg shadow-blue-500/10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 mb-4 p-2 shadow-sm">
             <Image
               src="/logoTitle.png"
               alt="NextView Logo"
@@ -181,14 +181,14 @@ function ForgotPasswordContent() {
               priority
             />
           </div>
-          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             {resetSuccess
               ? 'Password Reset Complete!'
               : step === 1
               ? 'Forgot Password?'
               : 'Verify OTP & Reset'}
           </h1>
-          <p className="text-slate-400 text-sm mt-2">
+          <p className="text-slate-600 text-sm mt-2">
             {resetSuccess
               ? 'Redirecting you to NextView login...'
               : step === 1
@@ -198,24 +198,24 @@ function ForgotPasswordContent() {
         </div>
 
         {/* Card */}
-        <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           {/* Glowing accent border */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600" />
 
           {resetSuccess ? (
             /* SUCCESS STATE */
             <div className="text-center py-6 space-y-4">
-              <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto text-emerald-400 animate-bounce">
+              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-600 animate-bounce">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
-              <h3 className="text-lg font-bold text-white">Your password is updated!</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="text-lg font-bold text-slate-900">Your password is updated!</h3>
+              <p className="text-sm text-slate-600">
                 You can now log in securely using your new credentials.
               </p>
               <div className="pt-2">
                 <Link
                   href={`/nextview/login?identifier=${encodeURIComponent(identifier.trim())}`}
-                  className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/30"
+                  className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/30"
                 >
                   <span>Go to Login</span>
                   <ArrowRight className="w-4 h-4" />
@@ -226,7 +226,7 @@ function ForgotPasswordContent() {
             /* STEP 1: IDENTIFY & CHOOSE DELIVERY METHOD */
             <form onSubmit={handleRequestOtp} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   Mobile Number, Email, or Member Code
                 </label>
                 <div className="relative">
@@ -237,14 +237,14 @@ function ForgotPasswordContent() {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="Enter registered mobile, email or NEX code"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 text-sm focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 focus:outline-none transition"
                   />
                 </div>
               </div>
 
               {/* Delivery Method Selection */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
                   Send Verification Code Via
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -254,22 +254,22 @@ function ForgotPasswordContent() {
                     onClick={() => setMethod('MOBILE')}
                     className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition ${
                       method === 'MOBILE'
-                        ? 'bg-blue-600/15 border-blue-500 text-white shadow-sm ring-1 ring-blue-500/50'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
+                        ? 'bg-blue-50 border-blue-600 text-slate-900 shadow-xs ring-1 ring-blue-600'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full mb-1">
                       <div className="flex items-center gap-1.5 font-bold text-xs">
-                        <Smartphone className="w-3.5 h-3.5 text-blue-400" />
+                        <Smartphone className="w-3.5 h-3.5 text-blue-600" />
                         <span>Mobile SMS</span>
                       </div>
                       {method === 'MOBILE' && (
-                        <div className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px]">
+                        <div className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">
                           <Check className="w-3 h-3 stroke-[3]" />
                         </div>
                       )}
                     </div>
-                    <span className="text-[11px] text-slate-400">
+                    <span className="text-[11px] text-slate-500">
                       Fast SMS OTP to your registered phone
                     </span>
                   </button>
@@ -280,22 +280,22 @@ function ForgotPasswordContent() {
                     onClick={() => setMethod('EMAIL')}
                     className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition ${
                       method === 'EMAIL'
-                        ? 'bg-blue-600/15 border-blue-500 text-white shadow-sm ring-1 ring-blue-500/50'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
+                        ? 'bg-blue-50 border-blue-600 text-slate-900 shadow-xs ring-1 ring-blue-600'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full mb-1">
                       <div className="flex items-center gap-1.5 font-bold text-xs">
-                        <Mail className="w-3.5 h-3.5 text-cyan-400" />
+                        <Mail className="w-3.5 h-3.5 text-blue-600" />
                         <span>Email Inbox</span>
                       </div>
                       {method === 'EMAIL' && (
-                        <div className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px]">
+                        <div className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">
                           <Check className="w-3 h-3 stroke-[3]" />
                         </div>
                       )}
                     </div>
-                    <span className="text-[11px] text-slate-400">
+                    <span className="text-[11px] text-slate-500">
                       Direct OTP to your registered email
                     </span>
                   </button>
@@ -306,7 +306,7 @@ function ForgotPasswordContent() {
               <button
                 type="submit"
                 disabled={loading || !identifier.trim()}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-600/25 disabled:opacity-50 text-sm mt-2"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 disabled:opacity-50 text-sm mt-2"
               >
                 {loading ? (
                   <>
@@ -321,11 +321,11 @@ function ForgotPasswordContent() {
                 )}
               </button>
 
-              <div className="pt-2 text-center text-sm text-slate-400">
+              <div className="pt-2 text-center text-sm text-slate-600">
                 Remember your password?{' '}
                 <Link
                   href={`/nextview/login${identifier ? `?identifier=${encodeURIComponent(identifier.trim())}` : ''}`}
-                  className="text-blue-400 font-semibold hover:underline"
+                  className="text-blue-600 font-semibold hover:underline"
                 >
                   Back to Login
                 </Link>
@@ -335,21 +335,21 @@ function ForgotPasswordContent() {
             /* STEP 2: VERIFY OTP & SET NEW PASSWORD */
             <form onSubmit={handleResetPassword} className="space-y-4">
               {/* Destination badge & Change details button */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-800">
                 <div className="flex items-center gap-2 truncate">
                   {destinationInfo.method === 'EMAIL' ? (
-                    <Mail className="w-4 h-4 shrink-0 text-cyan-400" />
+                    <Mail className="w-4 h-4 shrink-0 text-blue-600" />
                   ) : (
-                    <Smartphone className="w-4 h-4 shrink-0 text-blue-400" />
+                    <Smartphone className="w-4 h-4 shrink-0 text-blue-600" />
                   )}
                   <span className="truncate">
-                    Code sent to <strong className="text-white">{destinationInfo.destination}</strong>
+                    Code sent to <strong className="text-slate-900 font-bold">{destinationInfo.destination}</strong>
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-[11px] font-bold text-blue-400 hover:text-blue-300 hover:underline shrink-0 ml-2"
+                  className="text-[11px] font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0 ml-2"
                 >
                   Change
                 </button>
@@ -357,7 +357,7 @@ function ForgotPasswordContent() {
 
               {/* 6-Digit OTP */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5 text-center">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 text-center">
                   Enter 6-Digit OTP Code
                 </label>
                 <input
@@ -368,7 +368,7 @@ function ForgotPasswordContent() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="• • • • • •"
-                  className="w-full text-center tracking-[0.6em] text-2xl font-mono font-bold py-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition"
+                  className="w-full text-center tracking-[0.6em] text-2xl font-mono font-bold py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-300 focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 focus:outline-none transition"
                 />
               </div>
 
@@ -378,7 +378,7 @@ function ForgotPasswordContent() {
                   type="button"
                   onClick={handleResendOtp}
                   disabled={resendTimer > 0 || loading}
-                  className="text-blue-400 hover:text-blue-300 font-semibold disabled:text-slate-500 inline-flex items-center gap-1.5 transition"
+                  className="text-blue-600 hover:text-blue-700 font-semibold disabled:text-slate-400 inline-flex items-center gap-1.5 transition"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                   <span>{resendTimer > 0 ? `Resend code in ${resendTimer}s` : 'Resend Code'}</span>
@@ -387,11 +387,11 @@ function ForgotPasswordContent() {
 
               {/* New Password */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
                   New Password (Min. 8 Chars)
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -399,12 +399,12 @@ function ForgotPasswordContent() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-slate-500 hover:text-white"
+                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-700"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -413,11 +413,11 @@ function ForgotPasswordContent() {
 
               {/* Confirm Password */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
                   Confirm New Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                   <input
                     type={showConfirm ? 'text' : 'password'}
                     required
@@ -425,12 +425,12 @@ function ForgotPasswordContent() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter new password"
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-3 text-slate-500 hover:text-white"
+                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-700"
                   >
                     {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -441,11 +441,11 @@ function ForgotPasswordContent() {
               {newPassword && confirmPassword && (
                 <div className="text-[11px] flex items-center gap-1.5">
                   {newPassword === confirmPassword ? (
-                    <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                    <span className="text-emerald-600 flex items-center gap-1 font-medium">
                       <Check className="w-3.5 h-3.5" /> Passwords match
                     </span>
                   ) : (
-                    <span className="text-red-400 font-medium">Passwords do not match</span>
+                    <span className="text-red-600 font-medium">Passwords do not match</span>
                   )}
                 </div>
               )}
@@ -454,7 +454,7 @@ function ForgotPasswordContent() {
               <button
                 type="submit"
                 disabled={loading || otp.length < 6 || !newPassword || newPassword !== confirmPassword}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-600/25 disabled:opacity-50 text-sm mt-2"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 disabled:opacity-50 text-sm mt-2"
               >
                 {loading ? (
                   <>
@@ -472,7 +472,7 @@ function ForgotPasswordContent() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="w-full text-center text-xs text-slate-400 hover:text-white pt-2 flex items-center justify-center gap-1 transition"
+                className="w-full text-center text-xs text-slate-600 hover:text-slate-900 pt-2 flex items-center justify-center gap-1 transition"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to previous step</span>
@@ -487,7 +487,7 @@ function ForgotPasswordContent() {
 
 export default function NextViewForgotPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600">Loading...</div>}>
       <ForgotPasswordContent />
     </Suspense>
   );

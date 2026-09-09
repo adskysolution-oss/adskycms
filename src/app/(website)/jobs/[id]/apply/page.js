@@ -97,14 +97,14 @@ export default function JobApplyPage() {
         <FaArrowLeft size={14} /> Back
       </button>
 
-      <div className="glass-card p-8 md:p-12 border border-white/10">
+      <div className="glass-card p-8 md:p-12 border border-slate-200/80 bg-white shadow-xs rounded-2xl">
         <div className="mb-10">
           <h1 className="text-3xl font-extrabold text-text-primary mb-2">Apply for {job?.title}</h1>
           <p className="text-text-secondary">Fill in the details below to submit your application.</p>
         </div>
 
         {status.msg && (
-          <div className={`mb-8 p-4 rounded-xl text-sm flex items-center gap-3 ${status.type === 'success' ? 'bg-green-400/10 text-green-400 border border-green-400/20' : 'bg-danger/10 text-danger border border-danger/20'}`}>
+          <div className={`mb-8 p-4 rounded-xl text-sm flex items-center gap-3 ${status.type === 'success' ? 'bg-green-600/10 text-green-700 border border-green-600/20' : 'bg-danger/10 text-danger border border-danger/20'}`}>
             {status.type === 'success' && <FaCheckCircle />}
             {status.msg}
           </div>
@@ -115,20 +115,20 @@ export default function JobApplyPage() {
             <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-3">Resume / CV (PDF) *</label>
 
             {user?.resumeUrl && (
-              <div className="mb-6 p-6 rounded-2xl bg-primary/5 border border-primary/20 flex items-center justify-between">
+              <div className="mb-6 p-6 rounded-2xl bg-blue-50/60 border border-blue-200 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary-light">
+                  <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-primary">
                     <FaFileUpload size={20} />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-text-primary">Using saved resume</p>
-                    <a href={user.resumeUrl} target="_blank" className="text-[10px] text-primary-light hover:underline font-bold uppercase">View Current Resume</a>
+                    <a href={user.resumeUrl} target="_blank" className="text-[10px] text-primary hover:underline font-bold uppercase">View Current Resume</a>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setUseExistingResume(!useExistingResume)}
-                  className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${useExistingResume ? 'bg-white/5 text-text-muted border border-white/10 hover:bg-white/10' : 'bg-primary text-white shadow-lg shadow-primary/20'}`}
+                  className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${useExistingResume ? 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200' : 'bg-primary text-white shadow-lg shadow-primary/20'}`}
                 >
                   {useExistingResume ? 'Change Resume' : 'Use Saved'}
                 </button>
@@ -147,9 +147,9 @@ export default function JobApplyPage() {
                 />
                 <label
                   htmlFor="resume-upload"
-                  className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 hover:border-primary/50 transition-all cursor-pointer"
+                  className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:border-primary transition-all cursor-pointer"
                 >
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary-light mb-4 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
                     <FaFileUpload size={24} />
                   </div>
                   {resumeFile ? (
@@ -164,11 +164,10 @@ export default function JobApplyPage() {
                     </div>
                   )}
                 </label>
-                <p className="text-[10px] text-text-muted mt-3 italic">Resume will be uploaded only when you click "Submit Application".</p>
+                <p className="text-[10px] text-text-muted mt-3 italic">Resume will be uploaded only when you click &quot;Submit Application&quot;.</p>
               </div>
             )}
           </div>
-
 
           <div>
             <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-3">Cover Letter (Optional)</label>
@@ -176,7 +175,7 @@ export default function JobApplyPage() {
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell us why you are a good fit for this role..."
-              className="w-full bg-surface border border-white/10 rounded-2xl px-6 py-4 text-text-primary focus:outline-none focus:border-primary/50 h-40 resize-none transition-all"
+              className="w-full bg-slate-50 border border-slate-300 rounded-2xl px-6 py-4 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary h-40 resize-none transition-all"
             />
           </div>
 

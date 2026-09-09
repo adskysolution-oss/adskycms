@@ -1,4 +1,4 @@
-﻿import Hero from '@/components/sections/Hero';
+import Hero from '@/components/sections/Hero';
 import ServicesSection from '@/components/sections/ServicesSection';
 import StrategySection from '@/components/sections/StrategySection';
 import JobCategoriesSection from '@/components/sections/JobCategoriesSection';
@@ -29,7 +29,7 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      <div className="relative z-10 bg-black">
+      <div className="relative z-10 bg-white">
         {/* <AboutCompanySection /> */}
         <ServicesSection services={services} />
         <StrategySection />
@@ -37,7 +37,7 @@ export default async function HomePage() {
 
         {/* Subtle separator */}
         <div className="container-custom">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
         </div>
 
         <VisionMissionSection />

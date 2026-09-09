@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -73,17 +73,17 @@ const FAQ = [
 
 export default function CorporatePartnerPage() {
   return (
-    <div className="min-h-screen bg-[#020617] text-white pt-24 pb-20">
+    <div className="min-h-screen bg-white text-slate-900 pt-24 pb-20">
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 md:py-24 border-b border-white/5">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_30%,rgba(37,99,235,0.15),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(96,165,250,0.1),transparent_50%)]" />
+      <section className="relative overflow-hidden py-16 md:py-24 border-b border-slate-200/80">
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_30%,rgba(37,99,235,0.08),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(96,165,250,0.05),transparent_50%)]" />
         <div className="container-custom relative z-10">
           <div className="text-center max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary-light border border-primary/20 backdrop-blur-md">
-              <Briefcase size={14} className="text-primary-light" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 backdrop-blur-md">
+              <Briefcase size={14} className="text-primary" />
               <span>AdSky Solution Partner Ecosystem</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-slate-900">
               Corporate Partner<br />
               <span className="gradient-text">Program</span>
             </h1>
@@ -100,7 +100,7 @@ export default function CorporatePartnerPage() {
               </Link>
               <Link
                 href="/nextview/login"
-                className="py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 backdrop-blur-md transition flex items-center justify-center gap-2"
+                className="py-4 px-8 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm border border-slate-200 transition flex items-center justify-center gap-2 shadow-xs"
               >
                 <span>Partner Portal Login</span>
                 <ChevronRight size={16} />
@@ -111,14 +111,14 @@ export default function CorporatePartnerPage() {
       </section>
 
       {/* ── WHAT IS CORPORATE PARTNER ────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary-light">
+              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
                 <Briefcase size={14} /> <span>What Is the Program?</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
                 Empowering Regional Growth &amp; Field Infrastructure
               </h2>
               <p className="text-text-secondary leading-relaxed text-sm md:text-base">
@@ -130,11 +130,11 @@ export default function CorporatePartnerPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {BENEFITS.slice(0, 4).map((b) => (
-                <div key={b.title} className="p-6 rounded-2xl bg-surface border border-white/5 hover:border-primary/40 transition duration-300 space-y-3 group">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary-light group-hover:scale-110 transition-transform">
+                <div key={b.title} className="p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-primary/40 transition duration-300 space-y-3 group shadow-xs">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                     <b.icon size={22} />
                   </div>
-                  <h3 className="font-bold text-white text-base">{b.title}</h3>
+                  <h3 className="font-bold text-slate-900 text-base">{b.title}</h3>
                   <p className="text-xs text-text-secondary leading-relaxed">{b.desc}</p>
                 </div>
               ))}
@@ -144,28 +144,28 @@ export default function CorporatePartnerPage() {
       </section>
 
       {/* ── WHO CAN JOIN & HIERARCHY ─────────────────────────────── */}
-      <section className="py-20 bg-dark-light/50 border-b border-white/5">
+      <section className="py-20 bg-slate-50/70 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary-light">
+              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
                 <Users size={14} /> <span>Eligibility</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white">Who Can Join?</h2>
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900">Who Can Join?</h2>
               <p className="text-text-secondary text-sm leading-relaxed">
                 The Corporate Partner Program is designed for regional agencies, field distributors, and business operators ready to expand their regional footprint.
               </p>
               <ul className="space-y-3 pt-2">
                 {WHO_CAN_JOIN.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
-                    <CheckCircle2 className="w-5 h-5 text-primary-light shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="p-8 rounded-3xl bg-surface border border-white/10 shadow-2xl space-y-6">
-              <h3 className="font-black text-white text-xl">Operational Hierarchy</h3>
+            <div className="p-8 rounded-3xl bg-white border border-slate-200/80 shadow-md space-y-6">
+              <h3 className="font-black text-slate-900 text-xl">Operational Hierarchy</h3>
               <div className="space-y-3">
                 {[
                   { role: 'Corporate Vendor', desc: 'Top-tier authorized regional partner', color: 'bg-blue-500' },
@@ -174,9 +174,9 @@ export default function CorporatePartnerPage() {
                   { role: 'Corporate Executive', desc: 'Direct field execution & onboarding', color: 'bg-cyan-400' },
                 ].map((tier) => (
                   <div key={tier.role} className="flex items-center gap-4">
-                    <div className={`w-3 h-3 rounded-full ${tier.color} shrink-0 shadow-lg`} />
-                    <div className="flex-1 p-3.5 rounded-xl bg-dark/60 border border-white/5">
-                      <div className="font-bold text-sm text-white">{tier.role}</div>
+                    <div className={`w-3 h-3 rounded-full ${tier.color} shrink-0 shadow-sm`} />
+                    <div className="flex-1 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                      <div className="font-bold text-sm text-slate-900">{tier.role}</div>
                       <div className="text-xs text-text-muted">{tier.desc}</div>
                     </div>
                   </div>
@@ -188,19 +188,19 @@ export default function CorporatePartnerPage() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom">
           <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
-            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary-light">
+            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
               <ChevronRight size={14} /> <span>Process</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">How Partnership Works</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900">How Partnership Works</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {HOW_IT_WORKS.map((item) => (
-              <div key={item.step} className="p-6 rounded-2xl border border-white/5 bg-surface hover:border-primary/40 transition duration-300 space-y-3">
+              <div key={item.step} className="p-6 rounded-2xl border border-slate-200/80 bg-white hover:border-primary/40 transition duration-300 space-y-3 shadow-xs">
                 <span className="text-3xl font-black text-primary/30">{item.step}</span>
-                <h3 className="font-bold text-white text-base">{item.title}</h3>
+                <h3 className="font-bold text-slate-900 text-base">{item.title}</h3>
                 <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
               </div>
             ))}
@@ -209,25 +209,25 @@ export default function CorporatePartnerPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────── */}
-      <section className="py-20 border-b border-white/5">
+      <section className="py-20 border-b border-slate-200/80">
         <div className="container-custom max-w-4xl">
           <div className="text-center mb-14 space-y-3">
-            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary-light">
+            <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
               <HelpCircle size={14} /> <span>FAQ</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">Frequently Asked Questions</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-4">
             {FAQ.map((item) => (
               <details
                 key={item.q}
-                className="group border border-white/5 rounded-2xl bg-surface overflow-hidden hover:border-primary/30 transition p-1"
+                className="group border border-slate-200/80 rounded-2xl bg-white overflow-hidden hover:border-primary/30 transition p-1 shadow-xs"
               >
-                <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-white text-sm list-none">
+                <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-slate-900 text-sm list-none">
                   <span>{item.q}</span>
-                  <ChevronRight size={16} className="text-primary-light group-open:rotate-90 transition-transform shrink-0 ml-3" />
+                  <ChevronRight size={16} className="text-primary group-open:rotate-90 transition-transform shrink-0 ml-3" />
                 </summary>
-                <div className="px-6 pb-5 text-xs text-text-secondary leading-relaxed border-t border-white/5 pt-4">
+                <div className="px-6 pb-5 text-xs text-text-secondary leading-relaxed border-t border-slate-100 pt-4">
                   {item.a}
                 </div>
               </details>
@@ -237,9 +237,9 @@ export default function CorporatePartnerPage() {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────────────── */}
-      <section className="py-20 bg-gradient-to-br from-primary/20 via-surface to-dark relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-blue-50/40 via-white to-slate-50 border-t border-slate-200/80 relative overflow-hidden">
         <div className="container-custom text-center max-w-3xl space-y-6 relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
             Ready to Partner With Us?
           </h2>
           <p className="text-text-secondary text-sm md:text-base leading-relaxed">
@@ -255,7 +255,7 @@ export default function CorporatePartnerPage() {
             </Link>
             <Link
               href="/nextview/login"
-              className="py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 backdrop-blur-md transition flex items-center justify-center gap-2"
+              className="py-4 px-8 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-xs transition flex items-center justify-center gap-2"
             >
               <span>Partner Login</span>
               <ChevronRight size={16} />

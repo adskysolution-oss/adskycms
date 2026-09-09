@@ -36,31 +36,31 @@ export default function AdminDataTable({
       </div>
 
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
         <input 
           type="text"
           placeholder="Search..."
-          className="w-full bg-slate-900 border border-slate-800 rounded-lg py-2 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-10 pr-4 outline-none text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-xs"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-slate-800 bg-slate-900/80">
+            <tr className="border-b border-slate-200 bg-slate-50 text-slate-700">
               {columns.map(col => (
                 <th key={col.key} className="px-6 py-4 text-sm font-semibold">{col.label}</th>
               ))}
               <th className="px-6 py-4 text-sm font-semibold text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800">
+          <tbody className="divide-y divide-slate-200">
             {loading ? (
               [1, 2, 3].map(i => (
                 <tr key={i} className="animate-pulse">
-                  <td colSpan={columns.length + 1} className="px-6 py-8 bg-slate-950/20"></td>
+                  <td colSpan={columns.length + 1} className="px-6 py-8 bg-slate-50"></td>
                 </tr>
               ))
             ) : filteredData.length === 0 ? (
@@ -71,7 +71,7 @@ export default function AdminDataTable({
               </tr>
             ) : (
               filteredData.map((item) => (
-                <tr key={item._id} className="hover:bg-slate-800/30 transition-colors">
+                <tr key={item._id} className="hover:bg-slate-50 transition-colors text-slate-700">
                   {columns.map(col => (
                     <td key={col.key} className="px-6 py-4 text-sm">
                       {col.render ? col.render(item[col.key], item) : item[col.key]}
@@ -82,7 +82,7 @@ export default function AdminDataTable({
                       {onEdit && (
                         <button 
                           onClick={() => onEdit(item)}
-                          className="p-2 hover:bg-blue-500/10 text-blue-400 rounded-lg transition-colors"
+                          className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors"
                         >
                           <Edit size={16} />
                         </button>
@@ -90,7 +90,7 @@ export default function AdminDataTable({
                       {onDelete && (
                         <button 
                           onClick={() => onDelete(item._id)}
-                          className="p-2 hover:bg-rose-500/10 text-rose-400 rounded-lg transition-colors"
+                          className="p-2 hover:bg-rose-50 text-rose-600 rounded-lg transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>

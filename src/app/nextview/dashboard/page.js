@@ -206,26 +206,26 @@ export default function NextViewDashboardPage() {
   return (
     <MlmMemberLayout activePath="/nextview/dashboard">
       <div className="space-y-6">
-        {/* ── 1. WELCOME BANNER (MATCHING REFERENCE HERO) ────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0d1527] via-[#1a233a] to-[#2e1d10] p-6 sm:p-8 text-white shadow-lg border border-slate-800">
-          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/20 via-transparent to-transparent pointer-events-none" />
+        {/* ── 1. WELCOME BANNER (LIGHT THEME) ────────────────────── */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50 via-indigo-50/40 to-amber-50/60 p-6 sm:p-8 text-slate-900 shadow-xs border border-slate-200/80">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
                 Welcome back, {profile?.fullName || 'Member'}
               </h1>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-300">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
                 <p>
-                  Member ID: <span className="font-mono font-bold text-amber-400">{profile?.mlmCode || '—'}</span>
+                  Member ID: <span className="font-mono font-bold text-amber-700">{profile?.mlmCode || '—'}</span>
                 </p>
-                <span className="text-slate-600">•</span>
+                <span className="text-slate-300">•</span>
                 <p>
-                  Sponsor: <span className="font-mono font-bold text-slate-200">{profile?.sponsorCode || (profile?.sponsorId?.mlmCode) || 'NEX-ROOT-001'}</span>
+                  Sponsor: <span className="font-mono font-bold text-slate-800">{profile?.sponsorCode || (profile?.sponsorId?.mlmCode) || 'NEX-ROOT-001'}</span>
                 </p>
-                <span className="text-slate-600">•</span>
+                <span className="text-slate-300">•</span>
                 <p>
-                  KYC: <span className="font-bold text-emerald-400">{profile?.kycStatus || 'VERIFIED'}</span>
+                  KYC: <span className="font-bold text-emerald-700">{profile?.kycStatus || 'VERIFIED'}</span>
                 </p>
               </div>
             </div>
@@ -234,14 +234,14 @@ export default function NextViewDashboardPage() {
             <div className="flex items-center gap-2.5 shrink-0">
               <Link
                 href="/nextview/network"
-                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition inline-flex items-center gap-2 backdrop-blur-xs"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold transition inline-flex items-center gap-2 shadow-xs"
               >
-                <Network className="w-4 h-4 text-amber-400" />
+                <Network className="w-4 h-4 text-blue-600" />
                 <span>View Network</span>
               </Link>
               <Link
                 href="/nextview/fd-card"
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-extrabold transition inline-flex items-center gap-2 shadow-md shadow-amber-500/25"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-extrabold transition inline-flex items-center gap-2 shadow-md shadow-amber-500/20"
               >
                 <CreditCard className="w-4 h-4" />
                 <span>Explore FD</span>

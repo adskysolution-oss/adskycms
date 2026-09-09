@@ -31,12 +31,12 @@ export default function OTPModal({ email, userId, type, onSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="glass-card w-full max-w-md p-8 border border-white/10 shadow-2xl">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="glass-card w-full max-w-md p-8 bg-white border border-slate-200/80 shadow-2xl rounded-2xl">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Verify OTP</h2>
-          <p className="text-text-secondary text-sm">
-            We've sent a 6-digit code to <span className="text-primary-light">{email}</span>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Verify OTP</h2>
+          <p className="text-slate-600 text-sm">
+            We&apos;ve sent a 6-digit code to <span className="text-primary font-semibold">{email}</span>
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function OTPModal({ email, userId, type, onSuccess }) {
             type="text"
             maxLength={6}
             placeholder="000000"
-            className="w-full bg-dark border border-white/10 rounded-xl py-4 text-center text-3xl font-bold tracking-[10px] text-white focus:outline-none focus:border-primary/50 transition-all"
+            className="w-full bg-slate-50 border border-slate-300 rounded-xl py-4 text-center text-3xl font-bold tracking-[10px] text-slate-900 placeholder:text-slate-300 focus:bg-white focus:outline-none focus:border-primary transition-all"
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
           />

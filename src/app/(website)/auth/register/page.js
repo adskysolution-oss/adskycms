@@ -48,30 +48,32 @@ function RegisterForm() {
 
   return (
     <div className="w-full max-w-lg relative z-10">
-      <div className="glass-card p-6 md:p-10 border border-white/10 shadow-2xl">
+      <div className="glass-card p-6 md:p-10 border border-slate-200/80 shadow-xl bg-white rounded-2xl">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg text-sm">AS</div>
-            <span className="text-lg font-bold text-text-primary">AdSky Solution</span>
+            <span className="text-lg font-bold text-slate-900">AdSky Solution</span>
           </Link>
-          <h1 className="text-2xl font-bold text-text-primary mb-1">Create Account</h1>
-          <p className="text-text-secondary text-xs uppercase tracking-tighter font-bold">Join as a {role}</p>
+          <h1 className="text-2xl font-bold text-slate-900 mb-1">Create Account</h1>
+          <p className="text-slate-600 text-xs uppercase tracking-tighter font-bold">Join as a {role}</p>
         </div>
 
         {/* Role Selector */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           <button
             onClick={() => setRole('candidate')}
-            className={`p-3 rounded-xl border transition-all flex items-center justify-center gap-2 ${role === 'candidate' ? 'bg-primary/20 border-primary text-primary-light' : 'bg-white/5 border-white/5 text-text-muted hover:bg-white/10'
-              }`}
+            className={`p-3 rounded-xl border transition-all flex items-center justify-center gap-2 ${
+              role === 'candidate' ? 'bg-blue-50 border-primary text-primary font-bold shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+            }`}
           >
             <FaUserTie size={16} />
             <span className="text-xs font-bold uppercase tracking-widest">Candidate</span>
           </button>
           <button
             onClick={() => setRole('employer')}
-            className={`p-3 rounded-xl border transition-all flex items-center justify-center gap-2 ${role === 'employer' ? 'bg-secondary/20 border-secondary text-secondary-light' : 'bg-white/5 border-white/5 text-text-muted hover:bg-white/10'
-              }`}
+            className={`p-3 rounded-xl border transition-all flex items-center justify-center gap-2 ${
+              role === 'employer' ? 'bg-amber-50 border-amber-500 text-amber-700 font-bold shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+            }`}
           >
             <FaBriefcase size={16} />
             <span className="text-xs font-bold uppercase tracking-widest">Employer</span>
@@ -87,14 +89,14 @@ function RegisterForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 ml-1">Full Name</label>
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-1.5 ml-1">Full Name</label>
             <div className="relative group">
-              <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors text-xs" />
+              <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-xs" />
               <input
                 type="text"
                 required
                 placeholder="John Doe"
-                className="w-full bg-dark border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary/50 transition-all"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition-all"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -102,14 +104,14 @@ function RegisterForm() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
             <div className="relative group">
-              <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors text-xs" />
+              <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-xs" />
               <input
                 type="email"
                 required
                 placeholder="name@company.com"
-                className="w-full bg-dark border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary/50 transition-all"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition-all"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -117,14 +119,14 @@ function RegisterForm() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 ml-1">Password</label>
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-1.5 ml-1">Password</label>
             <div className="relative group">
-              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors text-xs" />
+              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-xs" />
               <input
                 type="password"
                 required
                 placeholder="••••••••"
-                className="w-full bg-dark border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary/50 transition-all"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition-all"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
@@ -141,8 +143,8 @@ function RegisterForm() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-text-secondary text-xs">
-            Already have an account? <Link href="/auth/login" className="text-primary-light font-bold hover:underline">Sign In</Link>
+          <p className="text-slate-600 text-xs">
+            Already have an account? <Link href="/auth/login" className="text-primary font-bold hover:underline">Sign In</Link>
           </p>
         </div>
       </div>
@@ -152,11 +154,7 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(17,24,39,1)_0%,rgba(0,0,0,1)_100%)]" />
-      <div className="glow-dot bg-primary top-1/4 right-1/4 opacity-20" />
-      <div className="glow-dot bg-secondary bottom-1/4 left-1/4 opacity-20" />
-      
+    <div className="min-h-screen flex items-center justify-center pt-24 pb-12 px-4 bg-gradient-to-b from-slate-50 via-white to-slate-50">
       <Suspense fallback={<div className="flex justify-center py-20"><FaSpinner className="animate-spin text-primary" size={32} /></div>}>
         <RegisterForm />
       </Suspense>

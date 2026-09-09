@@ -35,28 +35,28 @@ export default function AdminMlmShareConfigPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-6">📲 WhatsApp Share Configuration</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">📲 WhatsApp Share Configuration</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="glass-card p-6">
-          <h2 className="font-semibold text-white mb-4">Current Poster</h2>
-          {config?.posterUrl ? <img src={config.posterUrl} alt="Poster" className="w-full rounded-xl mb-4" /> : <div className="w-full h-48 bg-slate-900 rounded-xl flex items-center justify-center text-slate-500">No poster uploaded</div>}
-          <p className="text-slate-400 text-sm">Poster is shared along with the WhatsApp referral message.</p>
+        <div className="bg-white border border-slate-200/80 rounded-2xl shadow-xs p-6">
+          <h2 className="font-semibold text-slate-900 mb-4">Current Poster</h2>
+          {config?.posterUrl ? <img src={config.posterUrl} alt="Poster" className="w-full rounded-xl mb-4" /> : <div className="w-full h-48 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">No poster uploaded</div>}
+          <p className="text-slate-500 text-sm">Poster is shared along with the WhatsApp referral message.</p>
         </div>
-        <form onSubmit={handleSave} className="glass-card p-6 space-y-4">
+        <form onSubmit={handleSave} className="bg-white border border-slate-200/80 rounded-2xl shadow-xs p-6 space-y-4">
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Upload New Poster (JPG/PNG)</label>
-            <input type="file" accept="image/*" onChange={e => setPosterFile(e.target.files[0])} className="w-full text-slate-400 text-sm" />
+            <label className="block text-sm text-slate-700 font-medium mb-1">Upload New Poster (JPG/PNG)</label>
+            <input type="file" accept="image/*" onChange={e => setPosterFile(e.target.files[0])} className="w-full text-slate-600 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
           </div>
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Poster Title</label>
-            <input value={posterTitle} onChange={e => setPosterTitle(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none" />
+            <label className="block text-sm text-slate-700 font-medium mb-1">Poster Title</label>
+            <input value={posterTitle} onChange={e => setPosterTitle(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-900 text-sm focus:border-blue-500 focus:bg-white focus:outline-none" />
           </div>
           <div>
-            <label className="block text-sm text-slate-300 mb-2">Message Template</label>
+            <label className="block text-sm text-slate-700 font-medium mb-2">Message Template</label>
             <p className="text-slate-500 text-xs mb-2">Variables: {'{{MEMBER_NAME}}'}, {'{{REFERRAL_CODE}}'}, {'{{REFERRAL_LINK}}'}</p>
-            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={10} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none" />
+            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={10} className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-900 text-sm focus:border-blue-500 focus:bg-white focus:outline-none" />
           </div>
-          <button type="submit" disabled={saving} className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-60">
+          <button type="submit" disabled={saving} className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-purple-400 text-white font-semibold py-3 rounded-xl transition-all shadow-xs disabled:opacity-60">
             {saving ? 'Saving...' : 'Save Share Config'}
           </button>
         </form>

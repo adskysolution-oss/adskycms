@@ -317,10 +317,10 @@ export default function NextViewOnboardingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-darker flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
-          <p className="text-xs font-bold text-text-muted">Loading Onboarding Gateway...</p>
+          <div className="w-10 h-10 border-3 border-amber-200 border-t-amber-600 rounded-full animate-spin"></div>
+          <p className="text-xs font-bold text-slate-500">Loading Onboarding Gateway...</p>
         </div>
       </div>
     );
@@ -334,22 +334,22 @@ export default function NextViewOnboardingPage() {
   const currentStep = !isKycVerified ? 1 : !isFeePaid ? 2 : 3;
 
   return (
-    <div className="min-h-screen bg-darker text-text-primary py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Header banner */}
-        <div className="bg-gradient-to-br from-[#0e1726] to-[#0b1220] border border-amber-500/20 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-black uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-black uppercase tracking-wider">
                 Member Onboarding Gate
               </span>
-              <h1 className="text-2xl font-black text-white tracking-tight">
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                 Account Activation &amp; Compliance
               </h1>
-              <p className="text-xs text-text-secondary">
-                Welcome <strong className="text-white">{member?.fullName}</strong> ({member?.mlmCode}). Complete the 2-step verification below to unlock your dashboard and 3×15 Matrix.
+              <p className="text-xs text-slate-600">
+                Welcome <strong className="text-slate-900">{member?.fullName}</strong> ({member?.mlmCode}). Complete the 2-step verification below to unlock your dashboard and 3×15 Matrix.
               </p>
             </div>
 
@@ -358,7 +358,7 @@ export default function NextViewOnboardingPage() {
                 await fetch('/api/mlm/auth/logout', { method: 'POST' });
                 router.push('/nextview/login');
               }}
-              className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10"
+              className="text-xs text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200"
             >
               Sign Out
             </button>
@@ -370,16 +370,16 @@ export default function NextViewOnboardingPage() {
           {/* Step 1 */}
           <div className={`p-4 rounded-2xl border transition ${
             isKycVerified
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
               : currentStep === 1
-              ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-              : 'bg-dark border-white/5 text-text-muted'
+              ? 'bg-amber-50 border-amber-200 text-amber-800'
+              : 'bg-white border-slate-200 text-slate-400'
           }`}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] font-black uppercase tracking-wider">Step 1</span>
-              {isKycVerified ? <CheckCircle2 size={16} className="text-emerald-400" /> : <ShieldCheck size={16} />}
+              {isKycVerified ? <CheckCircle2 size={16} className="text-emerald-600" /> : <ShieldCheck size={16} />}
             </div>
-            <p className="text-xs font-black text-white">KYC Verification</p>
+            <p className="text-xs font-black text-slate-900">KYC Verification</p>
             <p className="text-[10px] mt-0.5 opacity-80">
               {isKycVerified ? 'Verified by Admin' : isKycSubmitted ? 'Under Admin Review' : 'Details Required'}
             </p>
@@ -388,16 +388,16 @@ export default function NextViewOnboardingPage() {
           {/* Step 2 */}
           <div className={`p-4 rounded-2xl border transition ${
             isFeePaid
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
               : currentStep === 2
-              ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-              : 'bg-dark border-white/5 text-text-muted'
+              ? 'bg-amber-50 border-amber-200 text-amber-800'
+              : 'bg-white border-slate-200 text-slate-400'
           }`}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] font-black uppercase tracking-wider">Step 2</span>
-              {isFeePaid ? <CheckCircle2 size={16} className="text-emerald-400" /> : <CreditCard size={16} />}
+              {isFeePaid ? <CheckCircle2 size={16} className="text-emerald-600" /> : <CreditCard size={16} />}
             </div>
-            <p className="text-xs font-black text-white">Platform Activation</p>
+            <p className="text-xs font-black text-slate-900">Platform Activation</p>
             <p className="text-[10px] mt-0.5 opacity-80">
               {isFeePaid ? 'Paid & Activated' : isKycVerified ? (feeData?.amount !== undefined ? `₹${feeData.amount} Deposit Ready` : 'Deposit Ready') : 'Locked until KYC'}
             </p>
@@ -406,14 +406,14 @@ export default function NextViewOnboardingPage() {
           {/* Step 3 */}
           <div className={`p-4 rounded-2xl border transition ${
             currentStep === 3
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-              : 'bg-dark border-white/5 text-text-muted'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+              : 'bg-white border-slate-200 text-slate-400'
           }`}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] font-black uppercase tracking-wider">Step 3</span>
-              {currentStep === 3 ? <Sparkles size={16} className="text-emerald-400" /> : <Lock size={16} />}
+              {currentStep === 3 ? <Sparkles size={16} className="text-emerald-600" /> : <Lock size={16} />}
             </div>
-            <p className="text-xs font-black text-white">Dashboard Unlocked</p>
+            <p className="text-xs font-black text-slate-900">Dashboard Unlocked</p>
             <p className="text-[10px] mt-0.5 opacity-80">
               {currentStep === 3 ? 'Full Access Granted' : 'Locked'}
             </p>
@@ -425,35 +425,35 @@ export default function NextViewOnboardingPage() {
           <div className="space-y-6">
             {isKycSubmitted ? (
               /* KYC IS SUBMITTED BUT WAITING FOR ADMIN APPROVAL */
-              <div className="bg-[#0b1220]/95 border border-amber-500/30 p-8 sm:p-10 rounded-3xl text-center space-y-4 shadow-2xl">
-                <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400 animate-pulse">
+              <div className="bg-white border border-slate-200/80 p-8 sm:p-10 rounded-3xl text-center space-y-4 shadow-xl">
+                <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-600 animate-pulse">
                   <Clock size={36} />
                 </div>
                 <div className="space-y-1">
-                  <h2 className="text-xl font-black text-white">
+                  <h2 className="text-xl font-black text-slate-900">
                     KYC Submitted &amp; Awaiting Admin Approval
                   </h2>
-                  <p className="text-text-secondary text-xs max-w-lg mx-auto">
+                  <p className="text-slate-600 text-xs max-w-lg mx-auto">
                     Your PAN, Aadhaar, and Bank IFSC details have been submitted and are currently in the <strong>Admin Compliance Queue</strong>. Dashboard and matrix activation will unlock as soon as the Admin approves your profile.
                   </p>
                 </div>
 
-                <div className="p-4 bg-dark/80 border border-white/5 rounded-2xl max-w-md mx-auto text-left space-y-2 text-xs">
-                  <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-text-secondary">Submitted Name:</span>
-                    <span className="font-bold text-white">{kyc?.fullName}</span>
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl max-w-md mx-auto text-left space-y-2 text-xs">
+                  <div className="flex justify-between border-b border-slate-200 pb-2">
+                    <span className="text-slate-500">Submitted Name:</span>
+                    <span className="font-bold text-slate-900">{kyc?.fullName}</span>
                   </div>
-                  <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-text-secondary">PAN Number:</span>
-                    <span className="font-mono font-bold text-amber-400 uppercase">{kyc?.panNumber || 'Provided'}</span>
+                  <div className="flex justify-between border-b border-slate-200 pb-2">
+                    <span className="text-slate-500">PAN Number:</span>
+                    <span className="font-mono font-bold text-amber-700 uppercase">{kyc?.panNumber || 'Provided'}</span>
                   </div>
-                  <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-text-secondary">Bank / IFSC:</span>
-                    <span className="font-mono font-bold text-emerald-400">{kyc?.bankIfscCode}</span>
+                  <div className="flex justify-between border-b border-slate-200 pb-2">
+                    <span className="text-slate-500">Bank / IFSC:</span>
+                    <span className="font-mono font-bold text-emerald-700">{kyc?.bankIfscCode}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-text-secondary">Status:</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">
+                    <span className="text-slate-500">Status:</span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">
                       {kyc?.status || 'UNDER_REVIEW'}
                     </span>
                   </div>
@@ -462,7 +462,7 @@ export default function NextViewOnboardingPage() {
                 <div className="pt-2 flex justify-center gap-3">
                   <button
                     onClick={loadOnboardingState}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-xs border border-white/10 transition"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition"
                   >
                     <RefreshCw size={14} />
                     <span>Check Approval Status</span>
@@ -473,16 +473,16 @@ export default function NextViewOnboardingPage() {
               /* KYC NOT SUBMITTED YET — SHOW FORM */
               <form
                 onSubmit={handleKycSubmit}
-                className="bg-[#0b1220]/95 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl"
+                className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl"
               >
-                <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                  <div className="flex items-center gap-2 text-amber-400">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div className="flex items-center gap-2 text-amber-800">
                     <ShieldCheck size={18} />
                     <h3 className="text-sm font-black uppercase tracking-wider">
                       Step 1: Submit Identity &amp; Bank Details
                     </h3>
                   </div>
-                  <span className="text-[10px] font-bold bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/20">
+                  <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
                     Mandatory Step
                   </span>
                 </div>
@@ -491,7 +491,7 @@ export default function NextViewOnboardingPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                         Full Legal Name *
                       </label>
                       <input
@@ -500,12 +500,12 @@ export default function NextViewOnboardingPage() {
                         value={form.fullName}
                         onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                         placeholder="Name on PAN"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                         PAN Card Number *
                       </label>
                       <input
@@ -515,12 +515,12 @@ export default function NextViewOnboardingPage() {
                         value={form.panNumber}
                         onChange={(e) => setForm({ ...form, panNumber: e.target.value.toUpperCase() })}
                         placeholder="ABCDE1234F"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono uppercase text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono uppercase text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                         Aadhaar Number (12 digits) *
                       </label>
                       <input
@@ -530,7 +530,7 @@ export default function NextViewOnboardingPage() {
                         value={form.aadhaarNumber}
                         onChange={(e) => setForm({ ...form, aadhaarNumber: e.target.value.replace(/\D/g, '') })}
                         placeholder="12-digit Number"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono text-white placeholder:text-text-muted focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -538,14 +538,14 @@ export default function NextViewOnboardingPage() {
 
                 {/* Bank Account Inputs */}
                 <div className="space-y-4 pt-2">
-                  <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
                       Bank Details (Auto-Fetch by IFSC)
                     </span>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                       Bank IFSC Code *
                     </label>
                     <div className="relative">
@@ -556,29 +556,29 @@ export default function NextViewOnboardingPage() {
                         value={ifsc}
                         onChange={handleIfscChange}
                         placeholder="e.g. SBIN0000691, HDFC0000060"
-                        className="w-full pl-4 pr-12 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono font-bold text-white uppercase focus:border-amber-500 focus:outline-none transition"
+                        className="w-full pl-4 pr-12 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 uppercase focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                       <div className="absolute right-3.5 top-3">
-                        {fetchingIfsc && <RefreshCw size={16} className="animate-spin text-amber-400" />}
-                        {!fetchingIfsc && bankDetails && <Check size={16} className="text-emerald-400" />}
+                        {fetchingIfsc && <RefreshCw size={16} className="animate-spin text-amber-600" />}
+                        {!fetchingIfsc && bankDetails && <Check size={16} className="text-emerald-600" />}
                       </div>
                     </div>
-                    {ifscError && <p className="text-xs text-rose-400 mt-1">{ifscError}</p>}
+                    {ifscError && <p className="text-xs text-rose-500 mt-1">{ifscError}</p>}
                   </div>
 
                   {bankDetails && (
-                    <div className="p-3.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 flex items-start gap-3">
-                      <Building2 size={18} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
+                      <Building2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
                       <div className="text-xs">
-                        <p className="font-extrabold text-white">{bankDetails.bankName || form.bankName}</p>
-                        <p className="text-text-secondary">Branch: {bankDetails.branch || form.branchName}</p>
+                        <p className="font-extrabold text-slate-900">{bankDetails.bankName || form.bankName}</p>
+                        <p className="text-slate-600">Branch: {bankDetails.branch || form.branchName}</p>
                       </div>
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                         Account Number *
                       </label>
                       <input
@@ -587,11 +587,11 @@ export default function NextViewOnboardingPage() {
                         value={form.bankAccountNumber}
                         onChange={(e) => setForm({ ...form, bankAccountNumber: e.target.value })}
                         placeholder="Bank Account Number"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono text-white focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                         Confirm Account Number *
                       </label>
                       <input
@@ -600,7 +600,7 @@ export default function NextViewOnboardingPage() {
                         value={form.confirmAccountNumber}
                         onChange={(e) => setForm({ ...form, confirmAccountNumber: e.target.value })}
                         placeholder="Re-enter Account Number"
-                        className="w-full px-4 py-2.5 bg-dark border border-white/10 rounded-xl text-sm font-mono text-white focus:border-amber-500 focus:outline-none transition"
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -621,49 +621,49 @@ export default function NextViewOnboardingPage() {
 
         {/* STEP 2 CONTAINER: KYC VERIFIED ➔ PLATFORM FEE / DEPOSIT */}
         {isKycVerified && !isFeePaid && (
-          <div className="bg-[#0b1220]/95 border border-emerald-500/30 p-8 sm:p-10 rounded-3xl space-y-6 shadow-2xl">
-            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <div className="bg-white border border-emerald-200 p-8 sm:p-10 rounded-3xl space-y-6 shadow-xl">
+            <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                 <CheckCircle2 size={22} />
               </div>
               <div>
-                <h3 className="text-base font-black text-white">
+                <h3 className="text-base font-black text-slate-900">
                   Step 1 Completed: KYC Approved &amp; Verified!
                 </h3>
-                <p className="text-xs text-text-secondary">
+                <p className="text-xs text-slate-600">
                   Your identity &amp; bank records have been approved by Admin. Now complete Step 2 to activate your 3×15 Matrix position.
                 </p>
               </div>
             </div>
 
             {/* Fee Card */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 via-dark to-[#0b1220] border border-amber-500/20 space-y-4">
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-50/60 to-orange-50/40 border border-amber-200 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">
                     {feeData?.feeDescription || feeData?.feeName || 'Lifetime Membership & Matrix Placement'}
                   </span>
-                  <h4 className="text-xl font-black text-white mt-0.5">
+                  <h4 className="text-xl font-black text-slate-900 mt-0.5">
                     Platform Activation Fee
                   </h4>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-amber-400 font-mono">₹{feeData?.amount ?? 100}</span>
-                  <span className="text-[10px] text-text-muted block">One-time Fee</span>
+                  <span className="text-2xl font-black text-amber-700 font-mono">₹{feeData?.amount ?? 100}</span>
+                  <span className="text-[10px] text-slate-500 block">One-time Fee</span>
                 </div>
               </div>
 
-              <ul className="text-xs text-text-secondary space-y-2 border-t border-white/5 pt-3">
+              <ul className="text-xs text-slate-700 space-y-2 border-t border-amber-200/60 pt-3">
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-emerald-400" />
+                  <Check size={14} className="text-emerald-600" />
                   <span>Permanent placement in 3×15 Ternary Matrix tree</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-emerald-400" />
+                  <Check size={14} className="text-emerald-600" />
                   <span>Direct referral commission &amp; spillover earnings eligibility</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-emerald-400" />
+                  <Check size={14} className="text-emerald-600" />
                   <span>Instant wallet withdrawals to verified bank account</span>
                 </li>
               </ul>
