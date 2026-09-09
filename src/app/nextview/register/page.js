@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   User,
@@ -322,8 +323,15 @@ function RegisterForm() {
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-xl text-center mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 mb-3 shadow-sm">
-          <span className="text-2xl font-black">NV</span>
+        <div className="inline-flex items-center justify-center mb-3">
+          <Image
+            src="/nexvia.png"
+            alt="NexVia Network"
+            width={220}
+            height={70}
+            className="h-16 sm:h-20 w-auto object-contain drop-shadow-xs"
+            priority
+          />
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight sm:text-4xl">
           Join <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">NexVia Network</span>

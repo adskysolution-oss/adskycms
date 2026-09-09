@@ -328,7 +328,10 @@ export default function Navbar() {
                     <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl backdrop-blur-xl space-y-3 z-50 animate-fade-in">
                       {/* NexVia Matrix */}
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-amber-500 uppercase tracking-wider px-2">NexVia 3×15 Matrix</p>
+                        <div className="flex items-center justify-between px-2">
+                          <Image src="/nexvia.png" alt="NexVia" width={72} height={22} className="h-4 w-auto object-contain" />
+                          <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">3×15 Matrix</span>
+                        </div>
                         <div className="grid grid-cols-2 gap-1.5">
                           <Link href="/nextview/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
                             Login
@@ -451,7 +454,10 @@ export default function Navbar() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-black text-amber-500 uppercase tracking-wider">NexVia 3×15 Matrix</p>
+                  <div className="flex items-center justify-between">
+                    <Image src="/nexvia.png" alt="NexVia" width={72} height={22} className="h-4 w-auto object-contain" />
+                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">3×15 Matrix</span>
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href="/nextview/login" className="py-2 px-3 rounded-xl bg-slate-50 text-center text-xs font-bold text-slate-800 border border-slate-200 hover:bg-slate-100">
                       Member Login

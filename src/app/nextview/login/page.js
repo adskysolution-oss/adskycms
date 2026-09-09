@@ -45,13 +45,13 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center px-4 bg-slate-50/50">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 mb-4 p-2 shadow-sm">
+          <div className="inline-flex items-center justify-center mb-4">
             <Image
-              src="/logoTitle.png"
-              alt="NextView Logo"
-              width={48}
-              height={48}
-              className="w-11 h-11 object-contain"
+              src="/nexvia.png"
+              alt="NexVia Logo"
+              width={200}
+              height={64}
+              className="h-16 w-auto object-contain drop-shadow-xs"
               priority
             />
           </div>

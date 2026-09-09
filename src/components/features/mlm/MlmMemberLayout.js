@@ -166,17 +166,14 @@ export default function MlmMemberLayout({ children, activePath }) {
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <Link href="/nextview/dashboard" className="flex items-center gap-2.5 group">
+          <Link href="/nextview/dashboard" className="flex items-center gap-2 group">
             <Image
-              src="/logoTitle.png"
+              src="/nexvia.png"
               alt="NexVia Logo"
-              width={32}
-              height={32}
-              className="w-8 h-8 rounded-xl object-contain shadow-xs"
+              width={120}
+              height={36}
+              className="h-8 w-auto object-contain"
             />
-            <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight leading-none group-hover:text-amber-600 transition">
-              NexVia
-            </span>
           </Link>
         </div>
 
@@ -343,15 +340,14 @@ export default function MlmMemberLayout({ children, activePath }) {
             />
             <div className="relative w-72 max-w-[80vw] bg-white h-full flex flex-col z-50 shadow-2xl animate-in slide-in-from-left duration-200">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <Image
-                    src="/logoTitle.png"
+                    src="/nexvia.png"
                     alt="NexVia Logo"
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-xl object-contain shadow-xs"
+                    width={120}
+                    height={36}
+                    className="h-8 w-auto object-contain"
                   />
-                  <span className="font-black text-base text-slate-900">NexVia</span>
                 </div>
                 <button
                   type="button"

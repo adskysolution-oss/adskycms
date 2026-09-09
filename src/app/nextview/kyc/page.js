@@ -313,7 +313,7 @@ export default function NextViewVerificationPage() {
         {/* Header Branding */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center mb-2">
-            <img src="/Nextview.png" alt="NextView Logo" className="h-14 w-auto object-contain"/>
+            <img src="/nexvia.png" alt="NexVia Logo" className="h-14 w-auto object-contain"/>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
             NexVia Member Verification &amp; Activation
