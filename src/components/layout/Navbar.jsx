@@ -166,7 +166,28 @@ export default function Navbar() {
       ? getAdminLinks()
       : getCandidateLinks();
 
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin')) {
+  // Hide AdSky Navbar on MLM member portal pages (they have their own MlmMemberLayout header)
+  const isHiddenRoute =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/nextview/dashboard') ||
+    pathname.startsWith('/nextview/profile') ||
+    pathname.startsWith('/nextview/fd') ||
+    pathname.startsWith('/nextview/network') ||
+    pathname.startsWith('/nextview/rewards') ||
+    pathname.startsWith('/nextview/wallet') ||
+    pathname.startsWith('/nextview/withdrawals') ||
+    pathname.startsWith('/nextview/transactions') ||
+    pathname.startsWith('/nextview/verification') ||
+    pathname.startsWith('/nextview/kyc') ||
+    pathname.startsWith('/nextview/matrix') ||
+    pathname.startsWith('/nextview/marketing') ||
+    pathname.startsWith('/nextview/training') ||
+    pathname.startsWith('/nextview/support') ||
+    pathname.startsWith('/nextview/settings') ||
+    pathname.startsWith('/nextview/onboarding');
+
+  if (isHiddenRoute) {
     return null;
   }
 
