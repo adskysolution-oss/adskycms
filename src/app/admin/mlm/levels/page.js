@@ -14,14 +14,21 @@ export default function AdminMlmLevelsPage() {
         setError('');
         try {
             const res = await fetch('/api/admin/mlm/levels');
-            const data = await res.json();
+            let data = null;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error('Invalid response from server');
+            }
             if (res.ok && data.success && data.data?.levels) {
                 setLevelsConfig(data.data);
                 setEditingLevels(data.data.levels);
+            } else if (!res.ok) {
+                setError(data?.message || 'Failed to load level configuration');
             }
         }
         catch (e) {
-            setError('Failed to load level configuration');
+            setError(e.message || 'Failed to load level configuration');
         }
         finally {
             setLoading(false);
@@ -46,9 +53,14 @@ export default function AdminMlmLevelsPage() {
                     description: 'Updated via MLM Admin Portal',
                 }),
             });
-            const data = await res.json();
+            let data = null;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error('Server returned an unexpected response');
+            }
             if (!res.ok)
-                throw new Error(data.message || 'Failed to save configuration');
+                throw new Error(data?.message || 'Failed to save configuration');
             setMessage('Level 1–15 configuration saved and versioned successfully!');
             loadLevels();
         }
