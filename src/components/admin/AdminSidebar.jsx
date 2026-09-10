@@ -110,14 +110,27 @@ export default function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        type="button"
-        onClick={() => setMobileOpen(!mobileOpen)}
-        className="lg:hidden fixed bottom-5 right-5 z-50 p-3 bg-amber-500 text-slate-950 rounded-full shadow-lg hover:bg-amber-600 transition"
-      >
-        {mobileOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
-      </button>
+      {/* Mobile Top Bar (sticky header with hamburger — replaces floating bottom button) */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 shadow-xs">
+        <Link href="/admin/dashboard" className="flex items-center gap-2">
+          <Image
+            src="/logoTitle.png"
+            alt="AdSky Admin"
+            width={28}
+            height={28}
+            className="w-7 h-7 rounded-lg object-contain"
+          />
+          <span className="font-extrabold text-sm text-slate-900 tracking-tight">AdSky <span className="text-amber-600">Admin</span></span>
+        </Link>
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+          aria-label="Toggle Sidebar"
+        >
+          {mobileOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
+        </button>
+      </div>
 
       {/* Backdrop */}
       {mobileOpen && (
