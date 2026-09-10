@@ -324,23 +324,7 @@ function LevelIncomeSection({ matrixData }) {
                         : 'bg-slate-50/80 border-slate-200 text-slate-600'
                     }`}
                   >
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <div className="font-bold uppercase tracking-wider text-[10px] text-slate-400">
-                          Reward Per Qualified FD
-                        </div>
-                        <div className={`text-base font-black ${l.premium ? 'text-white' : 'text-slate-900'}`}>
-                          ₹{l.rewardPerFd}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="font-bold uppercase tracking-wider text-[10px] text-slate-400">
-                          Calculation
-                        </div>
-                        <div className={`text-sm font-black ${l.premium ? 'text-white' : 'text-slate-800'}`}>
-                          {l.capacity.toLocaleString('en-IN')} × ₹{l.rewardPerFd} = {l.income}
-                        </div>
-                      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-1 gap-3">
                       <div>
                         <div className="font-bold uppercase tracking-wider text-[10px] text-slate-400">
                           Remaining to Complete
