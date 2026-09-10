@@ -153,7 +153,7 @@ export default function CorporateAndMlmCTA() {
             </div>
           </div>
 
-          {/* Card 2: NexVia 3×15 Network */}
+          {/* Card 2: NexVia Matrix Platform */}
           <div className="group relative rounded-3xl bg-white border border-slate-200/90 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06),0_2px_8px_-2px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_-12px_rgba(245,158,11,0.16)] hover:border-amber-300 transition-all duration-300 flex flex-col justify-between overflow-hidden">
             {/* Top Accent Line */}
             <div className="h-1.5 w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400" />
@@ -178,7 +178,7 @@ export default function CorporateAndMlmCTA() {
               {/* Title & Description */}
               <div className="space-y-2.5">
                 <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight group-hover:text-amber-600 transition-colors">
-                  NexVia 3×15 Network
+                  NexVia Matrix Platform
                 </h3>
                 <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed">
                   Join our structured 3×15 Matrix. Refer eligible Fixed Deposit (FD) and FD-Card products to unlock structured Level 1 through Level 15 upline rewards with instant withdrawals.

@@ -3,13 +3,13 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  Users, 
-  TrendingUp, 
-  Trophy, 
-  Target, 
-  ArrowRight, 
-  Play, 
+import {
+  Users,
+  TrendingUp,
+  Trophy,
+  Target,
+  ArrowRight,
+  Play,
   Sparkles,
   ChevronRight,
   ShieldCheck,
@@ -58,13 +58,13 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
       <div className="absolute top-1/2 -right-20 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        
+
         {/* ── MAIN 2-COLUMN HERO LAYOUT ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-          
+
           {/* ════════════════ LEFT COLUMN: Content & CTAs (lg:col-span-7) ════════════════ */}
           <div className="lg:col-span-7 flex flex-col justify-center space-y-5 text-center lg:text-left">
-            
+
             {/* Top Brand Header: Official Logo + Matrix Badge */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
               <div className="relative w-44 sm:w-52 h-14 sm:h-16 shrink-0">
@@ -77,10 +77,10 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                 />
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 border border-amber-500/25 shadow-xs">
+              {/* <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 border border-amber-500/25 shadow-xs">
                 <Sparkles size={13} className="text-amber-600" />
                 <span>Deterministic 3×15 Matrix</span>
-              </div>
+              </div> */}
             </div>
 
             {/* Slogans & Primary Headline */}
@@ -89,14 +89,11 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                 A STRONGER TODAY • A BRIGHTER TOMORROW
               </p>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.12]">
-                NEXVIA 3×15<br />
+                NEXVIA SMART FD<br />
                 <span className="bg-gradient-to-r from-blue-700 via-indigo-600 to-amber-500 bg-clip-text text-transparent">
                   CONNECT • BUILD • GROW
                 </span>
               </h1>
-              <p className="text-xs sm:text-sm font-bold text-slate-600">
-                एक Structured Referral Journey, बेहतर Opportunities के साथ
-              </p>
             </div>
 
             {/* Navy Sub-Bar Pill */}
@@ -125,7 +122,7 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                   className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
-                
+
                 {/* Floating Mobile Badge */}
                 <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full border border-white shadow-sm">
                   <span className="text-[10px] font-bold text-blue-950 flex items-center gap-1.5">
@@ -202,7 +199,7 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
 
           {/* ════════════════ RIGHT COLUMN: Crisp, HD Image Showcase (lg:col-span-5) ════════════════ */}
           <div className="hidden lg:block lg:col-span-5 relative">
-            
+
             {/* Visual Frame Card (Crystal clear, NO washed-out white gradient!) */}
             <div className="relative rounded-3xl overflow-hidden border-2 border-white shadow-2xl bg-slate-900 group">
               <div className="relative w-full aspect-[16/11]">
@@ -214,7 +211,7 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                   sizes="(max-width: 1024px) 100vw, 45vw"
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                
+
                 {/* Subtle bottom vignette so overlays pop */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
 
@@ -258,11 +255,10 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
               <div className="flex items-center justify-between gap-1 overflow-x-auto">
                 {MILESTONES.map((step, idx) => (
                   <div key={step} className="flex items-center gap-1 shrink-0">
-                    <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-                      idx === MILESTONES.length - 1 
-                        ? 'bg-amber-500 text-white shadow-xs' 
-                        : 'bg-slate-100 text-slate-700'
-                    }`}>
+                    <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${idx === MILESTONES.length - 1
+                      ? 'bg-amber-500 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-700'
+                      }`}>
                       {step}
                     </div>
                     {idx < MILESTONES.length - 1 && (
