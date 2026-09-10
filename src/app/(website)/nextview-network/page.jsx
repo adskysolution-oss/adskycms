@@ -35,7 +35,7 @@ import {
 // ─── DATA ──────────────────────────────────────────────────────────────────
 
 const LEVEL_INCOME = [
-  { level: 1,  members: 3,        income: '₹600',          incomeNum: 600,         rewardPerFd: 200, label: 'L1', highlight: true },
+  { level: 1,  members: 3,        income: '₹1,500',        incomeNum: 1500,        rewardPerFd: 500, label: 'L1', highlight: true },
   { level: 2,  members: 9,        income: '₹630',          incomeNum: 630,         rewardPerFd: 70,  label: 'L2' },
   { level: 3,  members: 27,       income: '₹1,485',        incomeNum: 1485,        rewardPerFd: 55,  label: 'L3' },
   { level: 4,  members: 81,       income: '₹3,645',        incomeNum: 3645,        rewardPerFd: 45,  label: 'L4' },
@@ -173,7 +173,7 @@ function LevelIncomeSection({ matrixData }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-8">
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-center">
             <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total 15-Level Potential</div>
-            <div className="text-lg font-black text-slate-900">₹20,59,58,380</div>
+            <div className="text-lg font-black text-slate-900">₹20,59,59,280</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-center">
             <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Matrix Capacity</div>
@@ -762,7 +762,7 @@ function MatrixJourneySection({ matrixData }) {
               <div className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full bg-blue-100/80 border border-blue-200 text-blue-900 text-xs font-black uppercase tracking-wider mb-2">
                 <span>Level 1</span>
                 <span className="w-1 h-1 rounded-full bg-blue-400" />
-                <span className="text-blue-700">Total Potential: ₹600</span>
+                <span className="text-blue-700">Total Potential: ₹1,500</span>
                 <span className="w-1 h-1 rounded-full bg-blue-400" />
                 <span className="font-mono text-[11px] text-blue-600 font-bold">
                   {l1Stats.filledCount} / 3 nodes
@@ -789,7 +789,7 @@ function MatrixJourneySection({ matrixData }) {
                         subtitle: pos.isFilled ? `Occupied: ${pos.name || pos.code || 'Active Member'}` : 'Available Slot',
                         capacity: 3,
                         filled: l1Stats.filledCount,
-                        potential: '₹600 Total Level Potential',
+                        potential: '₹1,500 Total Level Potential',
                         desc: pos.isFilled
                           ? `Placed under your direct root. FD Status: ${pos.fdStatus || 'Standard'}`
                           : 'Open position ready for direct placement or BFS spillover.',
