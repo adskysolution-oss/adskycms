@@ -25,8 +25,8 @@ export default function NextViewMarketingPage() {
                     setMemberCode(profRes.data.mlmCode);
                     setMemberName(profRes.data.fullName || '');
                 }
-                if (shareRes?.success && shareRes.data) {
-                    setShareConfig(shareRes.data);
+                if (shareRes?.success) {
+                    setShareConfig(shareRes.data || shareRes.config);
                 }
             }
             catch (e) {
@@ -39,17 +39,14 @@ export default function NextViewMarketingPage() {
         loadData();
     }, []);
     const getOfficialShareText = () => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : '';
-        const base = (origin.includes('localhost') || origin.includes('127.0.0.1'))
-            ? 'https://www.sakhihub.com'
-            : origin;
-        const inviteLink = `${base}/nextview/register?sponsor=${memberCode}`;
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
+        const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
         const rawTemplate = shareConfig?.messageTemplate || DEFAULT_SHARE_MESSAGE;
         let text = rawTemplate
             .replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink)
             .replace(/\*?\{\{REFERRAL_CODE\}\}\*?/g, `*${memberCode}*`)
             .replace(/\{\{MEMBER_NAME\}\}/g, memberName || 'NEXVIA Member');
-        if (shareConfig?.posterUrl && !text.includes(shareConfig.posterUrl)) {
+        if (shareConfig?.includePosterUrlInText && shareConfig?.posterUrl && !text.includes(shareConfig.posterUrl)) {
             text += `\n\n🖼️ Official Campaign Poster:\n${shareConfig.posterUrl}`;
         }
         return text;
@@ -104,14 +101,16 @@ export default function NextViewMarketingPage() {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     };
     const copyPersonalizedCaption = (id, captionTemplate) => {
-        const inviteLink = `${typeof window !== 'undefined' ? window.location.origin : 'https://www.sakhihub.com'}/nextview/register?sponsor=${memberCode}`;
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
+        const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
         const personalized = (captionTemplate || '').replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink);
         navigator.clipboard.writeText(personalized);
         setCopiedId(id);
         setTimeout(() => setCopiedId(null), 2000);
     };
     const shareOnWhatsapp = (captionTemplate) => {
-        const inviteLink = `${typeof window !== 'undefined' ? window.location.origin : 'https://www.sakhihub.com'}/nextview/register?sponsor=${memberCode}`;
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
+        const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
         const personalized = (captionTemplate || '').replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink);
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(personalized)}`, '_blank');
     };

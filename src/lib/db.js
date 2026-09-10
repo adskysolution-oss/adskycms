@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+let rawUri = (process.env.MONGODB_URI || '').trim();
+if (rawUri.startsWith('MONGODB_URI=')) {
+  rawUri = rawUri.replace(/^MONGODB_URI=/, '').trim();
+}
+const MONGODB_URI = rawUri;
 
 if (!MONGODB_URI) {
   throw new Error('Please define MONGODB_URI in .env.local');

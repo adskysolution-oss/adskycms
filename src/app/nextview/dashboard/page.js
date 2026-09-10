@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import MlmMemberLayout from '@/components/features/mlm/MlmMemberLayout';
+import { DEFAULT_SHARE_MESSAGE } from '@/constants/mlmShare';
 
 export default function NextViewDashboardPage() {
   const router = useRouter();
@@ -44,6 +45,7 @@ export default function NextViewDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedMessage, setCopiedMessage] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -104,8 +106,8 @@ export default function NextViewDashboardPage() {
       if (rewRes?.success && (rewRes.data || rewRes)) {
         setRewardsData(rewRes.data || rewRes);
       }
-      if (shareRes?.success && (shareRes.data || shareRes)) {
-        setShareConfig(shareRes.data || shareRes);
+      if (shareRes?.success) {
+        setShareConfig(shareRes.data || shareRes.config || shareRes);
       }
     } catch (err) {
       console.error('Error loading NextView dashboard:', err);
@@ -119,9 +121,27 @@ export default function NextViewDashboardPage() {
     loadData();
   }, []);
 
+  const getReferralShareText = () => {
+    if (!profile?.mlmCode) return '';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
+    const url = `${origin}/nextview/register?sponsor=${profile.mlmCode}`;
+    const template = shareConfig?.messageTemplate || DEFAULT_SHARE_MESSAGE;
+
+    let text = template
+      .replace(/\{\{REFERRAL_LINK\}\}/g, url)
+      .replace(/\*?\{\{REFERRAL_CODE\}\}\*?/g, `*${profile.mlmCode}*`)
+      .replace(/\{\{MEMBER_NAME\}\}/g, profile.fullName || 'NEXVIA Member');
+
+    if (shareConfig?.includePosterUrlInText && shareConfig?.posterUrl && !text.includes(shareConfig.posterUrl)) {
+      text += `\n\n🖼️ Official Campaign Poster:\n${shareConfig.posterUrl}`;
+    }
+
+    return text;
+  };
+
   const copyReferralLink = () => {
     if (!profile?.mlmCode) return;
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
     const url = `${origin}/nextview/register?sponsor=${profile.mlmCode}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
@@ -129,11 +149,21 @@ export default function NextViewDashboardPage() {
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
-  const shareReferralWhatsapp = () => {
+  const copyShareMessage = () => {
     if (!profile?.mlmCode) return;
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const url = `${origin}/nextview/register?sponsor=${profile.mlmCode}`;
-    const text = `🚀 Join NexVia Network with my Sponsor Code *${profile.mlmCode}*!\n\nRegister here: ${url}\n\nEarn lifetime direct rewards, matrix spillover benefits, and 15-tier network growth!`;
+    const text = getReferralShareText();
+    navigator.clipboard.writeText(text);
+    setCopiedMessage(true);
+    toast.success('WhatsApp referral message copied to clipboard!');
+    setTimeout(() => setCopiedMessage(false), 2500);
+  };
+
+  const shareReferralWhatsapp = () => {
+    if (!profile?.mlmCode) {
+      toast.error('Member profile is loading...');
+      return;
+    }
+    const text = getReferralShareText();
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -398,9 +428,20 @@ export default function NextViewDashboardPage() {
                 type="button"
                 onClick={copyReferralLink}
                 className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-amber-300 text-amber-900 text-xs font-bold transition shadow-2xs"
+                title="Copy registration link"
               >
                 <Copy className="w-3.5 h-3.5 text-amber-600" />
-                <span>{copiedLink ? 'Copied to Clipboard!' : 'Copy Link'}</span>
+                <span>{copiedLink ? 'Link Copied!' : 'Copy Link'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={copyShareMessage}
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-300 text-amber-900 text-xs font-bold transition shadow-2xs"
+                title="Copy entire WhatsApp message"
+              >
+                <Copy className="w-3.5 h-3.5 text-amber-600" />
+                <span>{copiedMessage ? 'Message Copied!' : 'Copy Message'}</span>
               </button>
 
               <button

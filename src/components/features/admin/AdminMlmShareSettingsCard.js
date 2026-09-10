@@ -145,12 +145,13 @@ export default function AdminMlmShareSettingsCard() {
         }
     };
     // Generate sample preview with mock member data
-    const sampleLink = 'https://www.sakhihub.com/nextview/register?sponsor=NEX-ROOT-001';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
+    const sampleLink = `${origin}/nextview/register?sponsor=NEX-ROOT-001`;
     let previewText = messageTemplate
         .replace(/\{\{REFERRAL_LINK\}\}/g, sampleLink)
         .replace(/\*?\{\{REFERRAL_CODE\}\}\*?/g, '*NEX-ROOT-001*')
         .replace(/\{\{MEMBER_NAME\}\}/g, 'Rahul Sharma');
-    if (posterUrl && !previewText.includes(posterUrl)) {
+    if (includePosterUrlInText && posterUrl && !previewText.includes(posterUrl)) {
         previewText += `\n\n🖼️ Official Campaign Poster:\n${posterUrl}`;
     }
     const handleTestWhatsApp = () => {

@@ -84,7 +84,7 @@ export async function POST(req) {
             await MlmAuditLog.create({
                 action: 'UPDATE_SHARE_CONFIG',
                 adminId: payload.id,
-                adminEmail: payload.email || 'admin@sakhihub.com',
+                adminEmail: payload.email || 'admin@adskysolution.com',
                 details: {
                     title: updated.title,
                     hasPoster: !!updated.posterUrl,
