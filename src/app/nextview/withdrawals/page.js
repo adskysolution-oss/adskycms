@@ -18,12 +18,13 @@ export default function NextViewWithdrawalsPage() {
     const [upiId, setUpiId] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [feedback, setFeedback] = useState(null);
-    const loadData = async () => {
-        setLoading(true);
+
+    const loadData = async (showLoading = false) => {
+        if (showLoading) setLoading(true);
         try {
             const [wRes, wdRes, kycRes] = await Promise.all([
-                fetch('/api/mlm/wallet').then((r) => r.json()),
-                fetch('/api/mlm/withdrawals').then((r) => r.json()),
+                fetch('/api/mlm/wallet').then((r) => r.json()).catch(() => ({})),
+                fetch('/api/mlm/withdrawals').then((r) => r.json()).catch(() => ({})),
                 fetch('/api/mlm/kyc').then((r) => r.json()).catch(() => ({})),
             ]);
             if (wRes?.success) setWallet(wRes?.data?.wallet || wRes?.wallet || null);
@@ -39,10 +40,79 @@ export default function NextViewWithdrawalsPage() {
                 setBankDetails(bd);
             }
         }
-        catch {
-            setFeedback({ type: 'error', message: 'Network error occurred while submitting withdrawal.' });
+        catch (err) {
+            console.error('Error loading withdrawal data:', err);
+            setFeedback({ type: 'error', message: 'Failed to load wallet data. Please refresh.' });
         }
         finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        let isMounted = true;
+        async function init() {
+            try {
+                const [wRes, wdRes, kycRes] = await Promise.all([
+                    fetch('/api/mlm/wallet').then((r) => r.json()).catch(() => ({})),
+                    fetch('/api/mlm/withdrawals').then((r) => r.json()).catch(() => ({})),
+                    fetch('/api/mlm/kyc').then((r) => r.json()).catch(() => ({})),
+                ]);
+                if (!isMounted) return;
+                if (wRes?.success) setWallet(wRes?.data?.wallet || wRes?.wallet || null);
+                if (wdRes?.success) setWithdrawals(wdRes?.data?.withdrawals || wdRes?.withdrawals || []);
+                const kycObj = kycRes?.data?.kyc || kycRes?.kyc;
+                if (kycObj) {
+                    const bd = kycObj.bankDetails || {
+                        accountHolderName: kycObj.accountHolderName || kycObj.fullName || '',
+                        accountNumber: kycObj.bankAccountNumber || '',
+                        ifscCode: kycObj.bankIfscCode || '',
+                        bankName: kycObj.bankName || '',
+                    };
+                    setBankDetails(bd);
+                }
+            } catch (err) {
+                console.error('Failed to initialize withdrawal page:', err);
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        }
+        init();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const handleWithdraw = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setFeedback(null);
+        try {
+            const payload = {
+                amount: Number(amount),
+                paymentMode: paymentMethod === 'UPI' ? 'UPI' : 'BANK_TRANSFER',
+                accountHolderName: bankDetails.accountHolderName,
+                bankAccountNumber: bankDetails.accountNumber,
+                bankIfscCode: bankDetails.ifscCode,
+                bankName: bankDetails.bankName,
+                upiId: paymentMethod === 'UPI' ? upiId : undefined,
+            };
+            const res = await fetch('/api/mlm/withdrawals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setFeedback({ type: 'success', message: data.message || 'Withdrawal request submitted successfully!' });
+                setAmount('');
+                loadData();
+            } else {
+                setFeedback({ type: 'error', message: data.message || 'Failed to submit withdrawal request.' });
+            }
+        } catch (err) {
+            setFeedback({ type: 'error', message: 'An unexpected error occurred while submitting withdrawal.' });
+        } finally {
             setSubmitting(false);
         }
     };

@@ -92,6 +92,32 @@ export async function GET(req) {
     });
   }
 
+  // Proactively self-heal any unplaced active paid members (e.g. newly activated direct referrals)
+  try {
+    const unplacedActiveMembers = await MlmMember.find({
+      status: 'ACTIVE',
+      platformFeePaid: true,
+      $or: [{ matrixNodeId: null }, { matrixNodeId: { $exists: false } }]
+    }).sort({ activatedAt: 1, joinedAt: 1 });
+
+    if (unplacedActiveMembers.length > 0) {
+      const { placeInMatrix } = await import('@/lib/mlm/matrixEngine');
+      for (const uMember of unplacedActiveMembers) {
+        const existingNode = await MlmMatrixNode.findOne({ memberId: uMember._id }).lean();
+        if (existingNode) {
+          await MlmMember.updateOne(
+            { _id: uMember._id },
+            { $set: { matrixNodeId: existingNode._id, matrixLevel: existingNode.level, matrixPosition: existingNode.positionInParent || existingNode.position } }
+          );
+        } else {
+          await placeInMatrix(uMember._id, uMember.userId || uMember._id, uMember.userId || uMember._id, 'system_heal');
+        }
+      }
+    }
+  } catch (healErr) {
+    console.warn('[Matrix Route Auto-Heal Notice]', healErr.message);
+  }
+
   // Find direct children (L1 under this node, max 3)
   const directChildren = await MlmMatrixNode.find({ parentNodeId: currentNode._id })
     .populate({

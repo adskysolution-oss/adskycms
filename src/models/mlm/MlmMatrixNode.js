@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const MlmMatrixNodeSchema = new mongoose.Schema(
   {
     memberId: { type: mongoose.Schema.Types.ObjectId, ref: "MlmMember", required: true, unique: true },
-    mlmCode: { type: String, required: true },
+    mlmCode: { type: String },
     parentNodeId: { type: mongoose.Schema.Types.ObjectId, ref: "MlmMatrixNode", default: null },
     positionInParent: { type: Number, enum: [1, 2, 3], default: null },
     level: { type: Number, required: true, min: 1, max: 15 },

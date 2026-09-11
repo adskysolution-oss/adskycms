@@ -184,7 +184,7 @@ export async function checkAndUnlockLevelCompletions(placedNode) {
  */
 export async function placeInMatrix(memberId, userId, placedByUserId, placedByRole, maxRetries = 3) {
     // 1. Idempotency check: already placed in a real matrix node?
-    const existing = await MlmMember.findById(memberId).select('matrixNodeId sponsorId').lean();
+    const existing = await MlmMember.findById(memberId).select('matrixNodeId sponsorId mlmCode').lean();
     if (existing?.matrixNodeId) {
         const node = await MlmMatrixNode.findById(existing.matrixNodeId).lean();
         if (node) {
@@ -212,6 +212,7 @@ export async function placeInMatrix(memberId, userId, placedByUserId, placedByRo
                     // Creating root node
                     const [node] = await MlmMatrixNode.create([{
                             memberId,
+                            mlmCode: existing?.mlmCode || '',
                             parentNodeId: null,
                             level: 1,
                             positionInParent: 1,
@@ -225,6 +226,7 @@ export async function placeInMatrix(memberId, userId, placedByUserId, placedByRo
                 else {
                     const [node] = await MlmMatrixNode.create([{
                             memberId,
+                            mlmCode: existing?.mlmCode || '',
                             parentNodeId: slot.parentNodeId,
                             level: slot.level,
                             positionInParent: slot.positionInParent,
@@ -234,6 +236,12 @@ export async function placeInMatrix(memberId, userId, placedByUserId, placedByRo
                             filledAt: new Date(),
                         }], { session });
                     placedNode = node;
+
+                    // Update parent's child metrics
+                    await MlmMatrixNode.findByIdAndUpdate(slot.parentNodeId, {
+                        $addToSet: { directChildIds: node._id },
+                        $inc: { childCount: 1 }
+                    }, { session });
                 }
                 // Update member with matrix position
                 await MlmMember.findByIdAndUpdate(memberId, {
@@ -244,13 +252,19 @@ export async function placeInMatrix(memberId, userId, placedByUserId, placedByRo
                 // Create placement history record
                 await MlmPlacementHistory.create([{
                         memberId,
+                        matrixNodeId: placedNode._id,
                         newNodeId: placedNode._id,
+                        parentNodeId: slot.parentNodeId,
+                        sponsorId: existing?.sponsorId || null,
+                        level: placedNode.level,
                         newLevel: placedNode.level,
+                        positionInParent: placedNode.positionInParent,
                         newPosition: placedNode.positionInParent,
                         placedBy: placedByUserId,
                         placedByRole,
                         reason: 'Initial 3x15 deterministic placement',
                         timestamp: new Date(),
+                        placedAt: new Date(),
                     }], { session });
             });
             // Check if adding this node completed any ancestor's level
