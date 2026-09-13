@@ -12,6 +12,9 @@ import AboutCompanySection from '@/components/sections/AboutCompanySection';
 import { getActiveServices, getPublishedBlogs, getTeamMembers } from '@/lib/data';
 import ContactSection from '@/components/sections/ContactSection';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'AdSky Solution - Premium IT Solutions & Strategic Hiring',
   description: 'Elevate your business with premium IT development and an integrated hiring system. We build smart technology and connect you with top talent.',

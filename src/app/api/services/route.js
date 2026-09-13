@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
 import Service from '@/models/Service';
 import { authenticateRequest } from '@/lib/auth';
@@ -21,6 +22,10 @@ export async function POST(request) {
     await dbConnect();
     const body = await request.json();
     const service = await Service.create(body);
+    try {
+      revalidatePath('/');
+      revalidatePath('/services');
+    } catch {}
     return NextResponse.json({ success: true, service }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,6 +41,10 @@ export async function PUT(request) {
     const { id, ...data } = await request.json();
     const service = await Service.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
     if (!service) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    try {
+      revalidatePath('/');
+      revalidatePath('/services');
+    } catch {}
     return NextResponse.json({ success: true, service });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -52,6 +61,10 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
     const service = await Service.findByIdAndDelete(id);
     if (!service) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    try {
+      revalidatePath('/');
+      revalidatePath('/services');
+    } catch {}
     return NextResponse.json({ success: true, message: 'Deleted' });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

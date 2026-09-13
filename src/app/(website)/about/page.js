@@ -5,6 +5,9 @@ import VisionMissionSection from '@/components/sections/VisionMissionSection';
 import OurJourneySection from '@/components/sections/OurJourneySection';
 import AboutCompanySection from '@/components/sections/AboutCompanySection';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = { title: 'About Us - AdSky Solution' };
 
 const values = [

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
 import PricingPlan from '@/models/PricingPlan';
 import { authenticateRequest } from '@/lib/auth';
@@ -21,6 +22,10 @@ export async function POST(request) {
     await dbConnect();
     const body = await request.json();
     const plan = await PricingPlan.create(body);
+    try {
+      revalidatePath('/');
+      revalidatePath('/pricing');
+    } catch {}
     return NextResponse.json({ success: true, plan }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,6 +41,10 @@ export async function PUT(request) {
     const { id, ...data } = await request.json();
     const plan = await PricingPlan.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
     if (!plan) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    try {
+      revalidatePath('/');
+      revalidatePath('/pricing');
+    } catch {}
     return NextResponse.json({ success: true, plan });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -52,6 +61,10 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
     const plan = await PricingPlan.findByIdAndDelete(id);
     if (!plan) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    try {
+      revalidatePath('/');
+      revalidatePath('/pricing');
+    } catch {}
     return NextResponse.json({ success: true, message: 'Deleted' });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
