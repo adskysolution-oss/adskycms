@@ -49,9 +49,9 @@ export default function NextViewOnboardingPage() {
 
   const [submittingKyc, setSubmittingKyc] = useState(false);
   const [payingFee, setPayingFee] = useState(false);
+  const [checkingPayment, setCheckingPayment] = useState(false);
 
   const loadOnboardingState = async () => {
-    setLoading(true);
     try {
       const [meRes, feeRes] = await Promise.all([
         fetch('/api/mlm/auth/me').then(r => r.json()),
@@ -105,39 +105,43 @@ export default function NextViewOnboardingPage() {
   };
 
   useEffect(() => {
-    loadOnboardingState();
+    (async () => {
+      await loadOnboardingState();
+    })();
 
     // Check if returning from Cashfree redirect with order_id
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const orderId = params.get('order_id');
       if (orderId) {
-        setPayingFee(true);
-        const toastId = toast.loading('Verifying payment with Cashfree...');
-        fetch('/api/mlm/payment/platform-fee', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'VERIFY_PAYMENT', orderId }),
-        })
-          .then((r) => r.json())
-          .then((data) => {
-            toast.dismiss(toastId);
-            if (data.success) {
-              toast.success('Payment verified! Your account is now ACTIVE.');
-              setTimeout(() => {
-                router.push('/nextview/dashboard');
-              }, 1200);
-            } else {
-              toast.error(data.message || 'Payment verification pending. Please try again.');
-            }
+        setTimeout(() => {
+          setPayingFee(true);
+          const toastId = toast.loading('Verifying payment with Cashfree...');
+          fetch('/api/mlm/payment/platform-fee', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'VERIFY_PAYMENT', orderId }),
           })
-          .catch(() => {
-            toast.dismiss(toastId);
-            toast.error('Network error while verifying payment');
-          })
-          .finally(() => {
-            setPayingFee(false);
-          });
+            .then((r) => r.json())
+            .then((data) => {
+              toast.dismiss(toastId);
+              if (data.success) {
+                toast.success('Payment verified! Your account is now ACTIVE.');
+                setTimeout(() => {
+                  router.push('/nextview/dashboard');
+                }, 1200);
+              } else {
+                toast.error(data.message || 'Payment verification pending. Please try again.');
+              }
+            })
+            .catch(() => {
+              toast.dismiss(toastId);
+              toast.error('Network error while verifying payment');
+            })
+            .finally(() => {
+              setPayingFee(false);
+            });
+        }, 0);
       }
     }
   }, []);
@@ -312,6 +316,43 @@ export default function NextViewOnboardingPage() {
       console.error(err);
       toast.error('Network error during payment initiation');
       setPayingFee(false);
+    }
+  };
+
+  const handleCheckPaymentStatus = async () => {
+    setCheckingPayment(true);
+    const toastId = toast.loading('Checking Cashfree payment status...');
+    try {
+      const res = await fetch('/api/mlm/payment/platform-fee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'CHECK_STATUS' }),
+      });
+      const data = await res.json();
+      toast.dismiss(toastId);
+
+      if (data.success && (data.result === 'PAID' || data.result === 'ALREADY_SYNCED' || data.data?.isAlreadyActive)) {
+        toast.success('Payment confirmed! Your account is active.');
+        setTimeout(() => {
+          router.push('/nextview/dashboard');
+        }, 1200);
+      } else if (data.result === 'PENDING') {
+        toast('Payment is still pending with Cashfree. If money was deducted, it will sync automatically.', {
+          icon: '⏳',
+        });
+      } else if (data.result === 'NOT_FOUND') {
+        toast.error('No pending payment order found. Please proceed to pay.');
+      } else if (data.result === 'FAILED') {
+        toast.error('Payment attempt failed. Please try paying again.');
+      } else {
+        toast.error(data.message || 'Unable to confirm payment. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.dismiss(toastId);
+      toast.error('Network error while checking payment status.');
+    } finally {
+      setCheckingPayment(false);
     }
   };
 
@@ -670,11 +711,21 @@ export default function NextViewOnboardingPage() {
 
               <button
                 onClick={handlePayFee}
-                disabled={payingFee}
+                disabled={payingFee || checkingPayment}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.01] transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 <span>{payingFee ? 'Activating Account & Matrix...' : `Pay ₹${feeData?.amount ?? 100} & Activate Matrix Position`}</span>
                 <ArrowRight size={18} />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCheckPaymentStatus}
+                disabled={payingFee || checkingPayment}
+                className="w-full py-3 rounded-2xl bg-white hover:bg-amber-50/70 border border-amber-300 text-amber-900 font-bold text-xs shadow-sm hover:shadow transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <RefreshCw size={14} className={checkingPayment ? 'animate-spin text-amber-600' : 'text-amber-600'} />
+                <span>{checkingPayment ? 'Checking Payment...' : 'Already paid? Check Payment Status'}</span>
               </button>
             </div>
           </div>
