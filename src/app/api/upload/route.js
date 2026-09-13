@@ -49,6 +49,9 @@ export async function POST(request) {
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
 
     const result = await uploadImage(file, `adskycms/${folder}`);
+    if (!result || !result.success) {
+      return NextResponse.json({ error: result?.error || 'Failed to upload image to Cloudinary' }, { status: 500 });
+    }
 
     const media = await Media.create({
       name: file.name,

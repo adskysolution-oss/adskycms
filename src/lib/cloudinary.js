@@ -8,11 +8,32 @@ cloudinary.config({
 
 export const uploadImage = async (file, folder = 'adsky') => {
   try {
-    const response = await cloudinary.uploader.upload(file, {
+    let uploadSource = file;
+
+    // Handle Web API File or Blob instances from Next.js formData
+    if (file && typeof file === 'object' && typeof file.arrayBuffer === 'function') {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const mimeType = file.type || 'image/jpeg';
+      uploadSource = `data:${mimeType};base64,${buffer.toString('base64')}`;
+    } else if (file && Buffer.isBuffer(file)) {
+      uploadSource = `data:image/jpeg;base64,${file.toString('base64')}`;
+    }
+
+    const response = await cloudinary.uploader.upload(uploadSource, {
       folder,
       resource_type: 'auto',
     });
-    return { success: true, url: response.secure_url, public_id: response.public_id };
+
+    return {
+      success: true,
+      url: response.secure_url || response.url,
+      publicId: response.public_id,
+      public_id: response.public_id,
+      width: response.width,
+      height: response.height,
+      format: response.format,
+    };
   } catch (error) {
     console.error('Cloudinary Upload Error:', error);
     return { success: false, error: error.message };
