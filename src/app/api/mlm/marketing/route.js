@@ -13,6 +13,6 @@ export async function GET(req) {
   const contentType = searchParams.get("type");
   const filter = { isActive: true };
   if (contentType) filter.contentType = contentType;
-  const materials = await MlmMarketing.find(filter).sort({ displayOrder: 1 }).lean();
-  return NextResponse.json({ success: true, materials });
+  const materials = await MlmMarketing.find(filter).sort({ displayOrder: 1, sortOrder: 1, createdAt: -1 }).lean();
+  return NextResponse.json({ success: true, materials, data: materials });
 }

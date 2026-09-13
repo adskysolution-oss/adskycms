@@ -26,7 +26,8 @@ import {
   X,
   Copy,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Image as ImageIcon
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -63,6 +64,7 @@ const NAV_GROUPS = [
   {
     group: 'RESOURCES',
     items: [
+      { name: 'Gallery / Marketing Library', href: '/nextview/gallery', icon: ImageIcon },
       { name: 'Training', href: '/nextview/training', icon: GraduationCap },
       { name: 'Marketing & Posters', href: '/nextview/marketing', icon: Megaphone },
       { name: 'Support Desk', href: '/nextview/support', icon: LifeBuoy },

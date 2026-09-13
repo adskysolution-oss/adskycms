@@ -130,6 +130,7 @@ export const ADMIN_DASHBOARD_LINKS = [
     { section: 'MLM & FD Platform', name: 'Payment Config', icon: Settings, href: '/admin/mlm/configuration' },
     { section: 'MLM & FD Platform', name: 'MLM Reports', icon: BarChart3, href: '/admin/mlm/reports' },
     { section: 'MLM & FD Platform', name: 'Training & Marketing', icon: Sparkles, href: '/admin/mlm/training' },
+    { section: 'MLM & FD Platform', name: 'Marketing Library', icon: ImageIcon, href: '/admin/mlm/gallery' },
     { section: 'MLM & FD Platform', name: 'MLM CMS', icon: FileText, href: '/admin/mlm/cms' },
     { section: 'MLM & FD Platform', name: 'MLM Notifications', icon: Bell, href: '/admin/mlm/notifications' },
     { section: 'MLM & FD Platform', name: 'MLM Audit Logs', icon: History, href: '/admin/mlm/audit-logs' },

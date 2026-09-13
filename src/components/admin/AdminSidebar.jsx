@@ -36,6 +36,7 @@ const menuGroups = [
       { href: '/admin/mlm/configuration', icon: FaCog, label: 'Payment Config' },
       { href: '/admin/mlm/reports', icon: FaChartBar, label: 'MLM Reports' },
       { href: '/admin/mlm/training', icon: FaGraduationCap, label: 'Training & Marketing' },
+      { href: '/admin/mlm/gallery', icon: FaImage, label: 'Marketing Library' },
       { href: '/admin/mlm/cms', icon: FaFileSignature, label: 'MLM CMS' },
       { href: '/admin/mlm/notifications', icon: FaBell, label: 'MLM Notifications' },
       { href: '/admin/mlm/audit-logs', icon: FaHistory, label: 'MLM Audit Logs' },
