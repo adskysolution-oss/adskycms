@@ -42,11 +42,29 @@ export default function AdminTeamPage() {
 
   const fetchAll = async () => {
     setLoading(true);
-    try { const res = await fetch('/api/team'); const data = await res.json(); setItems(data.members || []); }
-    catch {} finally { setLoading(false); }
+    try { 
+      const res = await fetch('/api/team'); 
+      const data = await res.json(); 
+      setItems(data.members || []); 
+    } catch {} finally { 
+      setLoading(false); 
+    }
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => {
+    let ignore = false;
+    async function load() {
+      try {
+        const res = await fetch('/api/team');
+        const data = await res.json();
+        if (!ignore) setItems(data.members || []);
+      } catch {} finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    load();
+    return () => { ignore = true; };
+  }, []);
 
   const save = async () => {
     setSaving(true); setMsg('');
@@ -112,14 +130,37 @@ export default function AdminTeamPage() {
               </div>
             </div>
             <div>
-              <label className="text-text-secondary text-sm mb-1 block">Image</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-primary file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary-dark" />
+              <label className="text-text-secondary text-sm mb-1 block">Image *</label>
+              <div className="space-y-2">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleFileChange} 
+                  className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-primary file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary-dark" 
+                />
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-text-muted font-medium shrink-0">OR Image URL:</span>
+                  <input
+                    type="text"
+                    placeholder="https://res.cloudinary.com/... or any image link"
+                    value={editing.image || ''}
+                    onChange={(e) => {
+                      setEditing({ ...editing, image: e.target.value });
+                      setImagePreview(e.target.value);
+                      setImageFile(null);
+                    }}
+                    className="flex-1 px-3 py-1.5 bg-surface border border-border rounded-lg text-text-primary text-xs focus:outline-none focus:border-primary font-mono"
+                  />
+                </div>
+              </div>
               {(imagePreview || editing.image) && (
                 <div className="mt-3 flex items-center gap-3">
-                  <div className="h-16 w-16 overflow-hidden rounded-2xl border border-border bg-surface">
+                  <div className="h-16 w-16 overflow-hidden rounded-2xl border border-border bg-surface shrink-0">
                     <img src={imagePreview || editing.image} alt="preview" className="h-full w-full object-cover" />
                   </div>
-                  <p className="text-xs text-text-muted">Preview shown here. Image uploads only when you click Save.</p>
+                  <p className="text-xs text-text-muted">
+                    {imageFile ? 'New file selected. Image will be uploaded to Cloudinary when you click Save.' : 'Current image preview.'}
+                  </p>
                 </div>
               )}
             </div>

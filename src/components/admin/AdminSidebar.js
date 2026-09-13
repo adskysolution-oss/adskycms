@@ -57,6 +57,7 @@ const menuGroups = [
     items: [
       { href: '/admin/services', icon: FaBriefcase, label: 'Services' },
       { href: '/admin/projects', icon: FaProjectDiagram, label: 'Projects' },
+      { href: '/admin/team', icon: FaUsers, label: 'Team Members' },
       { href: '/admin/blog', icon: FaBlog, label: 'Blog Posts' },
       { href: '/admin/categories', icon: FaTags, label: 'Categories' },
       { href: '/admin/media', icon: FaImage, label: 'Media Library' },

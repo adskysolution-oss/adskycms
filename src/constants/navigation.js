@@ -85,7 +85,7 @@ export const ADMIN_DASHBOARD_LINKS = [
     { section: 'System & Finance', name: 'Dynamic Forms', icon: ClipboardList, href: '/admin/forms' },
     { section: 'System & Finance', name: 'CMS Manage', icon: Settings, href: '/admin/cms' },
     { section: 'System & Finance', name: 'Gallery Manage', icon: ImageIcon, href: '/admin/gallery' },
-    { section: 'System & Finance', name: 'Team Manage', icon: Users, href: '/admin/team-manage' },
+    { section: 'System & Finance', name: 'Team Manage', icon: Users, href: '/admin/team' },
     { section: 'System & Finance', name: 'My Profile', icon: User, href: '/admin/profile' },
     // WEBSITE MANAGEMENT
     { section: 'Website Management', name: 'Popup Notice Manager', icon: Bell, href: '/admin/popup-notices' },
