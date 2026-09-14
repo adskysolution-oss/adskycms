@@ -166,6 +166,8 @@ export async function PATCH(req, { params }) {
   }
 }
 
+export const PUT = PATCH;
+
 export async function DELETE(req, { params }) {
   const auth = await requireModuleAuth(req, 'admin');
   if (auth instanceof NextResponse) return auth;

@@ -74,8 +74,8 @@ const MlmMarketingSchema = new mongoose.Schema(
   { timestamps: true, collection: "mlmmarketings" }
 );
 
-// Synchronize legacy and extended fields on save
-MlmMarketingSchema.pre("save", function (next) {
+// Synchronize legacy and extended fields on save (Mongoose 9 middleware does not use next callback)
+MlmMarketingSchema.pre("save", function () {
   if (this.url && !this.fileUrl) {
     this.fileUrl = this.url;
   } else if (this.fileUrl && !this.url) {
@@ -95,8 +95,6 @@ MlmMarketingSchema.pre("save", function (next) {
   } else if (this.isActive !== undefined && !this.status) {
     this.status = this.isActive ? "PUBLISHED" : "DRAFT";
   }
-
-  next();
 });
 
 // Index for high-performance gallery lookups and admin filtering

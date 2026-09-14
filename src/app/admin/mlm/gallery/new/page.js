@@ -146,7 +146,12 @@ export default function AdminNewGalleryPage() {
         body: formData,
       });
 
-      const data = await res.json();
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = { message: 'Failed to process server response.' };
+      }
       toast.dismiss(toastId);
 
       if (res.ok && data.success) {

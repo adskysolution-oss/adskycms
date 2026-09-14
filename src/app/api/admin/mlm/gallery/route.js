@@ -206,8 +206,8 @@ export async function POST(req) {
       mimeType = file.type || '';
       fileName = file.name || 'marketing-asset';
 
-      // Auto-set content type if generic
-      if (validation.fileType && (contentType === 'OTHER' || contentType === 'POSTER')) {
+      // Auto-set content type only if empty or generic OTHER
+      if (validation.fileType && (!contentType || contentType === 'OTHER')) {
         contentType = validation.fileType;
       }
 
