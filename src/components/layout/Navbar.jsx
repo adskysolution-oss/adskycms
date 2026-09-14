@@ -166,26 +166,13 @@ export default function Navbar() {
       ? getAdminLinks()
       : getCandidateLinks();
 
-  // Hide AdSky Navbar on MLM member portal pages (they have their own MlmMemberLayout header)
+  // Hide AdSky Navbar on MLM member portal, admin, and dashboard pages (they have their own dedicated layouts)
   const isHiddenRoute =
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/admin') ||
-    pathname.startsWith('/nextview/dashboard') ||
-    pathname.startsWith('/nextview/profile') ||
-    pathname.startsWith('/nextview/fd') ||
-    pathname.startsWith('/nextview/network') ||
-    pathname.startsWith('/nextview/rewards') ||
-    pathname.startsWith('/nextview/wallet') ||
-    pathname.startsWith('/nextview/withdrawals') ||
-    pathname.startsWith('/nextview/transactions') ||
-    pathname.startsWith('/nextview/verification') ||
-    pathname.startsWith('/nextview/kyc') ||
-    pathname.startsWith('/nextview/matrix') ||
-    pathname.startsWith('/nextview/marketing') ||
-    pathname.startsWith('/nextview/training') ||
-    pathname.startsWith('/nextview/support') ||
-    pathname.startsWith('/nextview/settings') ||
-    pathname.startsWith('/nextview/onboarding');
+    pathname === '/nextview' ||
+    pathname.startsWith('/nextview/') ||
+    pathname.startsWith('/recruitment/dashboard');
 
   if (isHiddenRoute) {
     return null;
