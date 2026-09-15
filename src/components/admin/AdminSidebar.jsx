@@ -81,6 +81,7 @@ const menuGroups = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState({
@@ -109,6 +110,11 @@ export default function AdminSidebar() {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/admin/login');
   };
+
+  // Hide sidebar on admin login page
+  if (pathname === '/admin/login' || pathname?.startsWith('/admin/login')) {
+    return null;
+  }
 
   return (
     <>
