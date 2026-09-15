@@ -1,2 +1,2 @@
-import dbConnect from './db';
+import dbConnect from './db.js';
 export default dbConnect;

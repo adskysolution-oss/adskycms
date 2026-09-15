@@ -3,6 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import MlmKyc from "@/models/mlm/MlmKyc.js";
 import MlmMember from "@/models/mlm/MlmMember.js";
 import { requireModuleAuth } from "@/lib/moduleAuth.js";
+import { maskPan, maskAadhaar } from "@/lib/verification/masking.js";
 import mongoose from "mongoose";
 
 export const dynamic = "force-dynamic";
@@ -35,8 +36,18 @@ export async function GET(req) {
     const holder = b.accountHolderName || kyc.accountHolderName || kyc.fullName || member.fullName || '';
     const upi = b.upiId || kyc.upiId || '';
 
+    // SECURITY: Delete server-side verification session secrets
+    const safeAadhaarVerification = kyc.aadhaarVerification ? { ...kyc.aadhaarVerification } : null;
+    if (safeAadhaarVerification) {
+      delete safeAadhaarVerification.referenceId;
+      delete safeAadhaarVerification.referenceIdExpiresAt;
+    }
+
     normalizedKyc = {
       ...kyc,
+      aadhaarVerification: safeAadhaarVerification,
+      maskedPan: maskPan(kyc.panNumber),
+      maskedAadhaar: maskAadhaar(kyc.aadhaarNumber),
       bankDetails: (acctNum || ifsc) ? {
         accountHolderName: holder,
         accountNumber: acctNum,
@@ -84,9 +95,6 @@ export async function POST(req) {
     if (!member) return NextResponse.json({ success: false, message: "Member not found" }, { status: 404 });
 
     const existing = await MlmKyc.findOne({ memberId: member._id });
-    if (existing && ["UNDER_REVIEW", "VERIFIED", "APPROVED"].includes(existing.status)) {
-      return NextResponse.json({ success: false, message: "KYC is already under review or verified." }, { status: 400 });
-    }
 
     let body = {};
     const contentType = req.headers.get("content-type") || "";
@@ -106,8 +114,13 @@ export async function POST(req) {
     const branch = body.bankDetails?.branchName || body.bankBranch || body.branchName || '';
     const upi = body.bankDetails?.upiId || body.upiId || '';
 
-    const cleanPan = body.panNumber ? body.panNumber.trim().toUpperCase() : '';
-    const cleanAadhaar = body.aadhaarNumber ? body.aadhaarNumber.trim().replace(/\s|-/g, '') : '';
+    const cleanPan = body.panNumber ? body.panNumber.trim().toUpperCase() : (existing?.panNumber || '');
+    const cleanAadhaar = body.aadhaarNumber ? body.aadhaarNumber.trim().replace(/\s|-/g, '') : (existing?.aadhaarNumber || '');
+    const cleanDob = body.dob ? body.dob.trim() : (existing?.dob || '');
+
+    // Preserve existing verified status if already verified
+    const isAlreadyVerified = existing?.status === "VERIFIED";
+    const newStatus = isAlreadyVerified ? "VERIFIED" : (existing?.status || "PENDING");
 
     const kycData = {
       memberId: member._id,
@@ -116,6 +129,7 @@ export async function POST(req) {
       fullName: body.fullName || member.fullName,
       panNumber: cleanPan,
       aadhaarNumber: cleanAadhaar,
+      dob: cleanDob,
       bankDetails: {
         accountHolderName: holder ? holder.trim() : '',
         accountNumber: acctNum ? acctNum.trim() : '',
@@ -129,8 +143,8 @@ export async function POST(req) {
       bankName: bName ? bName.trim() : '',
       bankBranch: branch ? branch.trim() : '',
       accountHolderName: holder ? holder.trim() : '',
-      status: "PENDING",
-      submittedAt: new Date(),
+      status: newStatus,
+      submittedAt: existing?.submittedAt || new Date(),
     };
 
     let kyc;
@@ -144,14 +158,16 @@ export async function POST(req) {
       kyc = await MlmKyc.create(kycData);
     }
 
-    await MlmMember.findByIdAndUpdate(member._id, {
-      kycStatus: "PENDING",
-      kycId: kyc._id,
-    });
+    if (!isAlreadyVerified) {
+      await MlmMember.findByIdAndUpdate(member._id, {
+        kycStatus: "PENDING",
+        kycId: kyc._id,
+      });
+    }
 
     return NextResponse.json({
       success: true,
-      message: "KYC submitted successfully! Awaiting Admin approval.",
+      message: isAlreadyVerified ? "Bank details updated successfully." : "KYC submitted successfully!",
       data: { kyc },
       kyc,
     });

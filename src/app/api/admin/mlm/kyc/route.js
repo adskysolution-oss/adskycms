@@ -4,6 +4,7 @@ import '@/models/User';
 import MlmMember from '@/models/mlm/MlmMember';
 import MlmKyc from '@/models/mlm/MlmKyc';
 import { requireModuleAuth } from '@/lib/moduleAuth';
+import { maskPan, maskAadhaar } from '@/lib/verification/masking';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,12 @@ export async function GET(req) {
             const holder = b.accountHolderName || r.accountHolderName || r.fullName || r.memberId?.fullName || '';
             const upi = b.upiId || r.upiId || '';
 
+            const safeAadhaarVerification = r.aadhaarVerification ? { ...r.aadhaarVerification } : null;
+            if (safeAadhaarVerification) {
+                delete safeAadhaarVerification.referenceId;
+                delete safeAadhaarVerification.referenceIdExpiresAt;
+            }
+
             const bankDetails = (acctNum || ifsc) ? {
                 accountHolderName: holder,
                 accountNumber: acctNum,
@@ -46,6 +53,9 @@ export async function GET(req) {
 
             return {
                 ...r,
+                aadhaarVerification: safeAadhaarVerification,
+                maskedPan: maskPan(r.panNumber),
+                maskedAadhaar: maskAadhaar(r.aadhaarNumber),
                 bankDetails,
             };
         });

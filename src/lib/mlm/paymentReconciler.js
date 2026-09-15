@@ -7,6 +7,7 @@ import MlmAuditLog from '@/models/mlm/MlmAuditLog.js';
 import { placeInMatrix } from '@/lib/mlm/matrixEngine.js';
 import { getCashfreeOrderStatus } from '@/lib/cashfree.js';
 import { getRequestMeta } from '@/lib/moduleAuth.js';
+import { activateEligibleMember } from '@/lib/mlm/memberActivation.js';
 
 /**
  * Centralized, idempotent, state-repair payment reconciler for NextView/MLM platform fees.
@@ -210,7 +211,7 @@ export async function reconcilePayment(args, p2, p3, p4, p5) {
     }
   }
 
-  // Step B: Repair MlmMember status & flags
+  // Step B: Update MlmMember fee payment details
   let memberNeedsUpdate = false;
   if (!member.platformFeePaid) {
     member.platformFeePaid = true;
@@ -224,67 +225,23 @@ export async function reconcilePayment(args, p2, p3, p4, p5) {
     member.platformFeeAmount = payableAmount;
     memberNeedsUpdate = true;
   }
-  if (member.status !== 'ACTIVE') {
-    member.status = 'ACTIVE';
-    member.activatedAt = member.activatedAt || new Date();
-    memberNeedsUpdate = true;
-  }
   if (memberNeedsUpdate) {
     await member.save();
     stateRepaired = true;
   }
 
-  // Step C: Repair User collection flags atomically
-  if (member.userId) {
-    try {
-      await mongoose.connection.db.collection('users').updateOne(
-        { _id: member.userId },
-        {
-          $set: {
-            status: 'active',
-            onboardingCompleted: true,
-            dashboardAccess: true,
-            paymentCompleted: true,
-            subscriptionPaid: true,
-            updatedAt: new Date(),
-          },
-        }
-      );
-    } catch (uErr) {
-      console.warn('[Reconciler] User collection sync notice:', uErr.message);
-    }
-  }
-
-  // Step D: Repair 3×15 Matrix Placement
-  let matrixPlacementNode = null;
-  let needsMatrixPlacement = !member.matrixNodeId;
-
-  if (member.matrixNodeId) {
-    // Confirm matrix node exists in MlmMatrixNode collection
-    const existingNode = await MlmMatrixNode.findById(member.matrixNodeId).select('_id').lean();
-    if (!existingNode) {
-      needsMatrixPlacement = true;
-    } else {
-      matrixPlacementNode = existingNode;
-    }
-  }
-
-  if (needsMatrixPlacement) {
-    try {
-      const placementResult = await placeInMatrix(
-        member._id,
-        member.userId || member._id,
-        member.userId || member._id,
-        'MEMBER'
-      );
-      if (placementResult?.node) {
-        matrixPlacementNode = placementResult.node;
-        member.matrixNodeId = placementResult.node._id;
-        await member.save();
-        stateRepaired = true;
-      }
-    } catch (matErr) {
-      console.error('[Reconciler] Matrix placement repair error:', matErr);
+  // Step C & D: Reusable Authoritative Activation & 3×15 Matrix Placement
+  const activationRes = await activateEligibleMember({
+    memberId: member._id,
+    source: source === 'webhook' ? 'payment_webhook' : 'payment_reconciliation',
+    req,
+  });
+  if (activationRes.activated) {
+    stateRepaired = true;
+    const refreshed = await MlmMember.findById(member._id);
+    if (refreshed) {
+      member = refreshed;
+      matrixPlacementNode = refreshed.matrixNodeId ? { _id: refreshed.matrixNodeId } : null;
     }
   }
 

@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ShieldCheck, CheckCircle2, AlertCircle, Clock, ArrowRight,
-  CreditCard, Building, Building2, RefreshCw, Lock, Sparkles, Check, User
+  CreditCard, Building2, RefreshCw, Lock, Sparkles, Check, CheckCircle,
+  KeyRound, Send, AlertTriangle, Calendar
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { formatDobInput, dobToIso, normalizeDob, isValidDob } from '@/lib/verification/dobHelper';
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -34,6 +36,7 @@ export default function NextViewOnboardingPage() {
   const [form, setForm] = useState({
     fullName: '',
     panNumber: '',
+    dob: '',
     aadhaarNumber: '',
     bankAccountNumber: '',
     confirmAccountNumber: '',
@@ -42,6 +45,21 @@ export default function NextViewOnboardingPage() {
     branchName: '',
   });
 
+  // PAN Auto-verification state
+  const [verifyingPan, setVerifyingPan] = useState(false);
+  const [panResult, setPanResult] = useState(null);
+
+  // Aadhaar OTP state
+  const [sendingAadhaarOtp, setSendingAadhaarOtp] = useState(false);
+  const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false);
+  const [aadhaarOtp, setAadhaarOtp] = useState('');
+  const [verifyingAadhaarOtp, setVerifyingAadhaarOtp] = useState(false);
+  const [aadhaarResult, setAadhaarResult] = useState(null);
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const timerRef = useRef(null);
+  const datePickerRef = useRef(null);
+
+  // Bank / IFSC state
   const [ifsc, setIfsc] = useState('');
   const [fetchingIfsc, setFetchingIfsc] = useState(false);
   const [ifscError, setIfscError] = useState('');
@@ -51,11 +69,24 @@ export default function NextViewOnboardingPage() {
   const [payingFee, setPayingFee] = useState(false);
   const [checkingPayment, setCheckingPayment] = useState(false);
 
+  // Countdown timer for Aadhaar OTP resend
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      timerRef.current = setTimeout(() => {
+        setResendCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [resendCountdown]);
+
   const loadOnboardingState = async () => {
     try {
-      const [meRes, feeRes] = await Promise.all([
-        fetch('/api/mlm/auth/me').then(r => r.json()),
-        fetch('/api/mlm/payment/platform-fee').then(r => r.json())
+      const [meRes, feeRes, kycRes] = await Promise.all([
+        fetch('/api/mlm/auth/me').then((r) => r.json()),
+        fetch('/api/mlm/payment/platform-fee').then((r) => r.json()),
+        fetch('/api/mlm/kyc').then((r) => r.json()),
       ]);
 
       if (!meRes.success) {
@@ -67,32 +98,53 @@ export default function NextViewOnboardingPage() {
 
       if (feeRes.success) {
         setFeeData(feeRes.data);
-        if (feeRes.data?.kyc) setKyc(feeRes.data.kyc);
       }
 
-      // Also check KYC details
-      const kycRes = await fetch('/api/mlm/kyc').then(r => r.json());
       if (kycRes.success && kycRes.kyc) {
-        setKyc(kycRes.kyc);
-        setForm(prev => ({
+        const k = kycRes.kyc;
+        setKyc(k);
+        setForm((prev) => ({
           ...prev,
-          fullName: kycRes.kyc.fullName || meRes.member.fullName || '',
-          panNumber: kycRes.kyc.panNumber || '',
-          aadhaarNumber: kycRes.kyc.aadhaarNumber || '',
-          bankAccountNumber: kycRes.kyc.bankAccountNumber || '',
-          confirmAccountNumber: kycRes.kyc.bankAccountNumber || '',
-          accountHolderName: kycRes.kyc.accountHolderName || meRes.member.fullName || '',
-          bankName: kycRes.kyc.bankName || '',
-          branchName: kycRes.kyc.bankBranch || '',
+          fullName: k.fullName || meRes.member.fullName || '',
+          panNumber: k.panNumber || '',
+          dob: k.dob || '',
+          aadhaarNumber: k.aadhaarNumber || '',
+          bankAccountNumber: k.bankAccountNumber || '',
+          confirmAccountNumber: k.bankAccountNumber || '',
+          accountHolderName: k.accountHolderName || meRes.member.fullName || '',
+          bankName: k.bankName || '',
+          branchName: k.bankBranch || '',
         }));
-        if (kycRes.kyc.bankIfscCode) {
-          setIfsc(kycRes.kyc.bankIfscCode);
+
+        if (k.bankIfscCode) {
+          setIfsc(k.bankIfscCode);
+        }
+
+        if (k.panVerification?.verified) {
+          setPanResult({
+            verified: true,
+            status: 'VERIFIED',
+            maskedPan: k.maskedPan,
+            nameMatch: k.panVerification.nameMatch,
+            dobMatch: k.panVerification.dobMatch,
+          });
+        }
+
+        if (k.aadhaarVerification?.verified) {
+          setAadhaarResult({
+            verified: true,
+            status: 'VERIFIED',
+            maskedAadhaar: k.maskedAadhaar,
+          });
         }
       } else {
-        setForm(prev => ({ ...prev, fullName: meRes.member.fullName || '', accountHolderName: meRes.member.fullName || '' }));
+        setForm((prev) => ({
+          ...prev,
+          fullName: meRes.member.fullName || '',
+          accountHolderName: meRes.member.fullName || '',
+        }));
       }
 
-      // If already active and fee paid, go to dashboard
       if (meRes.member.status === 'ACTIVE' && meRes.member.kycStatus === 'VERIFIED' && meRes.member.platformFeePaid) {
         router.push('/nextview/dashboard');
       }
@@ -105,11 +157,9 @@ export default function NextViewOnboardingPage() {
   };
 
   useEffect(() => {
-    (async () => {
-      await loadOnboardingState();
-    })();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadOnboardingState();
 
-    // Check if returning from Cashfree redirect with order_id
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const orderId = params.get('order_id');
@@ -193,6 +243,117 @@ export default function NextViewOnboardingPage() {
     }
   };
 
+  // ── PAN Auto-Verification ──
+  const handleVerifyPan = async () => {
+    const pan = form.panNumber.trim().toUpperCase();
+    const name = form.fullName.trim();
+    const cleanDob = normalizeDob(form.dob);
+
+    if (!pan || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+      toast.error('Please enter a valid 10-character PAN (e.g. ABCDE1234F)');
+      return;
+    }
+    if (!name) {
+      toast.error('Please enter your legal name as on PAN card');
+      return;
+    }
+    if (!cleanDob || !isValidDob(cleanDob)) {
+      toast.error('Please enter a valid Date of Birth (DD/MM/YYYY)');
+      return;
+    }
+
+    setVerifyingPan(true);
+    try {
+      const res = await fetch('/api/mlm/kyc/pan/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pan, name, dob: cleanDob }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success && data.verified) {
+        setPanResult(data.panVerification || { verified: true, status: 'VERIFIED' });
+        toast.success(data.message || 'PAN verified successfully!');
+        loadOnboardingState();
+      } else {
+        setPanResult({
+          verified: false,
+          status: data.status || 'FAILED',
+          message: data.message || 'PAN verification failed',
+          isMismatch: data.isMismatch,
+        });
+        toast.error(data.message || 'PAN details could not be matched.');
+      }
+    } catch {
+      toast.error('Network error during PAN verification');
+    } finally {
+      setVerifyingPan(false);
+    }
+  };
+
+  // ── Aadhaar Send OTP ──
+  const handleSendAadhaarOtp = async () => {
+    const cleanAadhaar = form.aadhaarNumber.trim().replace(/\D/g, '');
+    if (cleanAadhaar.length !== 12) {
+      toast.error('Please enter a valid 12-digit Aadhaar number');
+      return;
+    }
+
+    setSendingAadhaarOtp(true);
+    try {
+      const res = await fetch('/api/mlm/kyc/aadhaar/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ aadhaarNumber: cleanAadhaar }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setAadhaarOtpSent(true);
+        setResendCountdown(60);
+        toast.success(data.message || 'OTP sent to Aadhaar-registered mobile number!');
+      } else {
+        toast.error(data.message || 'Failed to send Aadhaar OTP');
+      }
+    } catch {
+      toast.error('Network error while requesting Aadhaar OTP');
+    } finally {
+      setSendingAadhaarOtp(false);
+    }
+  };
+
+  // ── Aadhaar Verify OTP ──
+  const handleVerifyAadhaarOtp = async () => {
+    const cleanOtp = aadhaarOtp.trim().replace(/\D/g, '');
+    if (cleanOtp.length !== 6) {
+      toast.error('Please enter the 6-digit OTP received on mobile');
+      return;
+    }
+
+    setVerifyingAadhaarOtp(true);
+    try {
+      const res = await fetch('/api/mlm/kyc/aadhaar/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ otp: cleanOtp }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success && data.verified) {
+        setAadhaarResult(data.aadhaarVerification || { verified: true, status: 'VERIFIED' });
+        toast.success('Aadhaar verified successfully!');
+        loadOnboardingState();
+      } else {
+        toast.error(data.message || 'Aadhaar OTP verification failed');
+      }
+    } catch {
+      toast.error('Network error during Aadhaar OTP verification');
+    } finally {
+      setVerifyingAadhaarOtp(false);
+    }
+  };
+
+  // ── Submit Complete KYC Form ──
   const handleKycSubmit = async (e) => {
     e.preventDefault();
 
@@ -211,6 +372,7 @@ export default function NextViewOnboardingPage() {
       const payload = {
         fullName: form.fullName.trim(),
         panNumber: form.panNumber.trim().toUpperCase(),
+        dob: form.dob.trim(),
         aadhaarNumber: form.aadhaarNumber.trim(),
         bankAccountNumber: form.bankAccountNumber.trim(),
         bankIfscCode: ifsc.trim().toUpperCase(),
@@ -227,7 +389,7 @@ export default function NextViewOnboardingPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        toast.success('KYC submitted! Now awaiting Admin Approval.');
+        toast.success(data.message || 'KYC details updated successfully!');
         loadOnboardingState();
       } else {
         toast.error(data.message || 'Failed to submit KYC.');
@@ -242,7 +404,6 @@ export default function NextViewOnboardingPage() {
   const handlePayFee = async () => {
     setPayingFee(true);
     try {
-      // 1. Create Cashfree order
       const res = await fetch('/api/mlm/payment/platform-fee', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -257,14 +418,11 @@ export default function NextViewOnboardingPage() {
       }
 
       const paymentInfo = data.data;
-
-      // 2. Load Cashfree JS SDK v3
       const loaded = await loadScript('https://sdk.cashfree.com/js/v3/cashfree.js');
       if (loaded && window.Cashfree) {
         const mode = paymentInfo.environment === 'sandbox' ? 'sandbox' : 'production';
         const cashfree = window.Cashfree({ mode });
 
-        // Checkout with seamless modal or redirect
         cashfree.checkout({
           paymentSessionId: paymentInfo.paymentSessionId,
           redirectTarget: '_modal',
@@ -298,22 +456,18 @@ export default function NextViewOnboardingPage() {
             } finally {
               setPayingFee(false);
             }
-          } else if (result.redirect) {
-            console.log('Redirecting to return_url...');
           }
-        }).catch((cfErr) => {
-          console.warn('Modal checkout notice, falling back to redirect:', cfErr);
+        }).catch(() => {
           cashfree.checkout({
             paymentSessionId: paymentInfo.paymentSessionId,
             redirectTarget: '_self',
           });
         });
       } else {
-        toast.error('Could not load Cashfree SDK. Please check your internet connection.');
+        toast.error('Could not load Cashfree SDK.');
         setPayingFee(false);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error('Network error during payment initiation');
       setPayingFee(false);
     }
@@ -321,7 +475,7 @@ export default function NextViewOnboardingPage() {
 
   const handleCheckPaymentStatus = async () => {
     setCheckingPayment(true);
-    const toastId = toast.loading('Checking Cashfree payment status...');
+    const toastId = toast.loading('Checking payment status...');
     try {
       const res = await fetch('/api/mlm/payment/platform-fee', {
         method: 'POST',
@@ -337,18 +491,11 @@ export default function NextViewOnboardingPage() {
           router.push('/nextview/dashboard');
         }, 1200);
       } else if (data.result === 'PENDING') {
-        toast('Payment is still pending with Cashfree. If money was deducted, it will sync automatically.', {
-          icon: '⏳',
-        });
-      } else if (data.result === 'NOT_FOUND') {
-        toast.error('No pending payment order found. Please proceed to pay.');
-      } else if (data.result === 'FAILED') {
-        toast.error('Payment attempt failed. Please try paying again.');
+        toast('Payment is still pending with Cashfree.', { icon: '⏳' });
       } else {
-        toast.error(data.message || 'Unable to confirm payment. Please try again.');
+        toast.error(data.message || 'Unable to confirm payment.');
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.dismiss(toastId);
       toast.error('Network error while checking payment status.');
     } finally {
@@ -367,11 +514,10 @@ export default function NextViewOnboardingPage() {
     );
   }
 
-  const isKycSubmitted = !!kyc && (kyc.status === 'PENDING' || kyc.status === 'UNDER_REVIEW' || kyc.status === 'VERIFIED');
-  const isKycVerified = kyc?.status === 'VERIFIED' || member?.kycStatus === 'VERIFIED';
+  const isPanVerified = kyc?.panVerification?.verified || panResult?.verified;
+  const isAadhaarVerified = kyc?.aadhaarVerification?.verified || aadhaarResult?.verified;
+  const isKycVerified = kyc?.status === 'VERIFIED' || member?.kycStatus === 'VERIFIED' || (isPanVerified && isAadhaarVerified);
   const isFeePaid = !!member?.platformFeePaid;
-
-  // Determine current active step: 1 (KYC), 2 (Payment), 3 (Unlocked)
   const currentStep = !isKycVerified ? 1 : !isFeePaid ? 2 : 3;
 
   return (
@@ -384,13 +530,13 @@ export default function NextViewOnboardingPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-black uppercase tracking-wider">
-                Member Onboarding Gate
+                Member Compliance Gateway
               </span>
               <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                Account Activation &amp; Compliance
+                Automatic KYC Verification &amp; Activation
               </h1>
               <p className="text-xs text-slate-600">
-                Welcome <strong className="text-slate-900">{member?.fullName}</strong> ({member?.mlmCode}). Complete the 2-step verification below to unlock your dashboard and 3×15 Matrix.
+                Welcome <strong className="text-slate-900">{member?.fullName}</strong> ({member?.mlmCode}). Complete automatic PAN &amp; Aadhaar verification below to unlock your Matrix position.
               </p>
             </div>
 
@@ -406,9 +552,8 @@ export default function NextViewOnboardingPage() {
           </div>
         </div>
 
-        {/* 3-Step Visual Progress Stepper */}
+        {/* 3-Step Visual Stepper */}
         <div className="grid grid-cols-3 gap-3">
-          {/* Step 1 */}
           <div className={`p-4 rounded-2xl border transition ${
             isKycVerified
               ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
@@ -422,11 +567,10 @@ export default function NextViewOnboardingPage() {
             </div>
             <p className="text-xs font-black text-slate-900">KYC Verification</p>
             <p className="text-[10px] mt-0.5 opacity-80">
-              {isKycVerified ? 'Verified by Admin' : isKycSubmitted ? 'Under Admin Review' : 'Details Required'}
+              {isKycVerified ? 'Auto-Verified' : isPanVerified ? 'Aadhaar Pending' : 'PAN & Aadhaar'}
             </p>
           </div>
 
-          {/* Step 2 */}
           <div className={`p-4 rounded-2xl border transition ${
             isFeePaid
               ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
@@ -440,11 +584,10 @@ export default function NextViewOnboardingPage() {
             </div>
             <p className="text-xs font-black text-slate-900">Platform Activation</p>
             <p className="text-[10px] mt-0.5 opacity-80">
-              {isFeePaid ? 'Paid & Activated' : isKycVerified ? (feeData?.amount !== undefined ? `₹${feeData.amount} Deposit Ready` : 'Deposit Ready') : 'Locked until KYC'}
+              {isFeePaid ? 'Paid & Active' : isKycVerified ? `₹${feeData?.amount ?? 100} Deposit Ready` : 'Locked until KYC'}
             </p>
           </div>
 
-          {/* Step 3 */}
           <div className={`p-4 rounded-2xl border transition ${
             currentStep === 3
               ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
@@ -461,189 +604,357 @@ export default function NextViewOnboardingPage() {
           </div>
         </div>
 
-        {/* STEP 1 CONTAINER */}
+        {/* STEP 1 CONTAINER: KYC VERIFICATION */}
         {!isKycVerified && (
           <div className="space-y-6">
-            {isKycSubmitted ? (
-              /* KYC IS SUBMITTED BUT WAITING FOR ADMIN APPROVAL */
-              <div className="bg-white border border-slate-200/80 p-8 sm:p-10 rounded-3xl text-center space-y-4 shadow-xl">
-                <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-600 animate-pulse">
-                  <Clock size={36} />
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div className="flex items-center gap-2 text-amber-800">
+                  <ShieldCheck size={18} />
+                  <h3 className="text-sm font-black uppercase tracking-wider">
+                    Step 1: Automatic PAN &amp; Aadhaar Verification
+                  </h3>
                 </div>
-                <div className="space-y-1">
-                  <h2 className="text-xl font-black text-slate-900">
-                    KYC Submitted &amp; Awaiting Admin Approval
-                  </h2>
-                  <p className="text-slate-600 text-xs max-w-lg mx-auto">
-                    Your PAN, Aadhaar, and Bank IFSC details have been submitted and are currently in the <strong>Admin Compliance Queue</strong>. Dashboard and matrix activation will unlock as soon as the Admin approves your profile.
-                  </p>
-                </div>
+                <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
+                  APITXT Verified
+                </span>
+              </div>
 
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl max-w-md mx-auto text-left space-y-2 text-xs">
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">Submitted Name:</span>
-                    <span className="font-bold text-slate-900">{kyc?.fullName}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">PAN Number:</span>
-                    <span className="font-mono font-bold text-amber-700 uppercase">{kyc?.panNumber || 'Provided'}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">Bank / IFSC:</span>
-                    <span className="font-mono font-bold text-emerald-700">{kyc?.bankIfscCode}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Status:</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">
-                      {kyc?.status || 'UNDER_REVIEW'}
-                    </span>
+              {/* Progress summary banner */}
+              <div className="grid grid-cols-2 gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs">
+                <div className="flex items-center gap-2">
+                  {isPanVerified ? (
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0"></div>
+                  )}
+                  <div>
+                    <p className="font-bold text-slate-900">PAN Verification</p>
+                    <p className="text-[10px] text-slate-500">
+                      {isPanVerified ? '✓ Verified' : 'Pending Verification'}
+                    </p>
                   </div>
                 </div>
 
-                <div className="pt-2 flex justify-center gap-3">
-                  <button
-                    onClick={loadOnboardingState}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition"
-                  >
-                    <RefreshCw size={14} />
-                    <span>Check Approval Status</span>
-                  </button>
+                <div className="flex items-center gap-2">
+                  {isAadhaarVerified ? (
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0"></div>
+                  )}
+                  <div>
+                    <p className="font-bold text-slate-900">Aadhaar OTP</p>
+                    <p className="text-[10px] text-slate-500">
+                      {isAadhaarVerified ? '✓ Verified' : aadhaarOtpSent ? '⏳ OTP Sent' : 'Pending OTP'}
+                    </p>
+                  </div>
                 </div>
               </div>
-            ) : (
-              /* KYC NOT SUBMITTED YET — SHOW FORM */
-              <form
-                onSubmit={handleKycSubmit}
-                className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl"
-              >
-                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                  <div className="flex items-center gap-2 text-amber-800">
-                    <ShieldCheck size={18} />
-                    <h3 className="text-sm font-black uppercase tracking-wider">
-                      Step 1: Submit Identity &amp; Bank Details
-                    </h3>
-                  </div>
-                  <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
-                    Mandatory Step
-                  </span>
-                </div>
 
-                {/* Identity Inputs */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Full Legal Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={form.fullName}
-                        onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                        placeholder="Name on PAN"
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        PAN Card Number *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        maxLength={10}
-                        value={form.panNumber}
-                        onChange={(e) => setForm({ ...form, panNumber: e.target.value.toUpperCase() })}
-                        placeholder="ABCDE1234F"
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono uppercase text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Aadhaar Number (12 digits) *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        maxLength={12}
-                        value={form.aadhaarNumber}
-                        onChange={(e) => setForm({ ...form, aadhaarNumber: e.target.value.replace(/\D/g, '') })}
-                        placeholder="12-digit Number"
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bank Account Inputs */}
-                <div className="space-y-4 pt-2">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
-                      Bank Details (Auto-Fetch by IFSC)
+              {/* ── 1. PAN SECTION ── */}
+              <div className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">
+                    1. PAN Card Verification
+                  </h4>
+                  {isPanVerified ? (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
+                      <Check size={12} />
+                      <span>✓ PAN Verified</span>
                     </span>
+                  ) : (
+                    <span className="text-[10px] text-slate-400 font-semibold">Government Verified</span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Full Legal Name *
+                    </label>
+                    <input
+                      type="text"
+                      disabled={isPanVerified}
+                      value={form.fullName}
+                      onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                      placeholder="Name as per PAN"
+                      className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-amber-500 disabled:opacity-75 disabled:bg-slate-100"
+                    />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Bank IFSC Code *
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      PAN Number (10 Chars) *
+                    </label>
+                    <input
+                      type="text"
+                      disabled={isPanVerified}
+                      maxLength={10}
+                      value={form.panNumber}
+                      onChange={(e) => setForm({ ...form, panNumber: e.target.value.toUpperCase() })}
+                      placeholder="ABCDE1234F"
+                      className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold uppercase text-slate-900 focus:outline-none focus:border-amber-500 disabled:opacity-75 disabled:bg-slate-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Date of Birth (DD/MM/YYYY) *
                     </label>
                     <div className="relative">
                       <input
                         type="text"
-                        required
-                        maxLength={11}
-                        value={ifsc}
-                        onChange={handleIfscChange}
-                        placeholder="e.g. SBIN0000691, HDFC0000060"
-                        className="w-full pl-4 pr-12 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 uppercase focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                        disabled={isPanVerified}
+                        maxLength={10}
+                        value={form.dob}
+                        onChange={(e) => {
+                          const formatted = formatDobInput(e.target.value);
+                          setForm({ ...form, dob: formatted });
+                        }}
+                        onBlur={() => {
+                          if (form.dob) {
+                            const normalized = normalizeDob(form.dob);
+                            setForm({ ...form, dob: normalized });
+                          }
+                        }}
+                        placeholder="DD/MM/YYYY"
+                        className="w-full pl-3.5 pr-10 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-amber-500 disabled:opacity-75 disabled:bg-slate-100"
                       />
-                      <div className="absolute right-3.5 top-3">
-                        {fetchingIfsc && <RefreshCw size={16} className="animate-spin text-amber-600" />}
-                        {!fetchingIfsc && bankDetails && <Check size={16} className="text-emerald-600" />}
-                      </div>
-                    </div>
-                    {ifscError && <p className="text-xs text-rose-500 mt-1">{ifscError}</p>}
-                  </div>
-
-                  {bankDetails && (
-                    <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
-                      <Building2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
-                      <div className="text-xs">
-                        <p className="font-extrabold text-slate-900">{bankDetails.bankName || form.bankName}</p>
-                        <p className="text-slate-600">Branch: {bankDetails.branch || form.branchName}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Account Number *
-                      </label>
+                      {/* Hidden native date input for calendar selection */}
                       <input
-                        type="password"
-                        required
-                        value={form.bankAccountNumber}
-                        onChange={(e) => setForm({ ...form, bankAccountNumber: e.target.value })}
-                        placeholder="Bank Account Number"
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                        ref={datePickerRef}
+                        type="date"
+                        disabled={isPanVerified}
+                        max={new Date().toISOString().split('T')[0]}
+                        value={dobToIso(form.dob)}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            const normalized = normalizeDob(e.target.value);
+                            setForm((prev) => ({ ...prev, dob: normalized }));
+                          }
+                        }}
+                        className="sr-only"
+                        tabIndex={-1}
+                        aria-hidden="true"
                       />
+                      <button
+                        type="button"
+                        disabled={isPanVerified}
+                        onClick={() => {
+                          try {
+                            datePickerRef.current?.showPicker();
+                          } catch {
+                            datePickerRef.current?.focus();
+                          }
+                        }}
+                        title="Choose from calendar"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-600 transition p-1 disabled:opacity-50"
+                      >
+                        <Calendar size={15} />
+                      </button>
                     </div>
+                  </div>
+                </div>
+
+                {!isPanVerified && (
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="button"
+                      onClick={handleVerifyPan}
+                      disabled={verifyingPan || !form.panNumber || !form.dob}
+                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition disabled:opacity-50 flex items-center gap-1.5"
+                    >
+                      {verifyingPan ? (
+                        <>
+                          <RefreshCw size={13} className="animate-spin" />
+                          <span>Verifying PAN...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck size={13} />
+                          <span>Verify PAN</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {panResult && !panResult.verified && (
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2">
+                    <AlertTriangle size={15} className="shrink-0 mt-0.5 text-rose-600" />
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Confirm Account Number *
-                      </label>
+                      <p className="font-bold">
+                        {panResult.isMismatch ? 'Name/DOB Mismatch' : 'PAN Verification Failed'}
+                      </p>
+                      <p className="text-[11px] mt-0.5">{panResult.message}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ── 2. AADHAAR SECTION ── */}
+              <div className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">
+                    2. Aadhaar OTP Verification
+                  </h4>
+                  {isAadhaarVerified ? (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
+                      <Check size={12} />
+                      <span>✓ Aadhaar Verified</span>
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-slate-400 font-semibold">2-Step UIDAI Verification</span>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Aadhaar Number (12 digits) *
+                    </label>
+                    <div className="flex gap-2">
                       <input
                         type="text"
-                        required
-                        value={form.confirmAccountNumber}
-                        onChange={(e) => setForm({ ...form, confirmAccountNumber: e.target.value })}
-                        placeholder="Re-enter Account Number"
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                        disabled={isAadhaarVerified || aadhaarOtpSent}
+                        maxLength={12}
+                        value={form.aadhaarNumber}
+                        onChange={(e) => setForm({ ...form, aadhaarNumber: e.target.value.replace(/\D/g, '') })}
+                        placeholder="12-digit Aadhaar Number"
+                        className="flex-1 px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-amber-500 disabled:opacity-75 disabled:bg-slate-100"
                       />
+                      {!isAadhaarVerified && (
+                        <button
+                          type="button"
+                          onClick={handleSendAadhaarOtp}
+                          disabled={sendingAadhaarOtp || form.aadhaarNumber.length !== 12 || resendCountdown > 0}
+                          className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm transition disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap"
+                        >
+                          {sendingAadhaarOtp ? (
+                            <>
+                              <RefreshCw size={13} className="animate-spin" />
+                              <span>Sending OTP...</span>
+                            </>
+                          ) : resendCountdown > 0 ? (
+                            <span>Resend in {resendCountdown}s</span>
+                          ) : (
+                            <>
+                              <Send size={13} />
+                              <span>{aadhaarOtpSent ? 'Resend OTP' : 'Send OTP'}</span>
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
+                  </div>
+
+                  {aadhaarOtpSent && !isAadhaarVerified && (
+                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 space-y-2">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-amber-900">
+                        Enter 6-Digit Aadhaar OTP *
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          maxLength={6}
+                          value={aadhaarOtp}
+                          onChange={(e) => setAadhaarOtp(e.target.value.replace(/\D/g, ''))}
+                          placeholder="6-digit OTP"
+                          className="flex-1 px-3.5 py-2 bg-white border border-amber-300 rounded-xl text-sm font-mono tracking-widest text-slate-900 focus:outline-none focus:border-amber-600"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleVerifyAadhaarOtp}
+                          disabled={verifyingAadhaarOtp || aadhaarOtp.length !== 6}
+                          className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition disabled:opacity-50 flex items-center gap-1.5"
+                        >
+                          {verifyingAadhaarOtp ? (
+                            <>
+                              <RefreshCw size={13} className="animate-spin" />
+                              <span>Verifying...</span>
+                            </>
+                          ) : (
+                            <>
+                              <KeyRound size={13} />
+                              <span>Verify Aadhaar</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-amber-700">
+                        OTP has been dispatched to the mobile number registered with your Aadhaar.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* ── 3. BANK DETAILS (AUTO-FETCH BY IFSC) ── */}
+              <form onSubmit={handleKycSubmit} className="space-y-4 pt-2">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-800">
+                    3. Bank Account Details (Payout Destination)
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Bank IFSC Code *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      maxLength={11}
+                      value={ifsc}
+                      onChange={handleIfscChange}
+                      placeholder="e.g. SBIN0000691, HDFC0000060"
+                      className="w-full pl-4 pr-12 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 uppercase focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                    />
+                    <div className="absolute right-3.5 top-3">
+                      {fetchingIfsc && <RefreshCw size={16} className="animate-spin text-amber-600" />}
+                      {!fetchingIfsc && bankDetails && <Check size={16} className="text-emerald-600" />}
+                    </div>
+                  </div>
+                  {ifscError && <p className="text-xs text-rose-500 mt-1">{ifscError}</p>}
+                </div>
+
+                {bankDetails && (
+                  <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
+                    <Building2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+                    <div className="text-xs">
+                      <p className="font-extrabold text-slate-900">{bankDetails.bankName || form.bankName}</p>
+                      <p className="text-slate-600">Branch: {bankDetails.branch || form.branchName}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                      Account Number *
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={form.bankAccountNumber}
+                      onChange={(e) => setForm({ ...form, bankAccountNumber: e.target.value })}
+                      placeholder="Bank Account Number"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                      Confirm Account Number *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={form.confirmAccountNumber}
+                      onChange={(e) => setForm({ ...form, confirmAccountNumber: e.target.value })}
+                      placeholder="Re-enter Account Number"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none transition"
+                    />
                   </div>
                 </div>
 
@@ -652,15 +963,15 @@ export default function NextViewOnboardingPage() {
                   disabled={submittingKyc}
                   className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <span>{submittingKyc ? 'Submitting Details...' : 'Submit KYC for Admin Review'}</span>
+                  <span>{submittingKyc ? 'Saving Details...' : 'Save Compliance & Bank Records'}</span>
                   <ArrowRight size={16} />
                 </button>
               </form>
-            )}
+            </div>
           </div>
         )}
 
-        {/* STEP 2 CONTAINER: KYC VERIFIED ➔ PLATFORM FEE / DEPOSIT */}
+        {/* STEP 2 CONTAINER: KYC VERIFIED -> PLATFORM ACTIVATION FEE */}
         {isKycVerified && !isFeePaid && (
           <div className="bg-white border border-emerald-200 p-8 sm:p-10 rounded-3xl space-y-6 shadow-xl">
             <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
@@ -672,12 +983,11 @@ export default function NextViewOnboardingPage() {
                   Step 1 Completed: KYC Approved &amp; Verified!
                 </h3>
                 <p className="text-xs text-slate-600">
-                  Your identity &amp; bank records have been approved by Admin. Now complete Step 2 to activate your 3×15 Matrix position.
+                  Your identity has been verified. Complete Step 2 platform activation to secure your permanent 3×15 Matrix position.
                 </p>
               </div>
             </div>
 
-            {/* Fee Card */}
             <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-50/60 to-orange-50/40 border border-amber-200 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -714,7 +1024,7 @@ export default function NextViewOnboardingPage() {
                 disabled={payingFee || checkingPayment}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.01] transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                <span>{payingFee ? 'Activating Account & Matrix...' : `Pay ₹${feeData?.amount ?? 100} & Activate Matrix Position`}</span>
+                <span>{payingFee ? 'Activating Matrix...' : `Pay ₹${feeData?.amount ?? 100} & Activate Matrix Position`}</span>
                 <ArrowRight size={18} />
               </button>
 
