@@ -90,10 +90,8 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUser();
-  }, [pathname]);
-
-  useEffect(() => {
     setIsOpen(false);
     setDropdownOpen(false);
     setPartnerNavOpen(false);
@@ -140,8 +138,17 @@ export default function Navbar() {
     }
   };
 
+  const getMlmMemberLinks = () => [
+    { label: 'Dashboard', href: '/nextview/dashboard', icon: FaBriefcase },
+    { label: 'My Network', href: '/nextview/network', icon: FaUsers },
+    { label: 'Rewards Wallet', href: '/nextview/wallet', icon: FaBookmark },
+    { label: 'Marketing Library', href: '/nextview/gallery', icon: FaBookmark },
+    { label: 'Profile', href: '/nextview/profile', icon: FaUserCircle },
+  ];
+
   const getEmployerLinks = () => [
     { label: 'Overview', href: '/dashboard/employer', icon: FaBriefcase },
+    { label: 'Applied Jobs', href: '/dashboard/employer?tab=ats', icon: FaHistory },
     { label: 'Post a Job', href: '/dashboard/employer?tab=post-job', icon: FaBriefcase },
     { label: 'Hiring Pipeline', href: '/dashboard/employer?tab=ats', icon: FaUsers },
     { label: 'Job Inventory', href: '/dashboard/employer?tab=jobs', icon: FaBriefcase },
@@ -151,7 +158,6 @@ export default function Navbar() {
 
   const getCandidateLinks = () => [
     { label: 'Dashboard', href: '/dashboard/candidate', icon: FaBriefcase },
-    { label: 'Applied Jobs', href: '/dashboard/candidate?tab=applications', icon: FaHistory },
     { label: 'Saved Jobs', href: '/dashboard/candidate?tab=saved', icon: FaBookmark },
     { label: 'Profile', href: '/dashboard/candidate/profile', icon: FaUserCircle },
   ];
@@ -160,11 +166,13 @@ export default function Navbar() {
     { label: 'Admin Panel', href: '/admin/dashboard', icon: FaCog },
   ];
 
-  const roleLinks = user?.role === 'employer'
-    ? getEmployerLinks()
-    : user?.role === 'admin'
-      ? getAdminLinks()
-      : getCandidateLinks();
+  const roleLinks = user?.role === 'mlm_member'
+    ? getMlmMemberLinks()
+    : user?.role === 'employer'
+      ? getEmployerLinks()
+      : user?.role === 'admin'
+        ? getAdminLinks()
+        : getCandidateLinks();
 
   // Hide AdSky Navbar on MLM member portal, admin, and dashboard pages (they have their own dedicated layouts)
   const isHiddenRoute =
@@ -272,11 +280,13 @@ export default function Navbar() {
                   className="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-all group shadow-xs"
                 >
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs font-bold text-slate-900 leading-none mb-0.5">{user.name}</p>
-                    <p className="text-[10px] text-text-muted uppercase tracking-wider font-semibold leading-none">{user.role}</p>
+                    <p className="text-xs font-bold text-slate-900 leading-none mb-0.5">{user.name || user.fullName || 'User'}</p>
+                    <p className="text-[10px] text-text-muted uppercase tracking-wider font-semibold leading-none">
+                      {user.role === 'mlm_member' ? 'NexVia Member' : user.role}
+                    </p>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20">
-                    {user.name?.charAt(0).toUpperCase()}
+                    {(user.name || user.fullName || 'U')?.charAt(0).toUpperCase()}
                   </div>
                   <FaChevronDown size={10} className={`text-text-muted transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
                 </button>

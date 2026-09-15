@@ -63,6 +63,7 @@ export async function GET(req) {
       user: {
         id: member._id,
         fullName: member.fullName,
+        name: member.fullName,
         mobile: member.mobile,
         email: member.email,
         role: "mlm_member",

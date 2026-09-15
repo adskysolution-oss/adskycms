@@ -23,7 +23,9 @@ export default function Hero() {
     ? '/admin/dashboard'
     : user?.role === 'employer'
       ? '/dashboard/employer'
-      : '/dashboard/candidate';
+      : user?.role === 'mlm_member'
+        ? '/nextview/dashboard'
+        : '/dashboard/candidate';
 
   // LOGGED IN VIEW
   if (user) {
@@ -43,7 +45,7 @@ export default function Hero() {
               </div>
               <div className="mb-8 animate-slide-up">
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-                  Welcome back, <span className="gradient-text">{user.name}</span> 👋
+                  Welcome back, <span className="gradient-text">{user.name || user.fullName || 'Member'}</span> 👋
                 </h2>
                 <p className="text-text-secondary text-xl font-medium">Ready to continue your journey with AdSky?</p>
               </div>
@@ -52,10 +54,17 @@ export default function Hero() {
                   Go to Dashboard
                   <FaRocket size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </Link>
-                <Link href="/careers" className="btn-secondary !rounded-2xl !px-8 !py-4 group">
-                  Explore Careers
-                  <FaBriefcase size={14} className="group-hover:scale-110 transition-transform" />
-                </Link>
+                {user?.role === 'mlm_member' ? (
+                  <Link href="/nextview/gallery" className="btn-secondary !rounded-2xl !px-8 !py-4 group">
+                    Marketing Library
+                    <FaBriefcase size={14} className="group-hover:scale-110 transition-transform" />
+                  </Link>
+                ) : (
+                  <Link href="/careers" className="btn-secondary !rounded-2xl !px-8 !py-4 group">
+                    Explore Careers
+                    <FaBriefcase size={14} className="group-hover:scale-110 transition-transform" />
+                  </Link>
+                )}
               </div>
             </div>
             <div className="relative group hidden lg:block">
