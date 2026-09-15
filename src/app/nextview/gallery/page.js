@@ -25,9 +25,11 @@ import {
   Clock,
   Send,
   HelpCircle,
+  Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import MlmMemberLayout from '@/components/features/mlm/MlmMemberLayout.js';
+import { sharePosterDirectly, fetchMediaFile, downloadBlob, sanitizeFileName } from '@/lib/mlm/posterShare.js';
 
 export default function NextViewGalleryPage() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +52,7 @@ export default function NextViewGalleryPage() {
   const [previewItem, setPreviewItem] = useState(null);
   const [activeCaptionTab, setActiveCaptionTab] = useState('general');
   const [copiedKey, setCopiedKey] = useState(null);
+  const [sharingId, setSharingId] = useState(null);
 
   // Fetch Member Profile for Referral Info
   useEffect(() => {
@@ -148,7 +151,7 @@ export default function NextViewGalleryPage() {
     }
   };
 
-  // Download Handler
+  // Download Handler (CORS-safe with proxy fallback)
   const handleDownload = async (item, e) => {
     if (e) e.stopPropagation();
     const targetUrl = item.fileUrl || item.url;
@@ -161,53 +164,44 @@ export default function NextViewGalleryPage() {
     trackAction(item._id, 'download');
 
     try {
-      const response = await fetch(targetUrl);
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      const ext = (item.fileName || targetUrl).split('.').pop() || 'file';
-      link.download = item.fileName || `${item.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.${ext}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-      toast.success('Download completed!', { id: 'download-toast' });
+      const fileName = item.fileName || sanitizeFileName(item.title, 'jpg');
+      const file = await fetchMediaFile(targetUrl, fileName, item.title);
+      if (file) {
+        downloadBlob(file, fileName);
+        toast.success('Download completed!', { id: 'download-toast' });
+        return;
+      }
+      // Fallback: direct window open
+      window.open(targetUrl, '_blank');
+      toast.success('Opened media in new tab.', { id: 'download-toast' });
     } catch {
-      // Fallback: direct window open if cross-origin fetch is blocked
       window.open(targetUrl, '_blank');
       toast.success('Opened media in new tab.', { id: 'download-toast' });
     }
   };
 
-  // Share Handler (Web Share API with WhatsApp / Copy Link fallbacks)
-  const handleShare = async (item, e) => {
+  // Direct Poster Share Handler (Web Share API Level 2 with Desktop Fallback)
+  const handleShare = async (item, e, customText = '') => {
     if (e) e.stopPropagation();
-    trackAction(item._id, 'share');
+    if (!item || sharingId) return;
 
-    const targetUrl = item.fileUrl || item.url;
-    const personalizedShare = personalizeText(item.shareText || item.caption || item.title);
+    setSharingId(item._id);
 
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title: item.title || 'NextView Marketing',
-          text: personalizedShare,
-          url: targetUrl || window.location.href,
-        });
-        toast.success('Shared successfully!');
-        return;
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.debug('Web Share dismissed or failed:', err);
-        }
-      }
+    try {
+      const shareText = customText || item.shareText || item.caption || item.title;
+      await sharePosterDirectly({
+        item,
+        text: shareText,
+        title: item.title,
+        member,
+        onAnalytics: (action) => trackAction(item._id, action),
+      });
+    } catch (err) {
+      console.error('[Gallery handleShare Error]:', err);
+      toast.error('Unable to prepare poster. Please try again.');
+    } finally {
+      setSharingId(null);
     }
-
-    // Fallback: WhatsApp share
-    const whatsappText = encodeURIComponent(`${personalizedShare}\n\n${targetUrl || ''}`);
-    window.open(`https://api.whatsapp.com/send?text=${whatsappText}`, '_blank');
-    toast.success('Opening WhatsApp to share...');
   };
 
   // Copy Caption Handler
@@ -433,10 +427,15 @@ export default function NextViewGalleryPage() {
 
                       <button
                         onClick={(e) => handleShare(item, e)}
-                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                        title="Share with WhatsApp / Web Share"
+                        disabled={sharingId === item._id}
+                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition disabled:opacity-50"
+                        title="Share poster directly"
                       >
-                        <Share2 size={14} />
+                        {sharingId === item._id ? (
+                          <Loader2 size={14} className="animate-spin text-amber-600" />
+                        ) : (
+                          <Share2 size={14} />
+                        )}
                       </button>
 
                       {item.fileUrl && (
@@ -587,10 +586,15 @@ export default function NextViewGalleryPage() {
 
                       <button
                         onClick={(e) => handleShare(item, e)}
-                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                        title="Share on WhatsApp or other platforms"
+                        disabled={sharingId === item._id}
+                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition disabled:opacity-50"
+                        title="Share poster directly"
                       >
-                        <Share2 size={14} />
+                        {sharingId === item._id ? (
+                          <Loader2 size={14} className="animate-spin text-amber-600" />
+                        ) : (
+                          <Share2 size={14} />
+                        )}
                       </button>
 
                       {item.fileUrl && (
@@ -676,10 +680,15 @@ export default function NextViewGalleryPage() {
                 )}
                 <button
                   onClick={(e) => handleShare(previewItem, e)}
-                  className="py-2.5 px-3 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs flex items-center justify-center gap-1.5 backdrop-blur-sm transition"
+                  disabled={sharingId === previewItem._id}
+                  className="py-2.5 px-3 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs flex items-center justify-center gap-1.5 backdrop-blur-sm transition disabled:opacity-50"
                 >
-                  <Share2 size={15} />
-                  <span>Share</span>
+                  {sharingId === previewItem._id ? (
+                    <Loader2 size={15} className="animate-spin text-white" />
+                  ) : (
+                    <Share2 size={15} />
+                  )}
+                  <span>{sharingId === previewItem._id ? 'Preparing...' : 'Share Poster'}</span>
                 </button>
               </div>
             </div>
@@ -768,22 +777,39 @@ export default function NextViewGalleryPage() {
                         )}
 
                         {personalized && (
-                          <button
-                            onClick={() => handleCopyCaption(previewItem, text, activeCaptionTab)}
-                            className="mt-3 w-full py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition shadow-xs"
-                          >
-                            {copiedKey === `${previewItem._id}-${activeCaptionTab}` ? (
-                              <>
-                                <Check size={14} />
-                                <span>Copied to Clipboard!</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy size={14} />
-                                <span>Copy Personalized Caption</span>
-                              </>
+                          <div className="mt-3 space-y-2">
+                            {previewItem.fileUrl && (
+                              <button
+                                onClick={(e) => handleShare(previewItem, e, text)}
+                                disabled={sharingId === previewItem._id}
+                                className="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition shadow-sm disabled:opacity-50"
+                              >
+                                {sharingId === previewItem._id ? (
+                                  <Loader2 size={14} className="animate-spin" />
+                                ) : (
+                                  <Share2 size={14} />
+                                )}
+                                <span>{sharingId === previewItem._id ? 'Preparing Poster...' : 'Share Poster Directly on WhatsApp'}</span>
+                              </button>
                             )}
-                          </button>
+
+                            <button
+                              onClick={() => handleCopyCaption(previewItem, text, activeCaptionTab)}
+                              className="w-full py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs flex items-center justify-center gap-1.5 transition shadow-xs"
+                            >
+                              {copiedKey === `${previewItem._id}-${activeCaptionTab}` ? (
+                                <>
+                                  <Check size={14} className="text-emerald-600" />
+                                  <span>Copied to Clipboard!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy size={14} />
+                                  <span>Copy Caption Only</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         )}
                       </div>
                     );

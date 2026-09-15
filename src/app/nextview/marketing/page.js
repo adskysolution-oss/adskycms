@@ -1,8 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Copy, Download, Share2, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Copy, Download, Share2, Image as ImageIcon, Sparkles, Loader2 } from 'lucide-react';
 import MlmMemberLayout from '@/components/features/mlm/MlmMemberLayout';
 import { DEFAULT_SHARE_MESSAGE } from '@/constants/mlmShare';
+import { sharePosterDirectly, fetchMediaFile, downloadBlob, stripMediaUrls } from '@/lib/mlm/posterShare';
 export default function NextViewMarketingPage() {
     const [items, setItems] = useState([]);
     const [memberCode, setMemberCode] = useState('');
@@ -11,6 +12,8 @@ export default function NextViewMarketingPage() {
     const [loading, setLoading] = useState(true);
     const [copiedId, setCopiedId] = useState(null);
     const [copiedOfficial, setCopiedOfficial] = useState(false);
+    const [sharingOfficial, setSharingOfficial] = useState(false);
+    const [sharingId, setSharingId] = useState(null);
     useEffect(() => {
         async function loadData() {
             try {
@@ -42,14 +45,12 @@ export default function NextViewMarketingPage() {
         const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
         const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
         const rawTemplate = shareConfig?.messageTemplate || DEFAULT_SHARE_MESSAGE;
-        let text = rawTemplate
+        const text = rawTemplate
             .replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink)
             .replace(/\*?\{\{REFERRAL_CODE\}\}\*?/g, `*${memberCode}*`)
             .replace(/\{\{MEMBER_NAME\}\}/g, memberName || 'NEXVIA Member');
-        if (shareConfig?.includePosterUrlInText && shareConfig?.posterUrl && !text.includes(shareConfig.posterUrl)) {
-            text += `\n\n🖼️ Official Campaign Poster:\n${shareConfig.posterUrl}`;
-        }
-        return text;
+        // Clean any raw media URLs from share text so only clean referral message is sent
+        return stripMediaUrls(text);
     };
     const copyOfficialText = () => {
         navigator.clipboard.writeText(getOfficialShareText());
@@ -60,59 +61,65 @@ export default function NextViewMarketingPage() {
         if (!shareConfig?.posterUrl)
             return;
         try {
-            const response = await fetch(shareConfig.posterUrl);
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `nexvia-poster-${memberCode || 'official'}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
+            const fileName = `nexvia-poster-${memberCode || 'official'}.jpg`;
+            const file = await fetchMediaFile(shareConfig.posterUrl, fileName, shareConfig.posterTitle || 'Official Poster');
+            if (file) {
+                downloadBlob(file, fileName);
+                return;
+            }
+            window.open(shareConfig.posterUrl, '_blank');
         }
         catch (e) {
             window.open(shareConfig.posterUrl, '_blank');
         }
     };
     const shareOfficialWhatsapp = async () => {
-        const text = getOfficialShareText();
-        if (typeof navigator !== 'undefined' && navigator.share && shareConfig?.posterUrl) {
-            try {
-                const response = await fetch(shareConfig.posterUrl);
-                const blob = await response.blob();
-                const file = new File([blob], 'nexvia-poster.jpg', { type: blob.type || 'image/jpeg' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        title: shareConfig.title || 'NEXVIA Community',
-                        text,
-                        files: [file],
-                    });
-                    return;
-                }
-            }
-            catch (e) {
-                // Fallback
-            }
+        if (sharingOfficial) return;
+        setSharingOfficial(true);
+        try {
+            const text = getOfficialShareText();
+            await sharePosterDirectly({
+                item: {
+                    fileUrl: shareConfig?.posterUrl,
+                    title: shareConfig?.posterTitle || shareConfig?.title || 'NEXVIA Official Poster',
+                    fileName: `nexvia-poster-${memberCode || 'official'}.jpg`,
+                },
+                text,
+                title: shareConfig?.title || 'NEXVIA Community',
+                member: { mlmCode: memberCode, fullName: memberName },
+            });
+        } catch (e) {
+            console.error('[shareOfficialWhatsapp Error]:', e);
+        } finally {
+            setSharingOfficial(false);
         }
-        if (shareConfig?.posterUrl) {
-            downloadPoster();
-        }
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     };
     const copyPersonalizedCaption = (id, captionTemplate) => {
         const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
         const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
         const personalized = (captionTemplate || '').replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink);
-        navigator.clipboard.writeText(personalized);
+        navigator.clipboard.writeText(stripMediaUrls(personalized));
         setCopiedId(id);
         setTimeout(() => setCopiedId(null), 2000);
     };
-    const shareOnWhatsapp = (captionTemplate) => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.adskysolution.com';
-        const inviteLink = `${origin}/nextview/register?sponsor=${memberCode}`;
-        const personalized = (captionTemplate || '').replace(/\{\{REFERRAL_LINK\}\}/g, inviteLink);
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(personalized)}`, '_blank');
+    const shareOnWhatsapp = async (item) => {
+        if (!item || sharingId === item._id) return;
+        setSharingId(item._id);
+        try {
+            await sharePosterDirectly({
+                item: {
+                    fileUrl: item.imageUrl,
+                    title: item.title,
+                },
+                text: item.caption,
+                title: item.title,
+                member: { mlmCode: memberCode, fullName: memberName },
+            });
+        } catch (e) {
+            console.error('[shareOnWhatsapp Error]:', e);
+        } finally {
+            setSharingId(null);
+        }
     };
     if (loading) {
         return (<MlmMemberLayout activePath="/nextview/marketing">
@@ -169,9 +176,9 @@ export default function NextViewMarketingPage() {
                   <span>Download Poster</span>
                 </button>)}
 
-              <button type="button" onClick={shareOfficialWhatsapp} className="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
-                <Share2 className="w-3.5 h-3.5"/>
-                <span>Share WhatsApp</span>
+              <button type="button" onClick={shareOfficialWhatsapp} disabled={sharingOfficial} className="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 disabled:opacity-50">
+                {sharingOfficial ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5"/>}
+                <span>{sharingOfficial ? 'Preparing...' : 'Share WhatsApp'}</span>
               </button>
             </div>
           </div>
@@ -202,9 +209,9 @@ export default function NextViewMarketingPage() {
                       <span>{copiedId === item._id ? 'Copied!' : 'Copy Text'}</span>
                     </button>
 
-                    <button type="button" onClick={() => shareOnWhatsapp(item.caption)} className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-600/20">
-                      <Share2 className="w-3.5 h-3.5"/>
-                      <span>WhatsApp</span>
+                    <button type="button" onClick={() => shareOnWhatsapp(item)} disabled={sharingId === item._id} className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-600/20 disabled:opacity-50">
+                      {sharingId === item._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5"/>}
+                      <span>{sharingId === item._id ? 'Preparing...' : 'WhatsApp'}</span>
                     </button>
                   </div>
                 </div>
