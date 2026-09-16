@@ -13,7 +13,9 @@ import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "adsky-nextview-secret-key-2026");
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production"
+);
 
 function generateMLMCode() {
   const prefix = "NEX";
