@@ -1,14 +1,17 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Phone, Calendar, Network, CheckCircle2, AlertCircle, Edit2, Save, Copy } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ShieldCheck, Phone, Calendar, Network, CheckCircle2, AlertCircle, Edit2, Save, Copy, Camera, Loader2, Trash2, Upload } from 'lucide-react';
 import MlmMemberLayout from '@/components/features/mlm/MlmMemberLayout';
+
 export default function NextViewProfilePage() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [message, setMessage] = useState(null);
     const [copiedCode, setCopiedCode] = useState(false);
+    const fileInputRef = useRef(null);
     const [form, setForm] = useState({
         fullName: '',
         email: '',
@@ -16,6 +19,7 @@ export default function NextViewProfilePage() {
         state: '',
         district: '',
     });
+
     const loadProfile = async () => {
         setLoading(true);
         try {
@@ -39,9 +43,94 @@ export default function NextViewProfilePage() {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         loadProfile();
     }, []);
+
+    const handlePhotoSelect = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Clear input value so selecting the same file again still fires change
+        e.target.value = '';
+
+        // Validation
+        if (!file.type.startsWith('image/')) {
+            setMessage({ type: 'error', text: 'Please select a valid image file (JPG, PNG, or WEBP).' });
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setMessage({ type: 'error', text: 'Profile photo must be smaller than 5MB.' });
+            return;
+        }
+
+        setUploadingPhoto(true);
+        setMessage(null);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', 'mlm_members');
+
+            const uploadRes = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const uploadData = await uploadRes.json();
+
+            if (!uploadRes.ok || !uploadData.success || !uploadData.media?.url) {
+                throw new Error(uploadData.error || uploadData.message || 'Failed to upload photo to server');
+            }
+
+            const imageUrl = uploadData.media.url;
+
+            // Persist to MLM member profile
+            const patchRes = await fetch('/api/mlm/profile', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ profileImage: imageUrl }),
+            });
+            const patchData = await patchRes.json();
+
+            if (!patchRes.ok || !patchData.success) {
+                throw new Error(patchData.message || 'Failed to save profile image');
+            }
+
+            setProfile((prev) => ({ ...prev, profileImage: imageUrl }));
+            setMessage({ type: 'success', text: 'Profile photo updated successfully!' });
+        } catch (err) {
+            console.error('Photo upload error:', err);
+            setMessage({ type: 'error', text: err.message || 'Could not upload photo. Please try again.' });
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
+    const handleRemovePhoto = async () => {
+        if (!confirm('Are you sure you want to remove your profile photo?')) return;
+        setUploadingPhoto(true);
+        setMessage(null);
+        try {
+            const patchRes = await fetch('/api/mlm/profile', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ profileImage: '' }),
+            });
+            const patchData = await patchRes.json();
+            if (!patchRes.ok || !patchData.success) {
+                throw new Error(patchData.message || 'Failed to remove photo');
+            }
+            setProfile((prev) => ({ ...prev, profileImage: '' }));
+            setMessage({ type: 'success', text: 'Profile photo removed successfully.' });
+        } catch (err) {
+            setMessage({ type: 'error', text: err.message || 'Could not remove photo.' });
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -69,6 +158,7 @@ export default function NextViewProfilePage() {
             setSaving(false);
         }
     };
+
     const copyCode = () => {
         if (!profile?.mlmCode)
             return;
@@ -76,6 +166,7 @@ export default function NextViewProfilePage() {
         setCopiedCode(true);
         setTimeout(() => setCopiedCode(false), 2000);
     };
+
     if (loading) {
         return (<MlmMemberLayout activePath="/nextview/profile">
         <div className="flex items-center justify-center min-h-[50vh]">
@@ -83,12 +174,14 @@ export default function NextViewProfilePage() {
         </div>
       </MlmMemberLayout>);
     }
+
     const initials = (profile?.fullName || 'NM')
         .split(' ')
         .map((n) => n[0])
         .join('')
         .slice(0, 2)
         .toUpperCase();
+
     return (<MlmMemberLayout activePath="/nextview/profile">
       <div className="space-y-6 max-w-4xl mx-auto">
         {/* Header Title */}
@@ -120,8 +213,82 @@ export default function NextViewProfilePage() {
 
         {/* ── CARD 1: IDENTITY BANNER ──────────────────────────────────────── */}
         <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center gap-6">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0">
-            {initials}
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/jpg"
+            className="hidden"
+            onChange={handlePhotoSelect}
+          />
+
+          {/* Interactive Avatar Container */}
+          <div className="flex flex-col items-center sm:items-start gap-2 shrink-0">
+            <div
+              onClick={() => !uploadingPhoto && fileInputRef.current?.click()}
+              title="Click to change profile photo"
+              className="relative w-24 h-24 rounded-2xl overflow-hidden shadow-md shadow-amber-500/15 cursor-pointer group border-2 border-amber-500/30 hover:border-amber-500 transition-all duration-200 bg-slate-100"
+            >
+              {profile?.profileImage ? (
+                <img
+                  src={profile.profileImage}
+                  alt={profile?.fullName || 'Member Profile'}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-2xl flex items-center justify-center shadow-inner">
+                  {initials}
+                </div>
+              )}
+
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white gap-1">
+                <Camera className="w-5 h-5 text-amber-300" />
+                <span className="text-[10px] font-extrabold tracking-tight">Change</span>
+              </div>
+
+              {/* Loading State Overlay */}
+              {uploadingPhoto && (
+                <div className="absolute inset-0 bg-black/65 backdrop-blur-xs flex flex-col items-center justify-center text-white gap-1 z-10">
+                  <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+                  <span className="text-[9px] font-bold uppercase tracking-wider">Saving...</span>
+                </div>
+              )}
+
+              {/* Camera Badge in bottom corner */}
+              {!uploadingPhoto && (
+                <div className="absolute bottom-1 right-1 p-1.5 rounded-lg bg-amber-500 text-white shadow-md border border-white/80 group-hover:bg-amber-600 transition">
+                  <Camera className="w-3 h-3" />
+                </div>
+              )}
+            </div>
+
+            {/* Quick Action Photo Link */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={uploadingPhoto}
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600 hover:text-amber-700 disabled:opacity-50 transition"
+              >
+                <Upload className="w-3 h-3" />
+                <span>{profile?.profileImage ? 'Change Photo' : 'Upload Photo'}</span>
+              </button>
+              {profile?.profileImage && (
+                <>
+                  <span className="text-slate-300 text-xs">•</span>
+                  <button
+                    type="button"
+                    disabled={uploadingPhoto}
+                    onClick={handleRemovePhoto}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-500 hover:text-red-700 disabled:opacity-50 transition"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Remove</span>
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="space-y-1.5 text-center sm:text-left flex-1 min-w-0">

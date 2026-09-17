@@ -4,8 +4,8 @@ import MlmMember from '@/models/mlm/MlmMember';
 import MlmPlacementHistory from '@/models/mlm/MlmPlacementHistory';
 import MlmFdApplication from '@/models/mlm/MlmFdApplication';
 import { unlockPendingLevelRewards } from './walletEngine';
-const MAX_WIDTH = 3;
-const MAX_DEPTH = 15;
+export const MAX_WIDTH = 3;
+export const MAX_DEPTH = 15;
 /**
  * Finds the next available vacant slot in the 3×15 matrix using BFS.
  *
@@ -168,8 +168,14 @@ export async function checkAndUnlockLevelCompletions(placedNode) {
         if (relativeLevel < 1 || relativeLevel > MAX_DEPTH)
             continue;
         const occ = await getLevelOccupancy(ancNode._id, relativeLevel);
-        if (occ.isComplete) {
+        if (occ.isComplete || occ.filledCount >= occ.capacity) {
             await unlockPendingLevelRewards(ancNode.memberId, relativeLevel);
+            try {
+                const { onMatrixPlacementCheckAchievements } = await import('@/lib/mlm/achievementService');
+                await onMatrixPlacementCheckAchievements(placedNode);
+            } catch (achErr) {
+                console.warn('[MatrixEngine] Auto achievement generation warning:', achErr.message);
+            }
         }
     }
 }

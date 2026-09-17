@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
 import Media from '@/models/Media';
 import User from '@/models/User';
 import { authenticateRequest } from '@/lib/auth';
+import { requireModuleAuth } from '@/lib/moduleAuth';
 import { uploadImage, deleteImage } from '@/lib/cloudinary';
 
 // GET media library
 export async function GET(request) {
   try {
-    const decoded = authenticateRequest(request);
+    let decoded = await authenticateRequest(request);
+    if (!decoded) {
+      try {
+        const auth = await requireModuleAuth(request, 'mlm');
+        if (!(auth instanceof NextResponse) && auth?.payload) decoded = auth.payload;
+      } catch (e) {}
+    }
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     await dbConnect();
@@ -38,7 +46,13 @@ export async function GET(request) {
 // UPLOAD media
 export async function POST(request) {
   try {
-    const decoded = authenticateRequest(request);
+    let decoded = await authenticateRequest(request);
+    if (!decoded) {
+      try {
+        const auth = await requireModuleAuth(request, 'mlm');
+        if (!(auth instanceof NextResponse) && auth?.payload) decoded = auth.payload;
+      } catch (e) {}
+    }
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     await dbConnect();
@@ -53,8 +67,11 @@ export async function POST(request) {
       return NextResponse.json({ error: result?.error || 'Failed to upload image to Cloudinary' }, { status: 500 });
     }
 
+    const userId = decoded.id || decoded.userId || decoded._id;
+    const validUploadedBy = (userId && mongoose.Types.ObjectId.isValid(userId)) ? userId : undefined;
+
     const media = await Media.create({
-      name: file.name,
+      name: file.name || 'image',
       url: result.url,
       publicId: result.publicId,
       width: result.width,
@@ -62,7 +79,7 @@ export async function POST(request) {
       format: result.format,
       size: file.size,
       folder,
-      uploadedBy: decoded.id,
+      uploadedBy: validUploadedBy,
     });
 
     return NextResponse.json({ success: true, media }, { status: 201 });
@@ -74,7 +91,13 @@ export async function POST(request) {
 // DELETE media
 export async function DELETE(request) {
   try {
-    const decoded = authenticateRequest(request);
+    let decoded = await authenticateRequest(request);
+    if (!decoded) {
+      try {
+        const auth = await requireModuleAuth(request, 'mlm');
+        if (!(auth instanceof NextResponse) && auth?.payload) decoded = auth.payload;
+      } catch (e) {}
+    }
     if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     await dbConnect();

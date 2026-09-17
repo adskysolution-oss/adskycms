@@ -9,6 +9,7 @@ import {
   User,
   CreditCard,
   Network,
+  Trophy,
   Award,
   Wallet,
   ArrowUpRight,
@@ -45,6 +46,7 @@ const NAV_GROUPS = [
       { name: 'FD / FD-Card', href: '/nextview/fd-card', icon: CreditCard },
       { name: 'My Network', href: '/nextview/network', icon: Network },
       { name: 'Level Rewards', href: '/nextview/rewards', icon: Award },
+      { name: 'Achievements', href: '/nextview/achievements', icon: Trophy },
     ]
   },
   {
@@ -204,9 +206,17 @@ export default function MlmMemberLayout({ children, activePath }) {
               onClick={() => setUserDropdownOpen(!userDropdownOpen)}
               className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-2xl hover:bg-slate-100 border border-transparent hover:border-slate-200 transition focus:outline-none"
             >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-xs flex items-center justify-center shadow-xs">
-                {initials}
-              </div>
+              {member?.profileImage ? (
+                <img
+                  src={member.profileImage}
+                  alt={memberName}
+                  className="w-8 h-8 rounded-xl object-cover shadow-xs border border-amber-500/20"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-xs flex items-center justify-center shadow-xs">
+                  {initials}
+                </div>
+              )}
               <div className="hidden sm:flex flex-col text-left">
                 <span className="text-xs font-extrabold text-slate-800 leading-tight max-w-[140px] truncate">
                   {memberName}
@@ -226,10 +236,23 @@ export default function MlmMemberLayout({ children, activePath }) {
                   onClick={() => setUserDropdownOpen(false)}
                 />
                 <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200/90 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95">
-                  <div className="px-4 py-3 border-b border-slate-100">
-                    <p className="text-xs font-black text-slate-900 truncate">{memberName}</p>
-                    <p className="text-[11px] font-mono text-amber-600 font-semibold mt-0.5">{memberCode}</p>
-                    <p className="text-[10px] text-slate-400 mt-1">Sponsor: {sponsorCode}</p>
+                  <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-3">
+                    {member?.profileImage ? (
+                      <img
+                        src={member.profileImage}
+                        alt={memberName}
+                        className="w-10 h-10 rounded-xl object-cover shadow-xs border border-amber-500/30 shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-sm flex items-center justify-center shadow-xs shrink-0">
+                        {initials}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-black text-slate-900 truncate">{memberName}</p>
+                      <p className="text-[11px] font-mono text-amber-600 font-semibold mt-0.5">{memberCode}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">Sponsor: {sponsorCode}</p>
+                    </div>
                   </div>
 
                   <div className="p-1 space-y-0.5 text-xs font-semibold text-slate-700">

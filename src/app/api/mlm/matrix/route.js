@@ -191,8 +191,9 @@ export async function GET(req) {
     }
   }
 
-  // Map downline members with rich level, lineage, and FD Card info
-  const downlineMembers = downlineNodes.map((n) => {
+  // Map downline members with rich level, lineage, and FD Card info (filter out orphaned nodes)
+  const validDownlineNodes = downlineNodes.filter((n) => n.memberId != null);
+  const downlineMembers = validDownlineNodes.map((n) => {
     const mem = n.memberId;
     const parentNode = n.parentNodeId;
     const parentMem = parentNode?.memberId;
@@ -207,16 +208,16 @@ export async function GET(req) {
     const fdStatus = fdApp?.status || 'NOT_APPLIED';
 
     return {
-      _id: mem?._id || n._id,
+      _id: mem._id || n._id,
       nodeId: n._id,
       parentNodeId: parentNode?._id || n.parentNodeId,
-      fullName: mem?.fullName || 'Anonymous Member',
-      mlmCode: mem?.mlmCode || '—',
-      mobile: mem?.mobile || '—',
-      status: mem?.status || 'ACTIVE',
-      platformFeePaid: mem?.platformFeePaid || false,
-      kycStatus: mem?.kycStatus || 'PENDING',
-      joinedAt: mem?.joinedAt || n.createdAt,
+      fullName: mem.fullName || 'Member',
+      mlmCode: mem.mlmCode || '—',
+      mobile: mem.mobile || '—',
+      status: mem.status || 'ACTIVE',
+      platformFeePaid: mem.platformFeePaid || false,
+      kycStatus: mem.kycStatus || 'PENDING',
+      joinedAt: mem.joinedAt || n.createdAt,
       relativeLevel: relLevel,
       absoluteLevel: n.level,
       positionInParent: n.positionInParent || n.position || 1,
@@ -243,7 +244,7 @@ export async function GET(req) {
     };
   });
 
-  const nodeLevelMap = new Map(downlineNodes.map((n) => [n.memberId?._id?.toString(), n.level - currentNode.level]));
+  const nodeLevelMap = new Map(validDownlineNodes.map((n) => [n.memberId?._id?.toString(), n.level - currentNode.level]));
 
   const directSponsored = rawDirectSponsored.map((m) => {
     const fdApp = m?._id ? fdMap.get(m._id.toString()) : null;
@@ -262,7 +263,8 @@ export async function GET(req) {
     };
   });
 
-  const formattedChildren = directChildren.map((c) => {
+  const validDirectChildren = directChildren.filter((c) => c.memberId != null);
+  const formattedChildren = validDirectChildren.map((c) => {
     const memId = c.memberId?._id?.toString();
     const fdApp = memId ? fdMap.get(memId) : null;
     const fdStatus = fdApp?.status || 'NOT_APPLIED';

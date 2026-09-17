@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
+  Trophy,
   Wallet,
   Award,
   Users,
@@ -42,6 +43,7 @@ export default function NextViewDashboardPage() {
   const [matrixData, setMatrixData] = useState(null);
   const [rewardsData, setRewardsData] = useState(null);
   const [shareConfig, setShareConfig] = useState(null);
+  const [achievementsData, setAchievementsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
@@ -61,12 +63,13 @@ export default function NextViewDashboardPage() {
         }
       };
 
-      const [profRes, wallRes, matRes, rewRes, shareRes] = await Promise.all([
+      const [profRes, wallRes, matRes, rewRes, shareRes, achRes] = await Promise.all([
         fetchJson('/api/mlm/profile'),
         fetchJson('/api/mlm/wallet'),
         fetchJson('/api/mlm/matrix'),
         fetchJson('/api/mlm/rewards'),
         fetchJson('/api/mlm/share-config'),
+        fetchJson('/api/mlm/achievements'),
       ]);
 
       let userProfile = null;
@@ -108,6 +111,9 @@ export default function NextViewDashboardPage() {
       }
       if (shareRes?.success) {
         setShareConfig(shareRes.data || shareRes.config || shareRes);
+      }
+      if (achRes?.success && achRes.data) {
+        setAchievementsData(achRes.data);
       }
     } catch (err) {
       console.error('Error loading NextView dashboard:', err);
@@ -402,6 +408,82 @@ export default function NextViewDashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* ── 2.5 COMPACT ACHIEVEMENT MILESTONE CARD ──────────────────────── */}
+        {(() => {
+          const latestLvl = achievementsData?.latestCompletedLevel;
+          const levelItem = latestLvl ? achievementsData?.levels?.find((l) => l.level === latestLvl) : null;
+
+          if (latestLvl && levelItem) {
+            return (
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-50/50 border border-amber-300/80 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0">
+                    <Trophy className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-200/70 text-amber-900 border border-amber-300">
+                        Milestone Unlocked
+                      </span>
+                      <span className="text-xs font-bold text-amber-800">
+                        Level {latestLvl} Achieved
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 leading-tight">
+                      Congratulations! {levelItem.title}
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      Your NexVia journey has reached its Level {latestLvl} milestone. Share your official recognition poster!
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                  <Link
+                    href="/nextview/achievements"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold transition shadow-xs cursor-pointer"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    <span>Share Achievement</span>
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+
+          // In-progress card when Level 1 is not yet completed
+          return (
+            <div className="relative overflow-hidden rounded-3xl bg-slate-50 border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-slate-200/70 text-slate-600 flex items-center justify-center shrink-0">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                      Next Goal
+                    </span>
+                    <span className="text-xs font-extrabold text-slate-800">
+                      Level 1: Journey Started
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Complete your Level 1 matrix (3 members with active FD Cards) to unlock your first official Achievement Certificate &amp; Poster.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/nextview/achievements"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition shrink-0 shadow-2xs"
+              >
+                <span>View Roadmap</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+          );
+        })()}
 
         {/* ── 3. YOUR PERSONAL REFERRAL LINK CARD ───────────────────────────── */}
         <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-white border border-amber-300/80 rounded-3xl p-6 shadow-xs">

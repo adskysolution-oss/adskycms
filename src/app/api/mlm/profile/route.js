@@ -47,13 +47,30 @@ export async function PATCH(req) {
     if (address) updates.address = address;
     if (state) updates.state = state;
     if (district) updates.district = district;
-    if (profileImage) updates.profileImage = profileImage;
+    if (typeof profileImage === 'string') updates.profileImage = profileImage.trim();
 
     const member = await MlmMember.findOneAndUpdate(
       { $or: [{ userId: authId }, { _id: authId }] },
       { $set: updates },
       { new: true }
     ).lean();
+
+    // If profileImage was updated, automatically refresh unlocked achievement posters in background
+    if (typeof profileImage === 'string' && member) {
+      import('@/lib/mlm/achievementService')
+        .then(({ autoGenerateAchievementPoster }) => {
+          import('@/models/mlm/MlmAchievement').then(({ default: MlmAchievement }) => {
+            MlmAchievement.find({ memberId: member._id, status: { $in: ['UNLOCKED', 'POSTER_GENERATED'] } })
+              .then((achievements) => {
+                for (const ach of achievements) {
+                  autoGenerateAchievementPoster({ member, level: ach.level, forceRegenerate: true }).catch(() => {});
+                }
+              })
+              .catch(() => {});
+          }).catch(() => {});
+        })
+        .catch(() => {});
+    }
 
     return NextResponse.json({ success: true, data: member });
   } catch (error) {
