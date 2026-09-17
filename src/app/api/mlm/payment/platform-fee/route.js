@@ -239,12 +239,15 @@ export async function POST(req) {
         entityType: "mlm",
       });
 
+      const checkoutUrl = `${baseUrl}/api/mlm/payment/cashfree-checkout?session=${cfOrder.payment_session_id}&orderId=${generatedOrderId}&env=${process.env.CASHFREE_ENV || "production"}`;
+
       return NextResponse.json({
         success: true,
         message: "Payment order generated successfully",
         data: {
           orderId: generatedOrderId,
           paymentSessionId: cfOrder.payment_session_id,
+          checkoutUrl,
           provider: "cashfree",
           amount: payableAmount,
           currency: "INR",
