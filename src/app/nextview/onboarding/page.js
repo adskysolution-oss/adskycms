@@ -341,8 +341,11 @@ export default function NextViewOnboardingPage() {
 
       if (res.ok && data.success && data.verified) {
         setAadhaarResult(data.aadhaarVerification || { verified: true, status: 'VERIFIED' });
-        toast.success('Aadhaar verified successfully!');
+        toast.success(data.message || 'Aadhaar verified successfully! Please enter your Bank Account details below to proceed.');
         loadOnboardingState();
+        setTimeout(() => {
+          document.getElementById('bank-details-section')?.scrollIntoView({ behavior: 'smooth' });
+        }, 350);
       } else {
         toast.error(data.message || 'Aadhaar OTP verification failed');
       }
@@ -357,12 +360,17 @@ export default function NextViewOnboardingPage() {
   const handleKycSubmit = async (e) => {
     e.preventDefault();
 
-    if (form.bankAccountNumber && form.confirmAccountNumber && form.bankAccountNumber !== form.confirmAccountNumber) {
+    if (!form.bankAccountNumber?.trim()) {
+      toast.error('Please enter your Bank Account Number.');
+      return;
+    }
+
+    if (form.confirmAccountNumber && form.bankAccountNumber.trim() !== form.confirmAccountNumber.trim()) {
       toast.error('Bank account numbers do not match!');
       return;
     }
 
-    if (!ifsc || ifsc.length !== 11) {
+    if (!ifsc || ifsc.trim().length !== 11) {
       toast.error('Please enter a valid 11-character IFSC code.');
       return;
     }
@@ -516,7 +524,11 @@ export default function NextViewOnboardingPage() {
 
   const isPanVerified = kyc?.panVerification?.verified || panResult?.verified;
   const isAadhaarVerified = kyc?.aadhaarVerification?.verified || aadhaarResult?.verified;
-  const isKycVerified = kyc?.status === 'VERIFIED' || member?.kycStatus === 'VERIFIED' || (isPanVerified && isAadhaarVerified);
+  const hasSavedBank = Boolean(
+    (kyc?.bankAccountNumber && kyc.bankAccountNumber.trim().length > 0) ||
+    (kyc?.bankDetails?.accountNumber && kyc.bankDetails.accountNumber.trim().length > 0)
+  );
+  const isKycVerified = (kyc?.status === 'VERIFIED' || member?.kycStatus === 'VERIFIED') && hasSavedBank;
   const isFeePaid = !!member?.platformFeePaid;
   const currentStep = !isKycVerified ? 1 : !isFeePaid ? 2 : 3;
 
@@ -536,7 +548,7 @@ export default function NextViewOnboardingPage() {
                 Automatic KYC Verification &amp; Activation
               </h1>
               <p className="text-xs text-slate-600">
-                Welcome <strong className="text-slate-900">{member?.fullName}</strong> ({member?.mlmCode}). Complete automatic PAN &amp; Aadhaar verification below to unlock your Matrix position.
+                Welcome <strong className="text-slate-900">{member?.fullName}</strong> ({member?.mlmCode}). Complete automatic PAN, Aadhaar &amp; Bank verification below to unlock your Matrix position.
               </p>
             </div>
 
@@ -565,9 +577,9 @@ export default function NextViewOnboardingPage() {
               <span className="text-[10px] font-black uppercase tracking-wider">Step 1</span>
               {isKycVerified ? <CheckCircle2 size={16} className="text-emerald-600" /> : <ShieldCheck size={16} />}
             </div>
-            <p className="text-xs font-black text-slate-900">KYC Verification</p>
+            <p className="text-xs font-black text-slate-900">KYC &amp; Bank Details</p>
             <p className="text-[10px] mt-0.5 opacity-80">
-              {isKycVerified ? 'Auto-Verified' : isPanVerified ? 'Aadhaar Pending' : 'PAN & Aadhaar'}
+              {isKycVerified ? 'Auto-Verified' : !isPanVerified ? 'PAN Pending' : !isAadhaarVerified ? 'Aadhaar Pending' : 'Bank Details Pending'}
             </p>
           </div>
 
@@ -612,7 +624,7 @@ export default function NextViewOnboardingPage() {
                 <div className="flex items-center gap-2 text-amber-800">
                   <ShieldCheck size={18} />
                   <h3 className="text-sm font-black uppercase tracking-wider">
-                    Step 1: Automatic PAN &amp; Aadhaar Verification
+                    Step 1: Automatic KYC &amp; Bank Details Verification
                   </h3>
                 </div>
                 <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
@@ -620,8 +632,8 @@ export default function NextViewOnboardingPage() {
                 </span>
               </div>
 
-              {/* Progress summary banner */}
-              <div className="grid grid-cols-2 gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs">
+              {/* Progress summary banner - 3 pillars: PAN, Aadhaar, Bank Details */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs">
                 <div className="flex items-center gap-2">
                   {isPanVerified ? (
                     <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -629,7 +641,7 @@ export default function NextViewOnboardingPage() {
                     <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0"></div>
                   )}
                   <div>
-                    <p className="font-bold text-slate-900">PAN Verification</p>
+                    <p className="font-bold text-slate-900">1. PAN Verification</p>
                     <p className="text-[10px] text-slate-500">
                       {isPanVerified ? '✓ Verified' : 'Pending Verification'}
                     </p>
@@ -643,9 +655,23 @@ export default function NextViewOnboardingPage() {
                     <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0"></div>
                   )}
                   <div>
-                    <p className="font-bold text-slate-900">Aadhaar OTP</p>
+                    <p className="font-bold text-slate-900">2. Aadhaar OTP</p>
                     <p className="text-[10px] text-slate-500">
                       {isAadhaarVerified ? '✓ Verified' : aadhaarOtpSent ? '⏳ OTP Sent' : 'Pending OTP'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {hasSavedBank ? (
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0"></div>
+                  )}
+                  <div>
+                    <p className="font-bold text-slate-900">3. Bank Account</p>
+                    <p className="text-[10px] text-slate-500">
+                      {hasSavedBank ? '✓ Saved' : 'Pending Details'}
                     </p>
                   </div>
                 </div>
@@ -890,12 +916,29 @@ export default function NextViewOnboardingPage() {
               </div>
 
               {/* ── 3. BANK DETAILS (AUTO-FETCH BY IFSC) ── */}
-              <form onSubmit={handleKycSubmit} className="space-y-4 pt-2">
+              <form id="bank-details-section" onSubmit={handleKycSubmit} className="space-y-4 pt-2">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <span className="text-xs font-black uppercase tracking-wider text-amber-800">
                     3. Bank Account Details (Payout Destination)
                   </span>
+                  {hasSavedBank && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                      ✓ Details Saved
+                    </span>
+                  )}
                 </div>
+
+                {isPanVerified && isAadhaarVerified && !hasSavedBank && (
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="text-xs">
+                      <p className="font-bold">Identity Verified! Please enter your Bank Account details</p>
+                      <p className="text-amber-800 mt-0.5">
+                        Your PAN and Aadhaar have been verified. Please provide your bank account details below to secure payouts and advance to Step 2 (Platform Activation).
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
@@ -963,7 +1006,7 @@ export default function NextViewOnboardingPage() {
                   disabled={submittingKyc}
                   className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <span>{submittingKyc ? 'Saving Details...' : 'Save Compliance & Bank Records'}</span>
+                  <span>{submittingKyc ? 'Saving Details...' : (isPanVerified && isAadhaarVerified) ? 'Save Bank Details & Proceed to Step 2' : 'Save Compliance & Bank Records'}</span>
                   <ArrowRight size={16} />
                 </button>
               </form>

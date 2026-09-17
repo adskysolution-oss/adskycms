@@ -236,8 +236,9 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       verified: true,
-      status: "VERIFIED",
-      message: "Aadhaar verified successfully!",
+      message: (transition.newlyVerified || transition.alreadyVerified)
+        ? "Aadhaar and KYC verified successfully!"
+        : "Aadhaar verified successfully! Please enter your bank details below.",
       aadhaarVerification: {
         status: "VERIFIED",
         verified: true,
@@ -245,6 +246,7 @@ export async function POST(req) {
         verifiedAt: now,
       },
       kycStatus: transition.kyc.status,
+      pending: transition.pending || null,
     });
   } catch (error) {
     console.error("[Aadhaar Verify OTP Error]", error);

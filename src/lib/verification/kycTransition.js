@@ -29,22 +29,27 @@ export async function atomicCheckAndApproveKyc({ kycId, memberId, source = "AUTO
     return { success: false, newlyVerified: false, alreadyVerified: false, message: "KYC document not found" };
   }
 
-  // If already verified, return safely without re-triggering side effects
-  if (currentKyc.status === "VERIFIED") {
+  const hasBankDetails = Boolean(
+    (currentKyc.bankAccountNumber?.trim() || currentKyc.bankDetails?.accountNumber?.trim()) &&
+    (currentKyc.bankIfscCode?.trim() || currentKyc.bankDetails?.ifscCode?.trim())
+  );
+
+  // If already verified AND has valid bank details, return safely without re-triggering side effects
+  if (currentKyc.status === "VERIFIED" && hasBankDetails) {
     return { success: true, newlyVerified: false, alreadyVerified: true, kyc: currentKyc };
   }
 
   const isPanVerified = currentKyc.panVerification?.verified === true;
   const isAadhaarVerified = currentKyc.aadhaarVerification?.verified === true;
 
-  // Both must pass before KYC can be auto-approved
-  if (!isPanVerified || !isAadhaarVerified) {
+  // PAN, Aadhaar, and Bank Details must ALL be complete before KYC can be approved
+  if (!isPanVerified || !isAadhaarVerified || !hasBankDetails) {
     return {
       success: true,
       newlyVerified: false,
       alreadyVerified: false,
       kyc: currentKyc,
-      pending: !isPanVerified ? "PAN" : "AADHAAR",
+      pending: !isPanVerified ? "PAN" : !isAadhaarVerified ? "AADHAAR" : "BANK_DETAILS",
     };
   }
 
@@ -52,13 +57,17 @@ export async function atomicCheckAndApproveKyc({ kycId, memberId, source = "AUTO
   const maskedP = maskPan(currentKyc.panNumber);
   const maskedA = maskAadhaar(currentKyc.aadhaarNumber);
 
-  // Atomic state transition: will ONLY match if status is NOT yet VERIFIED
+  // Atomic state transition: will ONLY match if status is NOT yet VERIFIED and bank details exist
   const updatedKyc = await MlmKyc.findOneAndUpdate(
     {
       _id: kycId,
       status: { $ne: "VERIFIED" },
       "panVerification.verified": true,
       "aadhaarVerification.verified": true,
+      $or: [
+        { bankAccountNumber: { $exists: true, $ne: "" } },
+        { "bankDetails.accountNumber": { $exists: true, $ne: "" } },
+      ],
     },
     {
       $set: {
@@ -66,7 +75,7 @@ export async function atomicCheckAndApproveKyc({ kycId, memberId, source = "AUTO
         verifiedAt: now,
         verifiedBy: source === "AUTOMATIC_APITXT" ? "APITXT_AUTO" : "ADMIN_MANUAL",
         verificationSource: source,
-        adminRemarks: source === "AUTOMATIC_APITXT" ? "Auto-verified via APITXT (PAN + Aadhaar)" : undefined,
+        adminRemarks: source === "AUTOMATIC_APITXT" ? "Auto-verified via APITXT (PAN + Aadhaar + Bank)" : undefined,
       },
       $push: {
         verificationHistory: {
@@ -75,7 +84,7 @@ export async function atomicCheckAndApproveKyc({ kycId, memberId, source = "AUTO
           status: "VERIFIED",
           provider: "APITXT",
           maskedIdentifier: `${maskedP} | ${maskedA}`,
-          remarks: "Automatic KYC verification completed successfully.",
+          remarks: "Automatic KYC verification completed successfully with bank details.",
           performedBy: source === "AUTOMATIC_APITXT" ? "APITXT_SYSTEM" : "ADMIN",
           performedByRole: source === "AUTOMATIC_APITXT" ? "system" : "admin",
           timestamp: now,

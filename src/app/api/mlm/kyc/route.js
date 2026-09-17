@@ -4,6 +4,7 @@ import MlmKyc from "@/models/mlm/MlmKyc.js";
 import MlmMember from "@/models/mlm/MlmMember.js";
 import { requireModuleAuth } from "@/lib/moduleAuth.js";
 import { maskPan, maskAadhaar } from "@/lib/verification/masking.js";
+import { atomicCheckAndApproveKyc } from "@/lib/verification/kycTransition.js";
 import mongoose from "mongoose";
 
 export const dynamic = "force-dynamic";
@@ -118,9 +119,13 @@ export async function POST(req) {
     const cleanAadhaar = body.aadhaarNumber ? body.aadhaarNumber.trim().replace(/\s|-/g, '') : (existing?.aadhaarNumber || '');
     const cleanDob = body.dob ? body.dob.trim() : (existing?.dob || '');
 
-    // Preserve existing verified status if already verified
-    const isAlreadyVerified = existing?.status === "VERIFIED";
-    const newStatus = isAlreadyVerified ? "VERIFIED" : (existing?.status || "PENDING");
+    // Check existing bank status
+    const existingHasBank = Boolean(
+      (existing?.bankAccountNumber?.trim() || existing?.bankDetails?.accountNumber?.trim()) &&
+      (existing?.bankIfscCode?.trim() || existing?.bankDetails?.ifscCode?.trim())
+    );
+    const isAlreadyFullyVerified = existing?.status === "VERIFIED" && existingHasBank;
+    const newStatus = isAlreadyFullyVerified ? "VERIFIED" : "PENDING";
 
     const kycData = {
       memberId: member._id,
@@ -158,18 +163,41 @@ export async function POST(req) {
       kyc = await MlmKyc.create(kycData);
     }
 
-    if (!isAlreadyVerified) {
+    // Trigger atomic KYC approval check (will verify if PAN + Aadhaar + Bank details are all complete)
+    const transition = await atomicCheckAndApproveKyc({
+      kycId: kyc._id,
+      memberId: member._id,
+      source: kyc.verificationSource || "AUTOMATIC_APITXT",
+      req,
+    });
+
+    const freshKyc = transition?.kyc || kyc;
+    const isNowVerified = freshKyc.status === "VERIFIED";
+
+    if (!isNowVerified) {
       await MlmMember.findByIdAndUpdate(member._id, {
         kycStatus: "PENDING",
         kycId: kyc._id,
       });
     }
 
+    let message = "KYC submitted successfully!";
+    if (isNowVerified) {
+      message = "Bank details and KYC verified successfully! You can now proceed to platform activation.";
+    } else if (transition?.pending === "PAN") {
+      message = "Bank details saved. Please complete PAN verification.";
+    } else if (transition?.pending === "AADHAAR") {
+      message = "Bank details saved. Please complete Aadhaar OTP verification.";
+    } else {
+      message = "Bank details saved successfully.";
+    }
+
     return NextResponse.json({
       success: true,
-      message: isAlreadyVerified ? "Bank details updated successfully." : "KYC submitted successfully!",
-      data: { kyc },
-      kyc,
+      message,
+      data: { kyc: freshKyc },
+      kyc: freshKyc,
+      isVerified: isNowVerified,
     });
   } catch (error) {
     console.error("[MLM Submit KYC Error]", error);

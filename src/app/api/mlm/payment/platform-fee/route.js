@@ -171,11 +171,17 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: "Member not found" }, { status: 404 });
     }
 
-    // Enforce KYC Approval before payment
-    if (member.kycStatus !== "VERIFIED") {
+    // Enforce KYC Approval and complete Bank Details before payment
+    const memberKyc = await MlmKyc.findOne({ memberId: member._id }).lean();
+    const hasBank = Boolean(
+      (memberKyc?.bankAccountNumber?.trim() || memberKyc?.bankDetails?.accountNumber?.trim()) &&
+      (memberKyc?.bankIfscCode?.trim() || memberKyc?.bankDetails?.ifscCode?.trim())
+    );
+
+    if (member.kycStatus !== "VERIFIED" || !hasBank) {
       return NextResponse.json({
         success: false,
-        message: "KYC must be verified and approved by administration before activating platform membership.",
+        message: "KYC and Bank details must be completely filled and verified before activating platform membership.",
       }, { status: 403 });
     }
 

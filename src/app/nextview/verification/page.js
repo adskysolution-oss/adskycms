@@ -277,11 +277,13 @@ export default function NextViewVerificationPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ otp: cleanOtp }),
             });
-            const data = await res.json();
             if (res.ok && data.success && data.verified) {
                 setAadhaarResult(data.aadhaarVerification || { verified: true, status: 'VERIFIED' });
-                setSuccessMsg('Aadhaar verified successfully!');
+                setSuccessMsg(data.message || 'Aadhaar verified successfully! Please enter your bank details below to proceed.');
                 loadData();
+                setTimeout(() => {
+                    document.getElementById('verification-bank-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 350);
             } else {
                 setError(data.message || 'Aadhaar OTP verification failed.');
             }
@@ -376,7 +378,11 @@ export default function NextViewVerificationPage() {
 
     const isPanVerified = kycData?.panVerification?.verified || panResult?.verified;
     const isAadhaarVerified = kycData?.aadhaarVerification?.verified || aadhaarResult?.verified;
-    const isKycApproved = kycData?.status === 'VERIFIED' || memberData?.kycStatus === 'VERIFIED' || (isPanVerified && isAadhaarVerified);
+    const hasSavedBank = Boolean(
+      (kycData?.bankAccountNumber && kycData.bankAccountNumber.trim().length > 0) ||
+      (kycData?.bankDetails?.accountNumber && kycData.bankDetails.accountNumber.trim().length > 0)
+    );
+    const isKycApproved = (kycData?.status === 'VERIFIED' || memberData?.kycStatus === 'VERIFIED') && hasSavedBank;
     const isPaid = memberData?.platformFeePaid || false;
     const isActive = memberData?.status === 'ACTIVE' && isPaid;
     const feeAmount = feeData?.amount ?? 100;
@@ -648,10 +654,29 @@ export default function NextViewVerificationPage() {
               </div>
 
               {/* Bank Details Form */}
-              <form onSubmit={handleKycSubmit} className="space-y-4 pt-2">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b pb-1">
-                  3. Bank Account Details (Payout Destination)
-                </h3>
+              <form id="verification-bank-section" onSubmit={handleKycSubmit} className="space-y-4 pt-2">
+                <div className="flex items-center justify-between border-b pb-1">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                    3. Bank Account Details (Payout Destination)
+                  </h3>
+                  {hasSavedBank && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                      ✓ Details Saved
+                    </span>
+                  )}
+                </div>
+
+                {isPanVerified && isAadhaarVerified && !hasSavedBank && (
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="text-xs">
+                      <p className="font-bold">Identity Verified! Please enter your Bank Account details</p>
+                      <p className="text-amber-800 mt-0.5">
+                        Your PAN and Aadhaar have been verified. Please enter your bank account details below to complete KYC and unlock Step 2 (Platform Activation).
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -714,7 +739,7 @@ export default function NextViewVerificationPage() {
                   className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold shadow-md shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <FileCheck className="w-4 h-4"/>
-                  <span>{submittingKyc ? 'Saving Details...' : 'Save Bank & Compliance Details'}</span>
+                  <span>{submittingKyc ? 'Saving Details...' : (isPanVerified && isAadhaarVerified) ? 'Save Bank Details & Proceed to Step 2' : 'Save Bank & Compliance Details'}</span>
                 </button>
               </form>
             </div>
