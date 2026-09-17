@@ -53,6 +53,8 @@ export async function GET(req) {
 
             return {
                 ...r,
+                panNumber: r.panNumber || '',
+                aadhaarNumber: r.aadhaarNumber || '',
                 aadhaarVerification: safeAadhaarVerification,
                 maskedPan: maskPan(r.panNumber),
                 maskedAadhaar: maskAadhaar(r.aadhaarNumber),

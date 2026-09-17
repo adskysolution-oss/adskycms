@@ -182,8 +182,8 @@ export default function AdminMlmKycPage() {
 
                           {/* PAN Column */}
                           <td className="p-4">
-                            <div className="font-mono font-bold text-gray-900">
-                              {k.maskedPan || k.panNumber || '—'}
+                            <div className="font-mono font-bold text-gray-900 tracking-wider">
+                              {k.panNumber || k.maskedPan || '—'}
                             </div>
                             <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                               <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
@@ -207,8 +207,12 @@ export default function AdminMlmKycPage() {
 
                           {/* Aadhaar Column */}
                           <td className="p-4">
-                            <div className="font-mono text-gray-700">
-                              {k.maskedAadhaar || (k.aadhaarNumber ? `XXXX-XXXX-${k.aadhaarNumber.slice(-4)}` : '—')}
+                            <div className="font-mono font-bold text-gray-900 tracking-wider">
+                              {k.aadhaarNumber
+                                ? (k.aadhaarNumber.length === 12
+                                    ? `${k.aadhaarNumber.slice(0, 4)} ${k.aadhaarNumber.slice(4, 8)} ${k.aadhaarNumber.slice(8, 12)}`
+                                    : k.aadhaarNumber)
+                                : k.maskedAadhaar || '—'}
                             </div>
                             <div className="mt-1">
                               <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
@@ -336,7 +340,7 @@ export default function AdminMlmKycPage() {
                       </span>
                     </div>
                     <div className="space-y-1">
-                      <p><span className="text-slate-500">PAN:</span> <strong className="font-mono">{selectedRecord.maskedPan || selectedRecord.panNumber}</strong></p>
+                      <p><span className="text-slate-500">PAN:</span> <strong className="font-mono font-bold text-slate-900">{selectedRecord.panNumber || selectedRecord.maskedPan || '—'}</strong></p>
                       <p><span className="text-slate-500">Provider:</span> {selectedRecord.panVerification?.provider || 'APITXT'}</p>
                       <p><span className="text-slate-500">Name Match:</span> <strong>{selectedRecord.panVerification?.nameMatch ? 'YES' : selectedRecord.panVerification?.nameMatch === false ? 'NO' : '—'}</strong></p>
                       <p><span className="text-slate-500">DOB Match:</span> <strong>{selectedRecord.panVerification?.dobMatch ? 'YES' : selectedRecord.panVerification?.dobMatch === false ? 'NO' : '—'}</strong></p>
@@ -359,7 +363,7 @@ export default function AdminMlmKycPage() {
                       </span>
                     </div>
                     <div className="space-y-1">
-                      <p><span className="text-slate-500">Aadhaar:</span> <strong className="font-mono">{selectedRecord.maskedAadhaar || (selectedRecord.aadhaarNumber ? `XXXX-XXXX-${selectedRecord.aadhaarNumber.slice(-4)}` : '—')}</strong></p>
+                      <p><span className="text-slate-500">Aadhaar:</span> <strong className="font-mono font-bold text-slate-900">{selectedRecord.aadhaarNumber ? (selectedRecord.aadhaarNumber.length === 12 ? `${selectedRecord.aadhaarNumber.slice(0, 4)} ${selectedRecord.aadhaarNumber.slice(4, 8)} ${selectedRecord.aadhaarNumber.slice(8, 12)}` : selectedRecord.aadhaarNumber) : selectedRecord.maskedAadhaar || '—'}</strong></p>
                       <p><span className="text-slate-500">Provider:</span> {selectedRecord.aadhaarVerification?.provider || 'APITXT'}</p>
                       {selectedRecord.aadhaarVerification?.verifiedName && (
                         <p><span className="text-slate-500">Verified Name:</span> <strong>{selectedRecord.aadhaarVerification.verifiedName}</strong></p>
