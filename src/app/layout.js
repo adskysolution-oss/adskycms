@@ -20,8 +20,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="bg-white text-slate-900 antialiased">
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="bg-white text-slate-900 antialiased" suppressHydrationWarning>
         <Navbar />
         {children}
         <Footer />

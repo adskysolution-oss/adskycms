@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaArrowUp } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import logoImg from '../../../public/logo.png';
+import { CurvedLine } from '../ui/BackgroundEffects';
 
 const footerSections = [
   {
@@ -71,10 +72,18 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-dark-light border-t border-border">
-      <div className="container-custom py-16">
-        {/* 6-Column Balanced Grid: 2 cols Brand + 4 x 1 col Links + 1 x 1.5 col Contact */}
+    <footer className="relative overflow-hidden bg-slate-900 text-white">
+      {/* Decorative top gradient line */}
+      <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-violet-500 to-cyan-400" />
+
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-violet-500/5 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl pointer-events-none" />
+      <CurvedLine variant="wave" width={300} height={60} color="#3B82F6" opacity={0.10} className="top-10 right-10 hidden xl:block" />
+
+      <div className="container-custom py-16 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-6 xl:gap-x-8">
+
           {/* Column 1 & 2: Brand & Social */}
           <div className="col-span-2 md:col-span-3 lg:col-span-2 flex flex-col justify-between">
             <div>
@@ -82,10 +91,10 @@ export default function Footer() {
                 <Image
                   src={logoImg}
                   alt="AdSky Solution Logo"
-                  className="h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain brightness-0 invert"
                 />
               </Link>
-              <p className="text-text-secondary text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
+              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
                 Transforming businesses through innovative digital solutions, strategic talent acquisition, and sustainable referral ecosystems.
               </p>
             </div>
@@ -95,7 +104,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-white border border-border flex items-center justify-center text-text-secondary hover:text-primary hover:border-primary/40 transition-all hover:-translate-y-0.5 shadow-xs"
+                  className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary/50 hover:bg-primary/10 transition-all hover:-translate-y-0.5"
                 >
                   <Icon size={16} />
                 </a>
@@ -106,7 +115,7 @@ export default function Footer() {
           {/* Columns 3, 4, 5: Link Groups */}
           {footerSections.slice(0, 3).map((group) => (
             <div key={group.title} className="col-span-1 flex flex-col">
-              <h4 className="text-text-primary font-bold mb-5 text-xs uppercase tracking-widest">
+              <h4 className="text-white font-bold mb-5 text-xs uppercase tracking-widest">
                 {group.title}
               </h4>
               <ul className="space-y-3.5">
@@ -114,7 +123,7 @@ export default function Footer() {
                   <li key={`${group.title}-${index}`}>
                     <Link
                       href={link.href}
-                      className="text-text-secondary text-xs hover:text-primary transition-all flex items-center group"
+                      className="text-slate-400 text-xs hover:text-white transition-all flex items-center group"
                     >
                       <span className="w-0 h-[1px] bg-primary mr-0 group-hover:w-2.5 group-hover:mr-1.5 transition-all duration-300"></span>
                       {link.label}
@@ -125,26 +134,26 @@ export default function Footer() {
             </div>
           ))}
 
-          {/* Column 6: Contact Info (Always in top row) */}
+          {/* Column 6: Contact Info */}
           <div className="col-span-2 sm:col-span-1 lg:col-span-1 flex flex-col">
-            <h4 className="text-text-primary font-bold mb-5 text-xs uppercase tracking-widest">
+            <h4 className="text-white font-bold mb-5 text-xs uppercase tracking-widest">
               Contact
             </h4>
-            <ul className="space-y-3.5 text-xs text-text-secondary">
+            <ul className="space-y-3.5 text-xs text-slate-400">
               <li className="flex flex-col gap-0.5">
-                <span className="text-text-muted text-[10px] uppercase font-bold tracking-wider">Email</span>
-                <a href="mailto:info@adskysolution.com" className="hover:text-primary transition-colors break-all">
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Email</span>
+                <a href="mailto:info@adskysolution.com" className="hover:text-white transition-colors break-all">
                   info@adskysolution.com
                 </a>
               </li>
               <li className="flex flex-col gap-0.5">
-                <span className="text-text-muted text-[10px] uppercase font-bold tracking-wider">Phone</span>
-                <a href="tel:8076611842" className="hover:text-primary transition-colors">
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Phone</span>
+                <a href="tel:8076611842" className="hover:text-white transition-colors">
                   +91 8076611842
                 </a>
               </li>
               <li className="flex flex-col gap-0.5">
-                <span className="text-text-muted text-[10px] uppercase font-bold tracking-wider">Office</span>
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Office</span>
                 <span className="leading-relaxed">126 Satyam Enclave Sahibabad, Ghaziabad, UP 201003</span>
               </li>
             </ul>
@@ -152,26 +161,28 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar: Copyright & Legal */}
-      <div className="border-t border-border">
-        <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-muted">
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="container-custom py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <p>&copy; {new Date().getFullYear()} AdSky Solution. All rights reserved.</p>
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/privacy-policy" className="hover:text-primary transition-colors">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
             <span>&bull;</span>
-            <Link href="/terms-and-conditions" className="hover:text-primary transition-colors">
+            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">
               Terms &amp; Conditions
             </Link>
             <span>&bull;</span>
-            <Link href="/refund-policy" className="hover:text-primary transition-colors">
+            <Link href="/refund-policy" className="hover:text-white transition-colors">
               Refund Policy
             </Link>
           </div>
           <button
+            type="button"
             onClick={scrollToTop}
-            className="w-8 h-8 rounded-lg bg-white border border-border hover:bg-slate-50 flex items-center justify-center text-text-secondary hover:text-primary transition-all shadow-xs"
+            suppressHydrationWarning
+            className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-primary/20 hover:border-primary/40 flex items-center justify-center text-slate-400 hover:text-white transition-all"
             aria-label="Scroll to top"
           >
             <FaArrowUp size={12} />

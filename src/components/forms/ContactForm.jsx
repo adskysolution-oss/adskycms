@@ -59,6 +59,7 @@ export default function ContactForm() {
           <input 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
+            suppressHydrationWarning
             className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
             placeholder="John Doe"
           />
@@ -68,6 +69,7 @@ export default function ContactForm() {
           <input 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
+            suppressHydrationWarning
             className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
             placeholder="john@example.com"
           />
@@ -79,6 +81,7 @@ export default function ContactForm() {
         <input 
           value={phone} 
           onChange={(e) => setPhone(e.target.value)} 
+          suppressHydrationWarning
           className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-xs" 
           placeholder="+1 (555) 000-0000"
         />
@@ -90,6 +93,7 @@ export default function ContactForm() {
           value={message} 
           onChange={(e) => setMessage(e.target.value)} 
           rows={5} 
+          suppressHydrationWarning
           className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none shadow-xs" 
           placeholder="How can we help you?"
         />
@@ -99,6 +103,7 @@ export default function ContactForm() {
         <button 
           type="submit" 
           disabled={loading} 
+          suppressHydrationWarning
           className="btn-primary w-full justify-center !py-4 text-base font-semibold shadow-lg shadow-primary/25 disabled:opacity-50"
         >
           {loading ? 'Sending Message...' : 'Submit Now'}

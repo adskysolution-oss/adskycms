@@ -108,7 +108,11 @@ export default function CareersPage() {
 
 
   return (
-    <div className="pt-32 pb-24">
+    <div className="pt-32 pb-24 relative overflow-hidden">
+      {/* Decorative Blobs */}
+      <div className="deco-blob deco-blob-blue w-[500px] h-[500px] -top-32 -right-32 animate-blob" />
+      <div className="deco-blob deco-blob-purple w-[400px] h-[400px] top-1/3 -left-32 animate-blob" style={{ animationDelay: '5s' }} />
+
       {/* Hero Section */}
       <section className="relative mb-20">
         <div className="container-custom text-center">
