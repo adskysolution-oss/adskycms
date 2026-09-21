@@ -233,7 +233,7 @@ export default function NextViewAchievementsPage() {
               <span>15-Level Milestone Matrix</span>
             </h2>
             <span className="text-xs text-slate-500 font-medium">
-              Verified by 3×15 Matrix Completion
+              Verified by Level Milestone Completion
             </span>
           </div>
 

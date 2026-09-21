@@ -37,7 +37,7 @@ const mainNavLinks = [
         bg: 'bg-primary/10',
       },
       {
-        title: 'NexVia 3×15 Matrix',
+        title: 'NexVia Network',
         desc: 'Deterministic multi-level rewards network',
         href: '/nextview-network',
         icon: TrendingUp,
@@ -358,7 +358,7 @@ export default function Navbar() {
                       <div className="space-y-1">
                         <div className="flex items-center justify-between px-2">
                           <Image src="/nexvia.png" alt="NexVia" width={72} height={22} className="h-4 w-auto object-contain" />
-                          <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">3×15 Matrix</span>
+                          <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">Referral Network</span>
                         </div>
                         <div className="grid grid-cols-2 gap-1.5">
                           <Link href="/nextview/login" className="flex items-center justify-center py-2 px-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition-colors font-bold text-[11px] border border-slate-200">
@@ -485,7 +485,7 @@ export default function Navbar() {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <Image src="/nexvia.png" alt="NexVia" width={72} height={22} className="h-4 w-auto object-contain" />
-                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">3×15 Matrix</span>
+                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-wider">Referral Network</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href="/nextview/login" className="py-2 px-3 rounded-xl bg-slate-50 text-center text-xs font-bold text-slate-800 border border-slate-200 hover:bg-slate-100">

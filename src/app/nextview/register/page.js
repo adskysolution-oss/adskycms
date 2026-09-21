@@ -337,7 +337,7 @@ function RegisterForm() {
           Join <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">NexVia Network</span>
         </h1>
         <p className="mt-1 text-xs sm:text-sm text-slate-600 font-medium">
-          Create your member account &amp; enter the 3×15 reward matrix
+          Create your member account &amp; enter the referral reward network
         </p>
       </div>
 

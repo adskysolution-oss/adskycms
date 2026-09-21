@@ -121,7 +121,7 @@ export const ADMIN_DASHBOARD_LINKS = [
     { section: 'MLM & FD Platform', name: 'MLM Members', icon: Users, href: '/admin/mlm/members' },
     { section: 'MLM & FD Platform', name: 'KYC Verification', icon: ShieldCheck, href: '/admin/mlm/kyc' },
     { section: 'MLM & FD Platform', name: 'FD Applications', icon: BadgeCheck, href: '/admin/mlm/fd' },
-    { section: 'MLM & FD Platform', name: '3×15 Matrix', icon: Network, href: '/admin/mlm/matrix' },
+    { section: 'MLM & FD Platform', name: 'Matrix Tree', icon: Network, href: '/admin/mlm/matrix' },
     { section: 'MLM & FD Platform', name: 'MLM Rewards', icon: IndianRupee, href: '/admin/mlm/rewards' },
     { section: 'MLM & FD Platform', name: 'Level 1–15 Config', icon: SlidersHorizontal, href: '/admin/mlm/levels' },
     { section: 'MLM & FD Platform', name: 'MLM Wallet', icon: Wallet, href: '/admin/mlm/wallet' },

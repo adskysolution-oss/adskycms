@@ -74,13 +74,13 @@ const HOW_IT_WORKS = [
   { step: '01', title: 'Register', desc: 'Complete your NexVia member registration online with your basic details.', icon: Users },
   { step: '02', title: 'Verification', desc: 'Submit KYC documents. Your profile is reviewed and approved by the team.', icon: BadgeCheck },
   { step: '03', title: 'Applicable FD Activation', desc: 'Activate your ₹2,000 Fixed Deposit with our verified financial partner.', icon: CreditCard },
-  { step: '04', title: 'Network Placement', desc: 'You are placed in the 3×15 matrix using a fair Breadth-First Search algorithm.', icon: Network },
+  { step: '04', title: 'Network Placement', desc: 'You are placed in the referral network structure using a fair Breadth-First Search algorithm.', icon: Network },
   { step: '05', title: 'Level Completion', desc: 'As your downline grows and FDs activate, level rewards are unlocked automatically.', icon: BarChart3 },
   { step: '06', title: 'Reward / Wallet', desc: 'Receive rewards in your NexVia wallet. Withdraw to Bank or UPI instantly.', icon: Wallet },
 ];
 
 const WHY_NEXVIA = [
-  { icon: Layers, title: 'Structured System', desc: 'A deterministic 3×15 BFS matrix ensures fair, transparent placement — no favoritism, no manipulation.' },
+  { icon: Layers, title: 'Structured System', desc: 'A deterministic multi-tier BFS structure ensures fair, transparent placement — no favoritism, no manipulation.' },
   { icon: Zap, title: 'Digital Platform', desc: 'Fully online — registration, KYC, FD activation, network tracking, wallet, and withdrawals, all in one portal.' },
   { icon: Gift, title: 'Achievement Rewards', desc: 'Beyond level income, unlock special cash bonuses and physical rewards at each milestone level.' },
   { icon: Users, title: 'Team Growth', desc: 'Every member benefits from collective network growth. When your team succeeds, your rewards unlock automatically.' },
@@ -159,7 +159,7 @@ function LevelIncomeSection({ matrixData }) {
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
           <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-blue-600">
             <TrendingUp size={13} />
-            <span>3×15 Matrix Rewards</span>
+            <span>15-Level Tier Rewards</span>
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Your Journey to L15
@@ -345,7 +345,7 @@ function LevelIncomeSection({ matrixData }) {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto">
-          * Stated rewards represent maximum level potential under the 3×15 matrix. Unlocking requires complete level occupancy and verified FD activations as per financial partner terms.
+          * Stated rewards represent maximum level potential under the 15-tier referral network. Unlocking requires complete level occupancy and verified FD activations as per financial partner terms.
         </p>
       </div>
     </section>
@@ -638,7 +638,7 @@ function AchievementSection() {
   );
 }
 
-// ─── MATRIX JOURNEY SECTION — 3×15 VISUAL TREE ───────────────────────────
+// ─── MATRIX JOURNEY SECTION — VISUAL TREE ───────────────────────────
 
 function MatrixJourneySection({ matrixData }) {
   const [activeInspector, setActiveInspector] = useState(null);
@@ -737,7 +737,7 @@ function MatrixJourneySection({ matrixData }) {
                     subtitle: 'Matrix Root Position',
                     capacity: 1,
                     filled: 1,
-                    desc: 'Your root position anchors the entire 3×15 ternary referral matrix.',
+                    desc: 'Your root position anchors the entire ternary referral network.',
                   })
                 }
                 className="group relative flex flex-col items-center p-3.5 rounded-2xl bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white border-2 border-blue-500 shadow-xl hover:scale-105 transition-all cursor-pointer text-center min-w-[160px]"
@@ -1295,7 +1295,7 @@ export default function NextViewNetworkPage() {
           </h2>
 
           <p className="text-blue-200 text-sm sm:text-base leading-relaxed">
-            Register, verify, activate your FD, and let the 3×15 matrix work for you. Join a structured, digital, and transparent network today.
+            Register, verify, activate your FD, and let the referral network work for you. Join a structured, digital, and transparent network today.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

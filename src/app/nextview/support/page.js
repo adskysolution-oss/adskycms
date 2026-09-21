@@ -5,8 +5,8 @@ import MlmMemberLayout from '@/components/features/mlm/MlmMemberLayout';
 export default function NextViewSupportPage() {
     const faqs = [
         {
-            q: 'How does the 3×15 Network placement work?',
-            a: 'When new members register with your referral link, they are automatically placed top-to-bottom, left-to-right in your 3×15 network hierarchy. You can personally sponsor up to 3 direct members in Level 1; further members spill over into your downline.',
+            q: 'How does the network placement work?',
+            a: 'When new members register with your referral link, they are automatically placed top-to-bottom, left-to-right in your network hierarchy. You can personally sponsor up to 3 direct members in Level 1; further members spill over into your downline.',
         },
         {
             q: 'When are Level rewards credited?',

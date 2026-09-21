@@ -232,7 +232,7 @@ export default function AdminMlmMembersPage() {
 
               <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
                 <Link href={`/admin/mlm/matrix?member=${encodeURIComponent(selectedMember.mlmCode)}`} className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition">
-                  Explore 3×15 Matrix Tree
+                  Explore Matrix Tree
                 </Link>
                 <button onClick={() => setSelectedMember(null)} className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition">
                   Close

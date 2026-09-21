@@ -76,11 +76,6 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                   className="object-contain object-center lg:object-left drop-shadow-xs"
                 />
               </div>
-
-              {/* <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 border border-amber-500/25 shadow-xs">
-                <Sparkles size={13} className="text-amber-600" />
-                <span>Deterministic 3×15 Matrix</span>
-              </div> */}
             </div>
 
             {/* Slogans & Primary Headline */}

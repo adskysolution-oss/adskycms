@@ -268,7 +268,7 @@ export async function placeInMatrix(memberId, userId, placedByUserId, placedByRo
                         newPosition: placedNode.positionInParent,
                         placedBy: placedByUserId,
                         placedByRole,
-                        reason: 'Initial 3x15 deterministic placement',
+                        reason: 'Initial deterministic placement',
                         timestamp: new Date(),
                         placedAt: new Date(),
                     }], { session });

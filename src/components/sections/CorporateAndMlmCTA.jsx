@@ -47,7 +47,7 @@ export default function CorporateAndMlmCTA() {
             Partner With <span className="gradient-text">AdSky Solution</span>
           </h2>
           <p className="text-sm md:text-base text-slate-500 leading-relaxed">
-            Explore dedicated enterprise and referral programs—from regional agency task execution to deterministic 3×15 matrix network rewards.
+            Explore dedicated enterprise and referral programs—from regional agency task execution to structured referral network rewards.
           </p>
         </div>
 
@@ -167,7 +167,7 @@ export default function CorporateAndMlmCTA() {
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-amber-50 text-amber-800 border border-amber-200/80">
                   <Sparkles size={13} className="text-amber-600" />
-                  <span>3×15 Matrix</span>
+                  <span>Referral Network</span>
                 </div>
               </div>
 
@@ -177,7 +177,7 @@ export default function CorporateAndMlmCTA() {
                   NexVia Matrix Platform
                 </h3>
                 <p className="text-sm sm:text-[15px] text-slate-500 leading-relaxed">
-                  Join our structured 3×15 Matrix. Refer eligible Fixed Deposit (FD) and FD-Card products to unlock structured Level 1 through Level 15 upline rewards with instant withdrawals.
+                  Join our structured referral network. Refer eligible Fixed Deposit (FD) and FD-Card products to unlock structured Level 1 through Level 15 upline rewards with instant withdrawals.
                 </p>
               </div>
 

@@ -7,7 +7,7 @@ CONNECT • BUILD • GROW
 
 🇮🇳 भारत के हर राज्य से जुड़ने का अवसर
 
-📈 3×15 Structured Journey
+📈 15-Level Structured Journey
 📲 Digital Referral System
 🏆 Achievement Rewards
 🤝 Team & Network Building

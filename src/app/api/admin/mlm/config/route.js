@@ -20,7 +20,7 @@ export async function GET() {
             feeAmount:         feeConfig?.feeAmount    ?? 100,
             gstPercent:        feeConfig?.gstPercent   ?? 0,
             totalAmount:       feeConfig?.totalAmount  ?? 100,
-            description:       feeConfig?.description  ?? "Lifetime Membership & 3x15 Matrix Placement Fee",
+            description:       feeConfig?.description  ?? "Lifetime Membership & Network Placement Fee",
             paymentProvider:   feeConfig?.paymentProvider ?? "adsky_cashfree",
             version:           feeConfig?.version ?? 1,
         };
@@ -44,7 +44,7 @@ export async function POST(req) {
         const feeAmount       = Number(body.platformFeeAmount) || 100;
         const gstPercent      = Number(body.gstPercent)        || 0;
         const totalAmount     = Math.round(feeAmount * (1 + gstPercent / 100));
-        const description     = body.description     || "Lifetime Membership & 3x15 Matrix Placement Fee";
+        const description     = body.description     || "Lifetime Membership & Network Placement Fee";
         const paymentProvider = body.paymentProvider || "adsky_cashfree";
         const auditReason     = body.auditReason     || "Platform fee config updated by admin";
 

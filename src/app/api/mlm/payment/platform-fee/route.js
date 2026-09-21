@@ -117,8 +117,8 @@ export async function GET(req) {
     const response = NextResponse.json({
       success: true,
       data: {
-        feeName: feeConfig?.description || "NexVia 3×15 Matrix Platform Activation Fee",
-        feeDescription: feeConfig?.description || "Lifetime Membership & 3×15 Matrix Placement",
+        feeName: feeConfig?.description || "NexVia Platform Activation Fee",
+        feeDescription: feeConfig?.description || "Lifetime Membership & Network Placement",
         amount,
         currency: "INR",
         activationRequired: true,
@@ -301,7 +301,7 @@ export async function POST(req) {
         return NextResponse.json({
           success: true,
           result: reconcileResult.result,
-          message: "Payment confirmed! Member activated and placed in 3×15 matrix.",
+          message: "Payment confirmed! Member activated and placed in network.",
           data: {
             member: reconcileResult.member,
             matrixNode: reconcileResult.matrixNode,

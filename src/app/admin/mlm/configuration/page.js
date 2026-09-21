@@ -44,7 +44,7 @@ export default function AdminMlmConfigPage() {
   const [config, setConfig] = useState({
     feeAmount: 100,
     gstPercent: 0,
-    description: 'Lifetime Membership and 3x15 Matrix Placement Fee',
+    description: 'Lifetime Membership and Network Placement Fee',
     paymentProvider: 'adsky_cashfree',
     version: 1,
   });
@@ -63,7 +63,7 @@ export default function AdminMlmConfigPage() {
         setConfig({
           feeAmount: Number(d.feeAmount ?? d.platformFeeAmount ?? 100),
           gstPercent: Number(d.gstPercent ?? 0),
-          description: d.description || 'Lifetime Membership and 3x15 Matrix Placement Fee',
+          description: d.description || 'Lifetime Membership and Network Placement Fee',
           paymentProvider: d.paymentProvider || 'adsky_cashfree',
           version: d.version || 1,
         });
@@ -321,7 +321,7 @@ export default function AdminMlmConfigPage() {
                     value={config.description}
                     onChange={(e) => setConfig({ ...config, description: e.target.value })}
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
-                    placeholder="e.g. Lifetime Membership and 3x15 Matrix Placement Fee"
+                    placeholder="e.g. Lifetime Membership and Network Placement Fee"
                   />
                   <p className="text-[11px] text-slate-500 mt-1.5">
                     This label is displayed on the payment checkout screen and invoices.

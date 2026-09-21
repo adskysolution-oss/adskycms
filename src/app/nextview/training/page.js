@@ -38,7 +38,7 @@ export default function NextViewTrainingPage() {
             <span>NexVia Referral Training Academy</span>
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Guides, customer explanation scripts, FD benefits tutorials, and 3×15 network growth strategies.
+            Guides, customer explanation scripts, FD benefits tutorials, and referral network growth strategies.
           </p>
         </div>
 

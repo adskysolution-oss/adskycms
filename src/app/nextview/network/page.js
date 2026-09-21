@@ -201,7 +201,7 @@ export default function NextViewNetworkPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-              <span>3×15 Network Visualizer</span>
+              <span>Network Visualizer</span>
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
               Explore your entire 15-level network tree, downline placements, and FD-Card status.
@@ -211,7 +211,7 @@ export default function NextViewNetworkPage() {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-600"/>
-              <span>3×15 Matrix Tree</span>
+              <span>Network Tree</span>
             </span>
           </div>
         </div>

@@ -27,7 +27,7 @@ const menuGroups = [
       { href: '/admin/mlm/members', icon: FaUsers, label: 'MLM Members' },
       { href: '/admin/mlm/kyc', icon: FaShieldAlt, label: 'KYC Verification' },
       { href: '/admin/mlm/fd', icon: FaCreditCard, label: 'FD Applications' },
-      { href: '/admin/mlm/matrix', icon: FaProjectDiagram, label: '3×15 Matrix' },
+      { href: '/admin/mlm/matrix', icon: FaProjectDiagram, label: 'Matrix Tree' },
       { href: '/admin/mlm/rewards', icon: FaAward, label: 'MLM Rewards' },
       { href: '/admin/mlm/levels', icon: FaSlidersH, label: 'Level 1–15 Config' },
       { href: '/admin/mlm/wallet', icon: FaWallet, label: 'MLM Wallet' },

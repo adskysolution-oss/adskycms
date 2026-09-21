@@ -39,7 +39,7 @@ export default function AdminMlmOverviewPage() {
               </h1>
             </div>
             <p className="text-xs text-gray-500 mt-1 font-medium">
-              Control Center &bull; Real-time network telemetry, 3×15 matrix analytics, and financial operations.
+              Control Center &bull; Real-time network telemetry, matrix analytics, and financial operations.
             </p>
           </div>
 
@@ -64,7 +64,7 @@ export default function AdminMlmOverviewPage() {
             <p className="text-2xl font-black text-emerald-600">{stats?.activeMembers ?? stats?.members?.active ?? 0}</p>
             <div className="text-[10px] text-emerald-700 flex items-center gap-1 font-semibold">
               <CheckCircle2 className="w-3 h-3"/>
-              <span>In 3×15 Matrix</span>
+              <span>In Matrix Tree</span>
             </div>
           </div>
 
@@ -178,7 +178,7 @@ export default function AdminMlmOverviewPage() {
             { title: 'Members Directory', href: '/admin/mlm/members', icon: Users, desc: 'Search & filters' },
             { title: 'KYC Verification', href: '/admin/mlm/kyc', icon: ShieldCheck, desc: 'PAN, Aadhaar, Bank' },
             { title: 'FD Applications', href: '/admin/mlm/fd', icon: Award, desc: 'Customer FDs' },
-            { title: '3×15 Matrix Tree', href: '/admin/mlm/matrix', icon: Layers, desc: 'Spatial inspector' },
+            { title: 'Matrix Tree', href: '/admin/mlm/matrix', icon: Layers, desc: 'Spatial inspector' },
             { title: 'Rewards Ledger', href: '/admin/mlm/rewards', icon: IndianRupee, desc: 'Level 1-15 rewards' },
             { title: 'Level Rules', href: '/admin/mlm/levels', icon: SlidersHorizontal, desc: 'Tiers 1-15 config' },
             { title: 'MLM Wallets', href: '/admin/mlm/wallet', icon: Wallet, desc: 'Financial balances' },

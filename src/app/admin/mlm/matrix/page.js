@@ -61,7 +61,7 @@ function MatrixExplorerContent() {
                     <div>
                         <h1 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
                             <Network className="w-6 h-6 text-amber-500" />
-                            <span>3×15 Matrix Explorer</span>
+                            <span>Matrix Explorer</span>
                         </h1>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                             Deterministic 3-width × 15-depth spatial ternary tree. Breadth-First Vacancy Resolution.
@@ -247,7 +247,7 @@ function MatrixExplorerContent() {
                         </div>
                     ) : (
                         <div className="p-12 text-center text-slate-400 text-xs">
-                            Enter an active MLM member code to visualize their 3×15 matrix subtree.
+                            Enter an active MLM member code to visualize their matrix subtree.
                         </div>
                     )}
                 </div>
@@ -261,7 +261,7 @@ export default function AdminMlmMatrixPage() {
         <Suspense fallback={
             <DashboardLayout>
                 <div className="p-12 text-center text-slate-400 text-xs">
-                    Loading 3×15 Matrix Explorer...
+                    Loading Matrix Explorer...
                 </div>
             </DashboardLayout>
         }>

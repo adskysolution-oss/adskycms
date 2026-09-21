@@ -86,7 +86,7 @@ export async function POST(req, context) {
         application.reviewedBy = adminUserId;
         application.reviewedAt = new Date();
         await application.save();
-        // Trigger MLM 3x15 Level 1-15 reward engine
+        // Trigger MLM Level 1-15 reward engine
         const rewardResult = await generateMlmReward(application._id, adminUserId, adminName);
         // After generating rewards, walk the triggering member's ancestor chain.
         // For each ancestor whose relative level is NOW truly complete

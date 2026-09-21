@@ -22,7 +22,7 @@ const footerSections = [
     title: 'Partner Programs',
     links: [
       { label: 'Corporate Partner', href: '/corporate-partner' },
-      { label: 'NexVia 3×15 Matrix', href: '/nextview-network' },
+      { label: 'NexVia Network', href: '/nextview-network' },
       { label: 'Recruitment Partner', href: '/recruitment/login' },
       { label: 'Join Network', href: '/nextview/register' },
     ],

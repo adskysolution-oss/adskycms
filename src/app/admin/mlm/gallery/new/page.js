@@ -267,7 +267,7 @@ export default function AdminNewGalleryPage() {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. launch, referral, earnings, poster, 3x15"
+                  placeholder="e.g. launch, referral, earnings, poster, network"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
                   className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:border-amber-500 outline-none"
@@ -405,7 +405,7 @@ export default function AdminNewGalleryPage() {
                   </label>
                   <textarea
                     rows={4}
-                    placeholder="e.g. 🚀 Join the revolutionary NextView 3×15 network! Earn lifetime passive rewards. Join using my referral link: {{REFERRAL_LINK}}"
+                    placeholder="e.g. 🚀 Join the revolutionary NextView referral network! Earn lifetime passive rewards. Join using my referral link: {{REFERRAL_LINK}}"
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:border-emerald-500 outline-none"
@@ -433,7 +433,7 @@ export default function AdminNewGalleryPage() {
                 </label>
                 <textarea
                   rows={5}
-                  placeholder="*NextView Platform Launch!* 🔥\n\nActivate your 3×15 Matrix position today.\nUse my sponsor code: {{REFERRAL_CODE}}\nJoin link: {{REFERRAL_LINK}}"
+                  placeholder="*NextView Platform Launch!* 🔥\n\nActivate your network position today.\nUse my sponsor code: {{REFERRAL_CODE}}\nJoin link: {{REFERRAL_LINK}}"
                   value={whatsappCaption}
                   onChange={(e) => setWhatsappCaption(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:border-emerald-500 outline-none"
@@ -478,7 +478,7 @@ export default function AdminNewGalleryPage() {
                 </label>
                 <textarea
                   rows={5}
-                  placeholder="In this video we review NextView 3x15 matrix opportunities...\n\nRegister: {{REFERRAL_LINK}}\nSponsor Code: {{REFERRAL_CODE}}"
+                  placeholder="In this video we review NextView referral network opportunities...\n\nRegister: {{REFERRAL_LINK}}\nSponsor Code: {{REFERRAL_CODE}}"
                   value={youtubeCaption}
                   onChange={(e) => setYoutubeCaption(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:border-emerald-500 outline-none"

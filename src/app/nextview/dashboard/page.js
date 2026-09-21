@@ -384,7 +384,7 @@ export default function NextViewDashboardPage() {
           <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
-                3×15 Network
+                Referral Network
               </span>
               <div className="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition">
                 <Network className="w-4 h-4" />
