@@ -95,7 +95,7 @@ export default function Footer() {
                 />
               </Link>
               <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
-                Transforming businesses through innovative digital solutions, strategic talent acquisition, and sustainable referral ecosystems.
+                Transforming businesses through innovative digital solutions, strategic talent acquisition, and sustainable digital ecosystems.
               </p>
             </div>
             <div className="flex gap-2.5">

@@ -156,7 +156,7 @@ export default function NextViewMarketingPage() {
                     Official Campaign
                   </span>
                   <h3 className="text-base font-black text-slate-900">
-                    {shareConfig?.title || 'NEXVIA Official WhatsApp Referral Message & Poster'}
+                    {shareConfig?.title || 'NEXVIA Official WhatsApp Invite Message & Poster'}
                   </h3>
                 </div>
                 <p className="text-xs text-slate-600 max-w-xl line-clamp-2">

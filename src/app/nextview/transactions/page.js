@@ -56,7 +56,7 @@ export default function NextViewTransactionsPage() {
           <div>
             <h1 className="text-2xl font-black text-slate-900">Wallet Transactions</h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Complete financial ledger of rewards, referral payouts, and debits.
+              Complete financial ledger of rewards, partner payouts, and debits.
             </p>
           </div>
 

@@ -409,7 +409,7 @@ export default function NextViewProfilePage() {
               </div>
               <div className="flex items-center gap-2">
                 <Network className="w-4 h-4 text-slate-400"/>
-                <span>Network Structure: <strong className="text-slate-800">Referral Network Tree</strong></span>
+                <span>Network Structure: <strong className="text-slate-800">Partner Network Tree</strong></span>
               </div>
             </div>
 

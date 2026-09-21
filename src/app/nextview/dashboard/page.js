@@ -151,7 +151,7 @@ export default function NextViewDashboardPage() {
     const url = `${origin}/nextview/register?sponsor=${profile.mlmCode}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
-    toast.success('Referral link copied to clipboard!');
+    toast.success('Invite link copied to clipboard!');
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
@@ -160,7 +160,7 @@ export default function NextViewDashboardPage() {
     const text = getReferralShareText();
     navigator.clipboard.writeText(text);
     setCopiedMessage(true);
-    toast.success('WhatsApp referral message copied to clipboard!');
+    toast.success('WhatsApp invite message copied to clipboard!');
     setTimeout(() => setCopiedMessage(false), 2500);
   };
 
@@ -384,7 +384,7 @@ export default function NextViewDashboardPage() {
           <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
-                Referral Network
+                Partner Network
               </span>
               <div className="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition">
                 <Network className="w-4 h-4" />
@@ -492,15 +492,15 @@ export default function NextViewDashboardPage() {
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-600" />
                 <h3 className="text-xs font-black uppercase tracking-wider text-amber-900">
-                  Your Personal Referral Link
+                  Your Personal Invite Link
                 </h3>
               </div>
               <p className="text-xs text-slate-600">
-                Share your referral link to sponsor new members. 3 direct slots sit in Level 1; subsequent referrals automatically spillover to grow your 15-tier network.
+                Share your invite link to sponsor new members. 3 direct slots sit in Level 1; subsequent partners automatically spillover to grow your 15-tier network.
               </p>
               <div className="pt-2 flex items-center">
                 <div className="flex-1 min-w-0 flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-xl border border-amber-200 shadow-2xs font-mono text-xs text-slate-800 break-all select-all">
-                  <span className="truncate">{referralUrl || 'Loading referral URL...'}</span>
+                  <span className="truncate">{referralUrl || 'Loading invite URL...'}</span>
                 </div>
               </div>
             </div>
@@ -667,7 +667,7 @@ export default function NextViewDashboardPage() {
                     ) : (
                       <div className="text-center space-y-1 mt-1">
                         <p className="text-xs font-bold text-slate-400">Slot Available</p>
-                        <p className="text-[10px] text-slate-400">Share referral link to fill</p>
+                        <p className="text-[10px] text-slate-400">Share invite link to fill</p>
                       </div>
                     )}
                   </div>

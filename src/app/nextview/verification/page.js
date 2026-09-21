@@ -437,7 +437,7 @@ export default function NextViewVerificationPage() {
               </div>
               <div className="space-y-1">
                 <h2 className="text-2xl font-black text-gray-900">Membership Activated!</h2>
-                <p className="text-xs text-gray-500">Your account is fully verified and placed in the referral network.</p>
+                <p className="text-xs text-gray-500">Your account is fully verified and placed in the partner network.</p>
               </div>
 
               <button

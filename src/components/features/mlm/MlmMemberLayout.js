@@ -146,7 +146,7 @@ export default function MlmMemberLayout({ children, activePath }) {
     const url = `${origin}/nextview/register?sponsor=${member.mlmCode}`;
     navigator.clipboard.writeText(url);
     setCopiedReferral(true);
-    toast.success('Referral link copied!');
+    toast.success('Invite link copied!');
     setTimeout(() => setCopiedReferral(false), 2500);
   };
 
@@ -188,11 +188,11 @@ export default function MlmMemberLayout({ children, activePath }) {
             <button
               type="button"
               onClick={copyReferralLink}
-              title="Click to copy your personal referral link"
+              title="Click to copy your personal invite link"
               className="hidden md:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-50/80 hover:bg-amber-100 border border-amber-200/80 text-amber-900 text-xs font-semibold transition shadow-2xs"
             >
               <Copy className="w-3.5 h-3.5 text-amber-600" />
-              <span>{copiedReferral ? 'Copied!' : 'Copy Referral'}</span>
+              <span>{copiedReferral ? 'Copied!' : 'Copy Invite Link'}</span>
               <span className="font-mono text-[11px] font-bold text-amber-800 bg-white px-1.5 py-0.5 rounded-md border border-amber-200">
                 {member.mlmCode}
               </span>

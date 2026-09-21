@@ -88,7 +88,7 @@ function RegisterForm() {
         setSponsorError('');
       } else {
         setSponsorDetails(null);
-        setSponsorError(data.message || 'Invalid sponsor / referral code');
+        setSponsorError(data.message || 'Invalid sponsor / invite code');
       }
     } catch {
       setSponsorDetails(null);
@@ -185,7 +185,7 @@ function RegisterForm() {
     setSuccessMessage('');
 
     if (!form.sponsorCode.trim()) {
-      setError('A valid Referral / Sponsor Code is required.');
+      setError('A valid Sponsor / Invite Code is required.');
       return;
     }
 
@@ -337,7 +337,7 @@ function RegisterForm() {
           Join <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">NexVia Network</span>
         </h1>
         <p className="mt-1 text-xs sm:text-sm text-slate-600 font-medium">
-          Create your member account &amp; enter the referral reward network
+          Create your member account &amp; enter the partner reward network
         </p>
       </div>
 
@@ -359,11 +359,11 @@ function RegisterForm() {
 
           {step === 1 ? (
             <form className="space-y-5" onSubmit={handleRegisterSubmit} autoComplete="off">
-              {/* SECTION A: REFERRAL / SPONSOR */}
+              {/* SECTION A: SPONSOR / INVITE */}
               <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="block text-xs font-black uppercase tracking-wider text-amber-800">
-                    Sponsor / Referral Code *
+                    Sponsor / Invite Code *
                   </label>
                   {validatingSponsor && (
                     <span className="text-[11px] text-amber-600 flex items-center gap-1 font-semibold">
@@ -401,7 +401,7 @@ function RegisterForm() {
 
                 {sponsorDetails ? (
                   <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs text-emerald-700">
-                    <span className="font-semibold">✓ Referred by {sponsorDetails.fullName}</span>
+                    <span className="font-semibold">✓ Invited by {sponsorDetails.fullName}</span>
                     <span className="font-mono font-bold text-emerald-800">{sponsorDetails.mlmCode}</span>
                   </div>
                 ) : sponsorError ? (

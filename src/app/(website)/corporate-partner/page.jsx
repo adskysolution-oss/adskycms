@@ -19,7 +19,7 @@ import {
 export const metadata = {
   title: 'Corporate Partner Program — AdSky Solution',
   description:
-    'Join AdSky Solution Corporate Partner Program for regional agencies, enterprises, and service operators — structured task execution, transparent ledger, and referral commissions.',
+    'Join AdSky Solution Corporate Partner Program for regional agencies, enterprises, and service operators — structured task execution, transparent ledger, and partner commissions.',
 };
 
 const HOW_IT_WORKS = [
@@ -28,13 +28,13 @@ const HOW_IT_WORKS = [
   { step: '03', title: 'Verification & Approval', desc: 'Our operations team reviews and verifies your regional application.' },
   { step: '04', title: 'Partner Activation', desc: 'Your authorized partner account is activated with access to your dashboard.' },
   { step: '05', title: 'Operations & Onboarding', desc: 'Execute regional tasks, onboard CSC / MP Online kiosks, and manage field teams.' },
-  { step: '06', title: 'Commissions & Payouts', desc: 'Earn referral incentives and withdraw earnings directly to Bank or UPI.' },
+  { step: '06', title: 'Commissions & Payouts', desc: 'Earn partner incentives and withdraw earnings directly to Bank or UPI.' },
 ];
 
 const BENEFITS = [
   { icon: Building2, title: 'Regional Hierarchy', desc: 'Operate with a structured downline: Corporate Vendor → Sub-Vendor → Team Leader → Executive.' },
   { icon: BarChart3, title: 'Structured Task Execution', desc: 'Receive and execute tasks through your dedicated dashboard with full tracking and reporting.' },
-  { icon: Wallet, title: 'Referral Commissions', desc: 'Earn commissions for verified CSC / MP Online kiosk onboarding and service referrals.' },
+  { icon: Wallet, title: 'Partner Commissions', desc: 'Earn commissions for verified CSC / MP Online kiosk onboarding and service facilitation.' },
   { icon: Globe, title: 'Kiosk Onboarding Incentives', desc: 'Facilitate ₹100 activation incentives for verified kiosk onboardings in your region.' },
   { icon: ShieldCheck, title: 'Transparent Ledger', desc: 'Full audit trail of all transactions, payouts, and commissions in your partner dashboard.' },
   { icon: FileText, title: 'Direct Bank / UPI Withdrawals', desc: 'Withdraw earned commissions directly to your registered bank account or UPI ID.' },
@@ -42,7 +42,7 @@ const BENEFITS = [
 
 const WHO_CAN_JOIN = [
   'Regional agencies with field operations capacity',
-  'Enterprises and SMEs seeking referral network opportunities',
+  'Enterprises and SMEs seeking partner network opportunities',
   'Individuals or organizations operating CSC / MP Online centers',
   'Service distributors and field onboarding agents',
   'Eligible business organizations in tier-2 and tier-3 cities',
@@ -88,7 +88,7 @@ export default function CorporatePartnerPage() {
               <span className="gradient-text">Program</span>
             </h1>
             <p className="text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mx-auto font-normal">
-              A structured partnership for regional agencies, enterprises, and businesses to scale operations through verified referrals, kiosk verification, and multi-tier task execution.
+              A structured partnership for regional agencies, enterprises, and businesses to scale operations through verified onboardings, kiosk verification, and multi-tier task execution.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link
@@ -122,7 +122,7 @@ export default function CorporatePartnerPage() {
                 Empowering Regional Growth &amp; Field Infrastructure
               </h2>
               <p className="text-text-secondary leading-relaxed text-sm md:text-base">
-                The AdSky Solution Corporate Partner Program empowers regional agencies and enterprises to operate as authorized field partners. Partners manage service referrals, CSC &amp; MP Online kiosk verification, and structured task assignments with direct wallet payouts.
+                The AdSky Solution Corporate Partner Program empowers regional agencies and enterprises to operate as authorized field partners. Partners manage services, CSC &amp; MP Online kiosk verification, and structured task assignments with direct wallet payouts.
               </p>
               <p className="text-text-secondary leading-relaxed text-sm md:text-base">
                 With a deterministic hierarchy—Corporate Vendor → Sub-Vendor → Team Leader → Executive—partners gain full management tools and real-time ledger visibility.

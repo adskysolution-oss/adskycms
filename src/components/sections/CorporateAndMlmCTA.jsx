@@ -41,13 +41,13 @@ export default function CorporateAndMlmCTA() {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200/60 bg-blue-50/80 text-primary text-xs font-bold uppercase tracking-wider">
             <Handshake size={14} />
-            <span>Growth &amp; Referral Ecosystem</span>
+            <span>Growth &amp; Partner Ecosystem</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
             Partner With <span className="gradient-text">AdSky Solution</span>
           </h2>
           <p className="text-sm md:text-base text-slate-500 leading-relaxed">
-            Explore dedicated enterprise and referral programs—from regional agency task execution to structured referral network rewards.
+            Explore dedicated enterprise and partner programs—from regional agency task execution to structured partner network rewards.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function CorporateAndMlmCTA() {
                   Corporate Partner Program
                 </h3>
                 <p className="text-sm sm:text-[15px] text-slate-500 leading-relaxed">
-                  Empower regional agencies and businesses. Access structured task execution, service referral commissions, CSC / MP Online kiosk verification, and multi-tier regional payout pools.
+                  Empower regional agencies and businesses. Access structured task execution, service partner commissions, CSC / MP Online kiosk verification, and multi-tier regional payout pools.
                 </p>
               </div>
 
@@ -162,22 +162,23 @@ export default function CorporateAndMlmCTA() {
                     src="/nexvia.png"
                     alt="NexVia Network"
                     fill
+                    sizes="(max-width: 640px) 144px, 176px"
                     className="object-contain object-left group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-amber-50 text-amber-800 border border-amber-200/80">
                   <Sparkles size={13} className="text-amber-600" />
-                  <span>Referral Network</span>
+                  <span>Partner Network</span>
                 </div>
               </div>
 
               {/* Title & Description */}
               <div className="space-y-2.5">
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-amber-600 transition-colors">
-                  NexVia Matrix Platform
+                  NexVia Network Platform
                 </h3>
                 <p className="text-sm sm:text-[15px] text-slate-500 leading-relaxed">
-                  Join our structured referral network. Refer eligible Fixed Deposit (FD) and FD-Card products to unlock structured Level 1 through Level 15 upline rewards with instant withdrawals.
+                  Join our structured partner network. Promote eligible Fixed Deposit (FD) and FD-Card products to unlock structured Level 1 through Level 15 upline rewards with instant withdrawals.
                 </p>
               </div>
 

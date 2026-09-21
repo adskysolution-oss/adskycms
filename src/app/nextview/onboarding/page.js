@@ -1026,7 +1026,7 @@ export default function NextViewOnboardingPage() {
                   Step 1 Completed: KYC Approved &amp; Verified!
                 </h3>
                 <p className="text-xs text-slate-600">
-                  Your identity has been verified. Complete Step 2 platform activation to secure your permanent referral network position.
+                  Your identity has been verified. Complete Step 2 platform activation to secure your permanent partner network position.
                 </p>
               </div>
             </div>
@@ -1035,7 +1035,7 @@ export default function NextViewOnboardingPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">
-                    {feeData?.feeDescription || feeData?.feeName || 'Lifetime Membership & Matrix Placement'}
+                    {feeData?.feeDescription || feeData?.feeName || 'Lifetime Membership & Network Placement'}
                   </span>
                   <h4 className="text-xl font-black text-slate-900 mt-0.5">
                     Platform Activation Fee
@@ -1050,11 +1050,11 @@ export default function NextViewOnboardingPage() {
               <ul className="text-xs text-slate-700 space-y-2 border-t border-amber-200/60 pt-3">
                 <li className="flex items-center gap-2">
                   <Check size={14} className="text-emerald-600" />
-                  <span>Permanent placement in ternary referral network tree</span>
+                  <span>Permanent placement in ternary partner network tree</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={14} className="text-emerald-600" />
-                  <span>Direct referral commission &amp; spillover earnings eligibility</span>
+                  <span>Direct partner commission &amp; spillover earnings eligibility</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={14} className="text-emerald-600" />

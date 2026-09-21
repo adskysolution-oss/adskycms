@@ -35,10 +35,10 @@ export default function NextViewTrainingPage() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <span>NexVia Referral Training Academy</span>
+            <span>NexVia Partner Training Academy</span>
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Guides, customer explanation scripts, FD benefits tutorials, and referral network growth strategies.
+            Guides, customer explanation scripts, FD benefits tutorials, and partner network growth strategies.
           </p>
         </div>
 

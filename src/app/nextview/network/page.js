@@ -243,9 +243,9 @@ export default function NextViewNetworkPage() {
 
           {/* Card 3: Direct Sponsored */}
           <div className="bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xs space-y-1">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400">Direct Referrals</span>
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400">Direct Partners</span>
             <div className="text-lg sm:text-2xl font-black text-purple-600">{directList.length}</div>
-            <div className="text-[11px] sm:text-xs text-slate-400">Via your referral ID</div>
+            <div className="text-[11px] sm:text-xs text-slate-400">Via your invite ID</div>
           </div>
 
           {/* Card 4: FD Card Progress */}
@@ -639,7 +639,7 @@ export default function NextViewNetworkPage() {
               {filteredDirect.length === 0 ? (<div className="text-center py-10 space-y-2">
                   <Users className="w-10 h-10 text-slate-300 mx-auto"/>
                   <p className="text-xs font-bold text-slate-600">No directly sponsored members found</p>
-                  <p className="text-[11px] text-slate-400">Share your personal referral link to recruit new members.</p>
+                  <p className="text-[11px] text-slate-400">Share your personal invite link to connect new members.</p>
                 </div>) : (<>
                   {/* Desktop Table View (md: and above) */}
                   <div className="hidden md:block overflow-x-auto">

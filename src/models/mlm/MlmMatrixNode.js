@@ -18,6 +18,5 @@ const MlmMatrixNodeSchema = new mongoose.Schema(
 
 MlmMatrixNodeSchema.index({ parentNodeId: 1 });
 MlmMatrixNodeSchema.index({ level: 1 });
-MlmMatrixNodeSchema.index({ memberId: 1 });
 
 export default mongoose.models.MlmMatrixNode || mongoose.model('MlmMatrixNode', MlmMatrixNodeSchema, 'mlmmatrixnodes');

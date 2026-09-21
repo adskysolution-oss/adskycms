@@ -72,6 +72,7 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
                   src="/nexvia.png"
                   alt="NexVia — Connect • Build • Grow"
                   fill
+                  sizes="(max-width: 640px) 176px, 208px"
                   priority
                   className="object-contain object-center lg:object-left drop-shadow-xs"
                 />
@@ -102,7 +103,7 @@ export default function NexViaHeroBanner({ imageSrc = '/nexvia-hero-banner.jpg' 
 
             {/* Description */}
             <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Join a transparent, verified referral platform designed for individuals and enterprises seeking exponential growth, verified security, and deterministic tier rewards.
+              Join a transparent, verified partner platform designed for individuals and enterprises seeking exponential growth, verified security, and deterministic tier rewards.
             </p>
 
             {/* ── MOBILE-ONLY IMAGE: Visible directly on Phone UI! ── */}

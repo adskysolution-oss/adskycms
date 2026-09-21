@@ -246,7 +246,7 @@ export default function NextViewGalleryPage() {
               Marketing Library
             </h1>
             <p className="text-sm sm:text-base text-amber-100/90 font-medium leading-relaxed">
-              Ready-to-use posters, promotional videos, campaign graphics, and pre-written captions with your personal referral link embedded.
+              Ready-to-use posters, promotional videos, campaign graphics, and pre-written captions with your personal invite link embedded.
             </p>
           </div>
 
@@ -765,7 +765,7 @@ export default function NextViewGalleryPage() {
                     } else if (activeCaptionTab === 'facebook') {
                       text = previewItem.captions?.facebook || previewItem.caption;
                     } else if (activeCaptionTab === 'cta') {
-                      text = previewItem.captions?.ctaText || `Join NextView with my referral link: {{REFERRAL_LINK}}`;
+                      text = previewItem.captions?.ctaText || `Join NextView with my invite link: {{REFERRAL_LINK}}`;
                     }
 
                     const personalized = personalizeText(text);
@@ -821,7 +821,7 @@ export default function NextViewGalleryPage() {
               <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/60 text-[11px] text-amber-900 flex items-center gap-2">
                 <HelpCircle size={15} className="text-amber-600 shrink-0" />
                 <span>
-                  All copied captions automatically insert your referral code (<strong>{member?.mlmCode || 'NEXVIA'}</strong>) and invite link.
+                  All copied captions automatically insert your invite code (<strong>{member?.mlmCode || 'NEXVIA'}</strong>) and link.
                 </span>
               </div>
             </div>

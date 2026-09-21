@@ -7,7 +7,7 @@ export default function AdminMlmShareSettingsCard() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [title, setTitle] = useState('NEXVIA Referral WhatsApp Share');
+    const [title, setTitle] = useState('NEXVIA WhatsApp Invite Share');
     const [messageTemplate, setMessageTemplate] = useState(DEFAULT_SHARE_MESSAGE);
     // posterUrl = signed URL for display only (never saved to DB)
     // rawPosterUrl = actual S3 URL saved to DB
@@ -24,7 +24,7 @@ export default function AdminMlmShareSettingsCard() {
             const res = await fetch('/api/admin/mlm/share-config');
             const json = await res.json();
             if (res.ok && json.success && json.data) {
-                setTitle(json.data.title || 'NEXVIA Referral WhatsApp Share');
+                setTitle(json.data.title || 'NEXVIA WhatsApp Invite Share');
                 setMessageTemplate(json.data.messageTemplate || DEFAULT_SHARE_MESSAGE);
                 // posterUrl from API is already signed (for display); rawPosterUrl comes from API's rawPosterUrl field
                 setPosterUrl(json.data.posterUrl || '');
@@ -179,13 +179,13 @@ export default function AdminMlmShareSettingsCard() {
             </div>
             <div>
               <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <span>WhatsApp Referral Share &amp; Poster Settings</span>
+                <span>WhatsApp Invite Share &amp; Poster Settings</span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 uppercase tracking-wider">
                   Live Dynamic
                 </span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                Set the default WhatsApp message template and promotional poster that members send when sharing their referral link.
+                Set the default WhatsApp message template and promotional poster that members send when sharing their invite link.
               </p>
             </div>
           </div>
@@ -212,7 +212,7 @@ export default function AdminMlmShareSettingsCard() {
             <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
               Template Title / Label
             </label>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. NEXVIA Referral WhatsApp Share" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition"/>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. NEXVIA WhatsApp Invite Share" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition"/>
           </div>
 
           {/* Placeholders helper toolbar */}
@@ -367,7 +367,7 @@ export default function AdminMlmShareSettingsCard() {
             </div>
 
             <div className="mt-auto pt-3 text-center text-[10px] text-slate-500 font-bold">
-              When members click &ldquo;Share WhatsApp&rdquo;, this exact message is sent with their unique referral link.
+              When members click &ldquo;Share WhatsApp&rdquo;, this exact message is sent with their unique invite link.
             </div>
           </div>
         </div>

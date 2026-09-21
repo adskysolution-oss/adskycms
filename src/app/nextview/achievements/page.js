@@ -174,8 +174,8 @@ export default function NextViewAchievementsPage() {
                 Achievement Center
               </h1>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                Celebrate your matrix milestones. Download and share official, high-resolution achievement certificates
-                with your photo and referral QR code in 1 click across WhatsApp and social media.
+                Celebrate your milestones. Download and share official, high-resolution achievement certificates
+                with your photo and partner QR code in 1 click across WhatsApp and social media.
               </p>
             </div>
 

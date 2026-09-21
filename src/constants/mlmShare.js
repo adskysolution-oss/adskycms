@@ -8,7 +8,7 @@ CONNECT • BUILD • GROW
 🇮🇳 भारत के हर राज्य से जुड़ने का अवसर
 
 📈 15-Level Structured Journey
-📲 Digital Referral System
+📲 Digital Partner System
 🏆 Achievement Rewards
 🤝 Team & Network Building
 🎯 Leadership Growth
@@ -17,7 +17,7 @@ CONNECT • BUILD • GROW
 लोगों को एक structured digital platform के माध्यम से
 CONNECT करने, BUILD करने और GROW करने का अवसर देना।
 
-💳 Financial Service Referral Model
+💳 Financial Service Distribution Model
 ₹2,000 Applicable FD
 + ₹100 Platform Fee
 
@@ -30,7 +30,7 @@ CONNECT करने, BUILD करने और GROW करने का अव�
 🔗 Registration Link (रजिस्टर करने के लिए लिंक पर क्लिक करें):
 {{REFERRAL_LINK}}
 
-🔑 Referral Code:
+🔑 Sponsor / Invite Code:
 *{{REFERRAL_CODE}}*
 
 📩 Interested?
